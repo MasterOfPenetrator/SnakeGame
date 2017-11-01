@@ -33,5 +33,5 @@ float FBM(float x)
 // Main Function
 void main()
 {
-    gl_FragColor = texture2D(Texture, gl_TexCoord[0].xy) * FBM(Time) * FBM(Time);
+    gl_FragColor = texture2D(Texture, gl_TexCoord[0].xy);
 }

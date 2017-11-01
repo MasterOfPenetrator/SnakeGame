@@ -57,7 +57,7 @@ bool CSFMLUpdateClock()
         {
             if(GameItem.GI_Coordinates_Setted[it] && GameItem.GI_Placed[it])
             {
-                //sfShader_setFloatUniform(GameItem.GI_Shaders[it], "Time", GameClock.GC_Time);
+                //sfShader_setFloatUniform(GameItem.GI_Shaders[it], "Time", GameClock.GC_Time); // if it active
             }
         }
     }

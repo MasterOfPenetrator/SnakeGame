@@ -94,9 +94,14 @@
 		<Unit filename="Bilder/Schriftarten/3Dventure.ttf" />
 		<Unit filename="Bilder/Schriftarten/SEASERN.ttf" />
 		<Unit filename="Bilder/Schriftarten/baby blocks.ttf" />
+		<Unit filename="Bilder/Shader/FirstAid.frag" />
+		<Unit filename="Bilder/Shader/Food.frag" />
+		<Unit filename="Bilder/Shader/GodMode.frag" />
 		<Unit filename="Bilder/Shader/Menu_Button_Blur_Effect.frag" />
+		<Unit filename="Bilder/Shader/Noclip.frag" />
 		<Unit filename="Bilder/Shader/Snake_Body_Shader.frag" />
 		<Unit filename="Bilder/Shader/Snake_Head_Shader.frag" />
+		<Unit filename="Bilder/Shader/Speed.frag" />
 		<Unit filename="CSFMLFileHandling.c">
 			<Option compilerVar="CC" />
 		</Unit>
