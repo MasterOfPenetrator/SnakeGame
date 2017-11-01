@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="SnakeGame" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/SnakeGame" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Os" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/SnakeGame" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="../Bibliotheken/CSFML/include" />
+		</Compiler>
+		<Linker>
+			<Add option="-lmingw32 -lopengl32 -lglu32" />
+			<Add library="libcsfml-audio" />
+			<Add library="libcsfml-network" />
+			<Add library="libcsfml-graphics" />
+			<Add library="libcsfml-window" />
+			<Add library="libcsfml-system" />
+			<Add directory="../Bibliotheken/CSFML/lib/gcc" />
+		</Linker>
+		<Unit filename="Bilder/Einstellungen/HighscoresDATA.MOP" />
+		<Unit filename="Bilder/Einstellungen/SettingsDATA.MOP" />
+		<Unit filename="Bilder/Game/LevelData/Level1/Diffuse.png" />
+		<Unit filename="Bilder/Game/LevelData/Level1/Eventmap.DAT" />
+		<Unit filename="Bilder/Game/LevelData/Level1/Normal.png" />
+		<Unit filename="Bilder/Game/LevelData/Level1/Shader.frag" />
+		<Unit filename="Bilder/Game/LevelData/Level1/Specular.png" />
+		<Unit filename="Bilder/Game/LevelData/Level1/Tilemap.DAT" />
+		<Unit filename="Bilder/Game/Tiles/Snake_Body.png" />
+		<Unit filename="Bilder/Game/Tiles/Snake_Head.png" />
+		<Unit filename="Bilder/Menu/AktivButtonClicked.png" />
+		<Unit filename="Bilder/Menu/AktivButtonNormal.png" />
+		<Unit filename="Bilder/Menu/AktivButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Menu/AusButtonClicked.png" />
+		<Unit filename="Bilder/Menu/AusButtonNormal.png" />
+		<Unit filename="Bilder/Menu/AusButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Menu/BeendenButtonClicked.png" />
+		<Unit filename="Bilder/Menu/BeendenButtonNormal.png" />
+		<Unit filename="Bilder/Menu/BeendenButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Menu/DefaultButtonClicked.png" />
+		<Unit filename="Bilder/Menu/DefaultButtonNormal.png" />
+		<Unit filename="Bilder/Menu/DefaultButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Menu/MenuGameBorder.png" />
+		<Unit filename="Bilder/Menu/MenuMainBorder.png" />
+		<Unit filename="Bilder/Menu/MenuScoresBorder.png" />
+		<Unit filename="Bilder/Menu/MenuSettingsBorder.png" />
+		<Unit filename="Bilder/Menu/MenuTitleBorder.png" />
+		<Unit filename="Bilder/Menu/SaveButtonClicked.png" />
+		<Unit filename="Bilder/Menu/SaveButtonNormal.png" />
+		<Unit filename="Bilder/Menu/SaveButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Menu/ScoresButtonClicked.png" />
+		<Unit filename="Bilder/Menu/ScoresButtonNormal.png" />
+		<Unit filename="Bilder/Menu/ScoresButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Menu/SettingsButtonClicked.png" />
+		<Unit filename="Bilder/Menu/SettingsButtonNormal.png" />
+		<Unit filename="Bilder/Menu/SettingsButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Menu/SpielenButtonClicked.png" />
+		<Unit filename="Bilder/Menu/SpielenButtonNormal.png" />
+		<Unit filename="Bilder/Menu/SpielenButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Menu/VorButtonClicked.png" />
+		<Unit filename="Bilder/Menu/VorButtonNormal.png" />
+		<Unit filename="Bilder/Menu/VorButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Menu/ZurButtonClicked.png" />
+		<Unit filename="Bilder/Menu/ZurButtonNormal.png" />
+		<Unit filename="Bilder/Menu/ZurButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Menu/ZurueckButtonClicked.png" />
+		<Unit filename="Bilder/Menu/ZurueckButtonNormal.png" />
+		<Unit filename="Bilder/Menu/ZurueckButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Schriftarten/3Dventure.ttf" />
+		<Unit filename="Bilder/Schriftarten/SEASERN.ttf" />
+		<Unit filename="Bilder/Schriftarten/baby blocks.ttf" />
+		<Unit filename="Bilder/Shader/Menu_Button_Blur_Effect.frag" />
+		<Unit filename="Bilder/Shader/Snake_Body_Shader.frag" />
+		<Unit filename="Bilder/Shader/Snake_Head_Shader.frag" />
+		<Unit filename="CSFMLFileHandling.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLFileHandling.h" />
+		<Unit filename="CSFMLGameClock.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLGameClock.h" />
+		<Unit filename="CSFMLGameItems.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLGameItems.h" />
+		<Unit filename="CSFMLGameLights.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLGameLights.h" />
+		<Unit filename="CSFMLGameMain.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLGameMain.h" />
+		<Unit filename="CSFMLGameSnake.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLGameSnake.h" />
+		<Unit filename="CSFMLGameTilemap.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLGameTilemap.h" />
+		<Unit filename="CSFMLMenu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLMenu.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,14 @@
+[Item_Name][FOOD_XL]
+[Item_Texture][Bilder/Game/Tiles/Food_XL.png]
+[Item_Shader][Bilder/Shader/Food_XL.frag]
+[Item_Chance][1%]
+
+[ItemEffect_Count][2]
+[ItemEffect_Property][Score, Health]
+{
+	[ItemEffect_Direction][Score][Increase]
+	[ItemEffect_Amount][Score][100Pts]
+
+	[ItemEffect_Direction][Health][Decrease]
+	[ItemEffect_Amount][Health][50%]
+}
