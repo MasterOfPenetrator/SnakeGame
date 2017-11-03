@@ -9,10 +9,19 @@
 #define MAX_TILES_X 20
 #define MAX_TILES_Y 20
 
+// Enums
+typedef enum { IT_HEALTH, IT_SPEED, IT_FOOD, IT_GOD, IT_NOCLIP, IT_CUSTOM } ItemType;
+
+// Structs
 typedef struct {
     sfVector2f Position;
     int Action;
 } Event;
+
+typedef struct {
+    ItemType Type;
+    size_t Count;
+} MapDescriptor;
 
 typedef struct {
 
@@ -51,6 +60,11 @@ typedef struct {
     size_t EV_Count;
     bool EV_Is_Init;
 
+    // Map Descriptor
+    MapDescriptor *MD_Allowed_Items;
+    size_t MD_Count;
+    bool MD_Is_Init;
+
 } GameLevel;
 
 GameLevel Level;
@@ -59,6 +73,7 @@ GameLevel Level;
 bool CSFMLLoadlevel(int id);
 bool CSFMLRenderLevel();
 void CSFMLQuitLevel();
+bool CSFMLLoadMapDescriptor();
 bool CSFMLLoadEventmap();
 bool CSFMLLoadTilemap();
 bool CSFMLLoadBackground();

@@ -58,10 +58,12 @@ bool CSFMLInitSnake()
     }
 
     // Setup general things
-    strcpy(GameSnake.S_Name, "Pascal ist Cool!");
+    strcpy(GameSnake.S_Name, "Youre Cool!");
     GameSnake.S_Health = 100;
     GameSnake.S_Score = 0;
     GameSnake.S_Speed = 2.0f;
+    GameSnake.S_DefaultSpeed = 2.0f;
+    GameSnake.S_EndItemTime = 0.0f;
     GameSnake.SB_Body_Elements = SNAKE_START_BLOCKS;
     GameSnake.S_Actual_Direction = NONE;
     GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
@@ -190,6 +192,12 @@ bool CSFMLPopSnakeBlock()
     GameSnake.SB_Body[0].y = GameSnake.SB_Head.y;
 
     return true;
+}
+
+// Lets grow the fucking Snake..
+bool CSFMLGrowSnake()
+{
+
 }
 
 // Set Snake Light
@@ -705,8 +713,12 @@ bool CSFMLHandleSnake()
     if(GameClock.GC_SnakeTick)
     {
         // Check TileMap Collide, Self Collide, if Noclip On, Ignore both
+        // Its a bit Tricky, if first equation true, the if skips next elements, so they will not execute :)
         if(GameSnake.S_NOCLIP || (CSFMLCheckTileMapCollision() && CSFMLCheckSelfCollision()))
         {
+            // Handle Items here!
+            CSFMLHandleItems();
+
             // Right Movement
             if(GameSnake.S_Actual_Direction == RIGHT)
             {
@@ -830,7 +842,7 @@ bool CSFMLHandleSnake()
     sfRenderWindow_setView(screen, Level.BG_View);
 
     // Handle Items
-    CSFMLHandleItems();
+    CSFMLRenderItems();
 
     // Place Light
     CSFMLSetSnakeLight();

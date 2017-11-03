@@ -20,6 +20,7 @@ bool CSFMLLoadlevel(int id)
     InitError |= !CSFMLLoadBackground();
     InitError |= !CSFMLLoadTilemap();
     InitError |= !CSFMLLoadEventmap();
+    InitError |= !CSFMLLoadMapDescriptor();
 
     if(InitError)
     {
@@ -52,19 +53,6 @@ bool CSFMLRenderLevel()
     // Set Default View
     sfRenderWindow_setView(screen, sfRenderWindow_getDefaultView(screen));
 
-    /*// Render MiniMap
-    // Set View
-    sfRenderWindow_setView(screen, Level.BG_Minimap);
-
-    // Render
-    if(shader_enabled)
-        sfRenderWindow_drawSprite(screen, Level.BG_Sprite, &Level.BG_Texture_State);
-    else
-        sfRenderWindow_drawSprite(screen, Level.BG_Sprite, NULL);
-
-    // Set Default View
-    sfRenderWindow_setView(screen, sfRenderWindow_getDefaultView(screen));*/
-
     return true;
 }
 
@@ -82,18 +70,20 @@ void CSFMLQuitLevel()
     sfShader_destroy(Level.BG_Texture_Shader);
     sfSprite_destroy(Level.BG_Sprite);
     sfView_destroy(Level.BG_View);
-    sfView_destroy(Level.BG_Minimap);
     Level.BG_Texture_Diffuse = NULL;
     Level.BG_Texture_Normal = NULL;
     Level.BG_Texture_Specular = NULL;
     Level.BG_Texture_Shader = NULL;
     Level.BG_Sprite = NULL;
     Level.BG_View = NULL;
-    Level.BG_Minimap = NULL;
 
     // Clear Event Stuff
     free(Level.EV_Map);
     Level.EV_Map = NULL;
+
+    // Clear Descirptor Stuff
+    free(Level.MD_Allowed_Items);
+    Level.MD_Allowed_Items = NULL;
 
     // Reset general things
     Level.Is_Init = false;
@@ -101,6 +91,70 @@ void CSFMLQuitLevel()
     Level.EV_Is_Init = false;
     Level.Is_Loaded = false;
     Level.TL_Is_Init = false;
+}
+
+// Loading MapDescriptor
+bool CSFMLLoadMapDescriptor()
+{
+    if(!Level.Is_Init || !Level.BG_Is_Init || !Level.TL_Is_Init || !Level.EV_Is_Init)
+        return false;
+
+    // Define Path
+    char CompletePath_MapDescriptor[100] = {0};
+    strcat(CompletePath_MapDescriptor, Level.Level_Path);
+    strcat(CompletePath_MapDescriptor, "MapDescriptor.DAT");
+
+    // Load Data
+    FILE *Mapdesc = fopen(CompletePath_MapDescriptor, "rb");
+
+    if(Mapdesc == NULL)
+    {
+        printf("Game Subsystem Fehler 'GameTilemap': Kann Mapdescriptor nicht laden!\n");
+        return false;
+    }
+
+    // Get Event Entrys
+    long file_size = 0;
+    size_t entrys;
+
+    fseek(Mapdesc, 0L, SEEK_END);
+    file_size = ftell(Mapdesc);
+    entrys = (size_t)file_size / sizeof(MapDescriptor);
+
+    if(entrys <= 0)
+    {
+        printf("Game Subsystem Fehler 'GameTilemap': Keine Descriptoren hinterlegt!\n");
+        return false;
+    }
+    else
+    {
+        rewind(Mapdesc);
+
+        Level.MD_Allowed_Items = malloc(entrys * sizeof(MapDescriptor));
+
+        if(Level.MD_Allowed_Items == NULL)
+        {
+            printf("Game Subsystem Fehler 'GameTilemap': Kann Speicher fuer Descriptoren nicht anlegen!\n");
+            return false;
+        }
+
+        if(fread(Level.MD_Allowed_Items, sizeof(MapDescriptor), entrys, Mapdesc) != entrys)
+        {
+            printf("Game Subsystem Fehler 'GameTilemap': Fehler beim Auslesen der Descriptoren!\n");
+            return false;
+        }
+
+        Level.MD_Count = entrys;
+    }
+
+    // Setting up general things
+    Level.MD_Is_Init = true;
+
+    // Cleanup things
+    fclose(Mapdesc);
+    Mapdesc = NULL;
+
+    return true;
 }
 
 // Loading Eventmap
@@ -132,7 +186,7 @@ bool CSFMLLoadEventmap()
     entrys = (size_t)file_size / sizeof(Event);
 
     // Get Events to structure
-    if(entrys == 0)
+    if(entrys <= 0)
     {
         printf("Game Subsystem Warning 'GameTilemap': Keine Events in der Datei!\n");
         Level.EV_Count = 0;
@@ -267,9 +321,8 @@ bool CSFMLLoadBackground()
     Level.BG_Texture_Shader = sfShader_createFromFile(NULL, NULL, CompletePath_Shader);
     Level.BG_Sprite = sfSprite_create();
     Level.BG_View = sfView_create();
-    Level.BG_Minimap = sfView_create();
 
-    if(Level.BG_Texture_Diffuse == NULL || Level.BG_Texture_Normal == NULL || Level.BG_Texture_Specular == NULL || Level.BG_Texture_Shader == NULL || Level.BG_Sprite == NULL || Level.BG_View == NULL || Level.BG_Minimap == NULL)
+    if(Level.BG_Texture_Diffuse == NULL || Level.BG_Texture_Normal == NULL || Level.BG_Texture_Specular == NULL || Level.BG_Texture_Shader == NULL || Level.BG_Sprite == NULL || Level.BG_View == NULL)
     {
         printf("Game Subsystem Fehler 'GameTilemap': Dateien zu BG konnte nicht geladen werden!\n");
         return false;
@@ -291,12 +344,6 @@ bool CSFMLLoadBackground()
     View_Rect.left = 14.0f;
     View_Rect.top = 214.0f;
     sfView_reset(Level.BG_View, View_Rect);
-    Minimap_Rect.width = 200.0f;
-    Minimap_Rect.height = 200.0f;
-    Minimap_Rect.left = 420.0f;
-    Minimap_Rect.top = 120.0f;
-    sfView_reset(Level.BG_Minimap, Minimap_Rect);
-    sfView_zoom(Level.BG_Minimap, 10.0f);
 
     // Setup Target Views
     sfFloatRect Rec, Rec2;
@@ -305,11 +352,6 @@ bool CSFMLLoadBackground()
     Rec.left = View_Rect.left / SCREEN_WIDTH;
     Rec.top = View_Rect.top / SCREEN_HEIGHT;
     sfView_setViewport(Level.BG_View, Rec);
-    Rec2.width = Minimap_Rect.width / SCREEN_WIDTH;
-    Rec2.height = Minimap_Rect.height / SCREEN_HEIGHT;
-    Rec2.left = Minimap_Rect.left / SCREEN_WIDTH;
-    Rec2.top = Minimap_Rect.top / SCREEN_HEIGHT;
-    sfView_setViewport(Level.BG_Minimap, Rec2);
 
     // Setting up general things
     sfVector2f Position = {14, 214};

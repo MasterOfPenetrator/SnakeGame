@@ -8,9 +8,9 @@
 // Defines
 #define SNAKE_START_BLOCKS 5
 #define SNAKE_PICTURE_SIZE 25
-#define SNAKE_BORDERHIT_DMG_1 15
-#define SNAKE_BORDERHIT_DMG_2 25
-#define SNAKE_BORDERHIT_DMG_3 35
+#define SNAKE_BORDERHIT_DMG_1 15 // Todo Get from LevelData File
+#define SNAKE_BORDERHIT_DMG_2 25 // "
+#define SNAKE_BORDERHIT_DMG_3 35 // "
 #define SNAKE_SELFHIT_DMG 45
 #define SNAKE_SCORE_PER_SECOND 1
 
@@ -46,6 +46,7 @@ typedef struct
     int S_Score;
 
     float S_Speed;
+    float S_DefaultSpeed;
     float S_LightDistance;
     bool S_Light_FBM;
     bool S_Light_OnOff;
@@ -58,6 +59,8 @@ typedef struct
 
     bool S_GODMODE;
     bool S_NOCLIP;
+
+    float S_EndItemTime;
 
 } Snake;
 
@@ -72,6 +75,7 @@ sfVector2f CSFMLSnakeConvertIndexToVector(Block blk);
 bool CSFMLPushSnakeBlock(Direction dir);
 bool CSFMLPopSnakeBlock();
 bool CSFMLSetSnakeLight();
+bool CSFMLGrowSnake();
 bool CSFMLCheckTileMapCollision();
 bool CSFMLCheckSelfCollision();
 bool CSFMLHandleSnake();

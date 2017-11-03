@@ -9,15 +9,19 @@
 typedef enum { I_HEALTH, I_SCORE, I_SPEED, I_GOD, I_CLIP } ItemEffect;
 typedef enum { I_INCREASE, I_DECREASE, I_NOTHING } ItemDirection;
 
-
 // Structs
-typedef struct
-{
+typedef struct {
     float x;
     float y;
     float w;
     float h;
 } iBlock;
+
+typedef struct {
+    ItemType Type;
+    size_t Actual_Count;
+    size_t Max_Count;
+} AllowedItems;
 
 typedef struct {
     ItemEffect I_Effect;
@@ -40,6 +44,7 @@ typedef struct {
 typedef struct {
     sfTexture **GI_Textures;
     sfShader **GI_Shaders;
+    sfSprite *GI_Sprite;
     sfRenderStates *GI_States;
 
     Item *GI_Items;
@@ -48,6 +53,9 @@ typedef struct {
     iBlock *GI_Blocks;
     bool *GI_Placed;
     bool *GI_Coordinates_Setted;
+
+    AllowedItems *GI_AllowedItems;
+    size_t GI_AllowedItems_Count;
 
     bool GI_Is_Init;
 
@@ -61,8 +69,13 @@ bool CSFMLInitItems();
 void CSFMLQuitItems();
 void CSFMLPlaceItems();
 void CSFMLSetCoordinatesItems();
-sfVector2f CSFMLItemConvertIndexToVector(iBlock blk);
+void CSFMLRenderItems();
 void CSFMLHandleItems();
 
+// Intern Functions
+sfVector2f CSFMLItemConvertIndexToVector(iBlock blk);
+ItemType CSFMLGetItemType(Item Current);
+bool CSFMLIncreaseItemCount(size_t ItemIndex);
+void CSFMLDecreaseItemCount(size_t ItemIndex);
 
-#endif /* CSFMLGameSnake_H */
+#endif /* CSFMLGameItems_H */

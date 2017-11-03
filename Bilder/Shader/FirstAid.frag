@@ -23,8 +23,8 @@ float FBM(float x)
 	for(int i = 0; i<10; i++)
     {
         Value += Noise(x * Frequency) * Amplitude;
-        Frequency *= 1.5f;
-        Amplitude *= 0.5f;
+        Frequency *= 1.25f;
+        Amplitude *= 0.3f;
     }
 
     return Value;
@@ -33,5 +33,5 @@ float FBM(float x)
 // Main Function
 void main()
 {
-    gl_FragColor = texture2D(Texture, gl_TexCoord[0].xy);
+    gl_FragColor = texture2D(Texture, gl_TexCoord[0].xy) * FBM(Time);
 }
