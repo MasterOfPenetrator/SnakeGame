@@ -14,7 +14,7 @@ bool CSFMLInit()
     }
 
     // FPS Timer und Font initialisieren
-    clock = sfClock_create();
+    clck = sfClock_create();
     if(clock == NULL)
     {
         printf("Video Subsystem Fehler: Kann FPS Timer nicht initialisieren.\n");
@@ -264,8 +264,8 @@ void CSFMLQuit()
     media.buttons = NULL;
 
     // Allgemein
-    sfClock_destroy(clock);
-    clock = NULL;
+    sfClock_destroy(clck);
+    clck = NULL;
     sfFont_destroy(fps_font);
     fps_font = NULL;
     sfText_destroy(fps_text);
@@ -288,7 +288,7 @@ void CSFMLShowFPS()
     sfVector2f position = {20, 163};
     sfColor color = {233, 77, 0, 255};
 
-    actualtime = sfClock_getElapsedTime(clock);
+    actualtime = sfClock_getElapsedTime(clck);
     FPS = 1000000.f/(actualtime.microseconds - lasttime.microseconds);
     lasttime = actualtime;
 

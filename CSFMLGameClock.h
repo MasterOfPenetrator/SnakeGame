@@ -10,8 +10,8 @@ typedef struct {
     sfClock *GC_Clock;
     sfTime GC_Actual_Time;
     sfTime GC_Last_Time;
-    bool GC_SnakeTick;
-    bool GC_SecondTick;
+    volatile bool GC_SnakeTick;
+    volatile bool GC_SecondTick;
     float GC_DeltaTime;
     float GC_SnakeTime;
     float GC_SecondTime;

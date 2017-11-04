@@ -2,6 +2,9 @@
 
 #define CSFMLGameMain_H
 
+// Enums
+typedef enum { IT_HEALTH, IT_SPEED, IT_FOOD, IT_GOD, IT_NOCLIP, IT_CUSTOM } ItemType;
+
 // Includes
 #include "CSFMLMenu.h"
 #include "CSFMLGameTilemap.h"
@@ -9,6 +12,7 @@
 #include "CSFMLGameClock.h"
 #include "CSFMLGameSnake.h"
 #include "CSFMLGameItems.h"
+
 
 // Structs
 typedef struct {

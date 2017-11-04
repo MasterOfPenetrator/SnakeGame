@@ -82,8 +82,8 @@ void CSFMLQuitLevel()
     Level.EV_Map = NULL;
 
     // Clear Descirptor Stuff
-    free(Level.MD_Allowed_Items);
-    Level.MD_Allowed_Items = NULL;
+    //free(Level.MD_Allowed_Items);
+    //Level.MD_Allowed_Items = NULL;
 
     // Reset general things
     Level.Is_Init = false;
@@ -113,39 +113,13 @@ bool CSFMLLoadMapDescriptor()
         return false;
     }
 
-    // Get Event Entrys
-    long file_size = 0;
-    size_t entrys;
-
-    fseek(Mapdesc, 0L, SEEK_END);
-    file_size = ftell(Mapdesc);
-    entrys = (size_t)file_size / sizeof(MapDescriptor);
-
-    if(entrys <= 0)
+    if(fread(&Level.MD_Details, sizeof(MapDescriptor), 1, Mapdesc) != 1)
     {
-        printf("Game Subsystem Fehler 'GameTilemap': Keine Descriptoren hinterlegt!\n");
+        printf("Game Subsystem Fehler 'GameTilemap': Kann keine Daten aus Mapdescriptor lesen!\n");
         return false;
     }
-    else
-    {
-        rewind(Mapdesc);
 
-        Level.MD_Allowed_Items = malloc(entrys * sizeof(MapDescriptor));
-
-        if(Level.MD_Allowed_Items == NULL)
-        {
-            printf("Game Subsystem Fehler 'GameTilemap': Kann Speicher fuer Descriptoren nicht anlegen!\n");
-            return false;
-        }
-
-        if(fread(Level.MD_Allowed_Items, sizeof(MapDescriptor), entrys, Mapdesc) != entrys)
-        {
-            printf("Game Subsystem Fehler 'GameTilemap': Fehler beim Auslesen der Descriptoren!\n");
-            return false;
-        }
-
-        Level.MD_Count = entrys;
-    }
+    printf("Mapname: %s\n", Level.MD_Details.MapName);
 
     // Setting up general things
     Level.MD_Is_Init = true;
@@ -338,7 +312,7 @@ bool CSFMLLoadBackground()
     Level.BG_Texture_State.transform = sfTransform_Identity;
 
     // Setup Views
-    sfFloatRect View_Rect, Minimap_Rect;
+    sfFloatRect View_Rect;
     View_Rect.width = 572.0f;
     View_Rect.height = 472.0f;
     View_Rect.left = 14.0f;
@@ -346,7 +320,7 @@ bool CSFMLLoadBackground()
     sfView_reset(Level.BG_View, View_Rect);
 
     // Setup Target Views
-    sfFloatRect Rec, Rec2;
+    sfFloatRect Rec;
     Rec.width = View_Rect.width / SCREEN_WIDTH;
     Rec.height = View_Rect.height / SCREEN_HEIGHT;
     Rec.left = View_Rect.left / SCREEN_WIDTH;

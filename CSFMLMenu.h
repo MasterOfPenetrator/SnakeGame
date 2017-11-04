@@ -9,6 +9,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <math.h>
+#include <time.h>
 #include <SFML/Audio.h>
 #include <SFML/Graphics.h>
 #include <SFML/Window.h>
@@ -134,7 +135,7 @@ sfEvent EventLoop;
 // FPS Variablen
 sfTime actualtime;
 sfTime lasttime;
-sfClock *clock;
+sfClock *clck;
 float FPS;
 sfFont *fps_font;
 sfText *fps_text;

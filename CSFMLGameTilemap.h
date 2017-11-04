@@ -9,9 +9,6 @@
 #define MAX_TILES_X 20
 #define MAX_TILES_Y 20
 
-// Enums
-typedef enum { IT_HEALTH, IT_SPEED, IT_FOOD, IT_GOD, IT_NOCLIP, IT_CUSTOM } ItemType;
-
 // Structs
 typedef struct {
     sfVector2f Position;
@@ -21,6 +18,18 @@ typedef struct {
 typedef struct {
     ItemType Type;
     size_t Count;
+} MapAllowedItems;
+
+typedef struct {
+    int Type;
+    int Damage;
+} MapDMGTypes;
+
+typedef struct {
+    const char MapName[20];
+    int Score_per_Second;
+    MapDMGTypes DMG[3];
+    MapAllowedItems ItemsAllowed[6];
 } MapDescriptor;
 
 typedef struct {
@@ -61,8 +70,7 @@ typedef struct {
     bool EV_Is_Init;
 
     // Map Descriptor
-    MapDescriptor *MD_Allowed_Items;
-    size_t MD_Count;
+    MapDescriptor MD_Details;
     bool MD_Is_Init;
 
 } GameLevel;

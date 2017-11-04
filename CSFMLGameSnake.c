@@ -53,9 +53,11 @@ bool CSFMLInitSnake()
     {
         GameSnake.SB_Body[i].w = SNAKE_PICTURE_SIZE;
         GameSnake.SB_Body[i].h = SNAKE_PICTURE_SIZE;
-        GameSnake.SB_Body[i].x = GameSnake.SB_Head.x - (((float)i/2)+0.5f);
+        GameSnake.SB_Body[i].x = GameSnake.SB_Head.x - (((float)i*(float)SNAKE_PICTURE_SIZE/Level.TL_X_Size)+(float)SNAKE_PICTURE_SIZE/Level.TL_X_Size);
         GameSnake.SB_Body[i].y = GameSnake.SB_Head.y;
     }
+
+    GameSnake.SB_Body_Elements = SNAKE_START_BLOCKS;
 
     // Setup general things
     strcpy(GameSnake.S_Name, "Youre Cool!");
@@ -64,7 +66,6 @@ bool CSFMLInitSnake()
     GameSnake.S_Speed = 2.0f;
     GameSnake.S_DefaultSpeed = 2.0f;
     GameSnake.S_EndItemTime = 0.0f;
-    GameSnake.SB_Body_Elements = SNAKE_START_BLOCKS;
     GameSnake.S_Actual_Direction = NONE;
     GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
     GameSnake.S_Rotate = 0;
@@ -185,7 +186,12 @@ bool CSFMLPopSnakeBlock()
     // Move Blocks down
     size_t i;
     for(i = GameSnake.SB_Body_Elements; i>0; i--)
-        GameSnake.SB_Body[i] = GameSnake.SB_Body[i-1];
+    {
+        GameSnake.SB_Body[i].x = GameSnake.SB_Body[i-1].x;
+        GameSnake.SB_Body[i].y = GameSnake.SB_Body[i-1].y;
+        GameSnake.SB_Body[i].w = GameSnake.SB_Body[i-1].w;
+        GameSnake.SB_Body[i].h = GameSnake.SB_Body[i-1].h;
+    }
 
     // Set First Element to last Head Block Element
     GameSnake.SB_Body[0].x = GameSnake.SB_Head.x;
@@ -197,7 +203,47 @@ bool CSFMLPopSnakeBlock()
 // Lets grow the fucking Snake..
 bool CSFMLGrowSnake()
 {
+    GameSnake.SB_Body = realloc(GameSnake.SB_Body, (GameSnake.SB_Body_Elements+1) * sizeof(Block));
 
+    if(GameSnake.SB_Body == NULL)
+    {
+        printf("Game Subsystem Fehler 'GameSnake': Kann keinen zusaetzlichen Speicher fuer die Snake anfordern!\n");
+        perror("Genauer Fehler: ");
+        return false;
+    }
+    else
+    {
+        GameSnake.SB_Body[GameSnake.SB_Body_Elements].w = SNAKE_PICTURE_SIZE;
+        GameSnake.SB_Body[GameSnake.SB_Body_Elements].h = SNAKE_PICTURE_SIZE;
+
+        // Check Direction and Setup the new Block
+        // And Check if the New Blocks maybe in Tilemap Border or Item
+        if(GameSnake.S_Actual_Direction == UP)
+        {
+            GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x;
+            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y + (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        }
+        else if(GameSnake.S_Actual_Direction == DOWN)
+        {
+            GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x;
+            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-2].y - (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        }
+        else if(GameSnake.S_Actual_Direction == RIGHT)
+        {
+            GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x - (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y;
+        }
+        else if(GameSnake.S_Actual_Direction == LEFT)
+        {
+            GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x + (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y;
+        }
+
+    }
+
+    GameSnake.SB_Body_Elements++;
+
+    return true;
 }
 
 // Set Snake Light
@@ -287,32 +333,18 @@ bool CSFMLCheckTileMapCollision()
 
     // Degenerate Health and Change Direction
     bool Snake_Hit = false;
-    if(Level.TL_Map[New_Y][New_X] == 1)
+    int p;
+    for(p = 0; p<3; p++)
     {
-        // Do DMG
-        if(!GameSnake.S_GODMODE)
-            GameSnake.S_Health -= SNAKE_BORDERHIT_DMG_1;
+        if(Level.TL_Map[New_Y][New_X] == Level.MD_Details.DMG[p].Type)
+        {
+            // Do DMG
+            if(!GameSnake.S_GODMODE)
+                GameSnake.S_Health -= Level.MD_Details.DMG[p].Damage;
 
-        // Change Direction
-        Snake_Hit = true;
-    }
-    else if(Level.TL_Map[New_Y][New_X] == 2)
-    {
-        // Do DMG
-        if(!GameSnake.S_GODMODE)
-            GameSnake.S_Health -= SNAKE_BORDERHIT_DMG_2;
-
-        // Change Direction
-        Snake_Hit = true;
-    }
-    else if(Level.TL_Map[New_Y][New_X] == 3)
-    {
-        // Do DMG
-        if(!GameSnake.S_GODMODE)
-            GameSnake.S_Health -= SNAKE_BORDERHIT_DMG_3;
-
-        // Change Direction
-        Snake_Hit = true;
+            // Change Direction
+            Snake_Hit = true;
+        }
     }
 
     // Process Snake Health

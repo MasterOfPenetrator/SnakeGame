@@ -134,7 +134,7 @@ bool CSFMLInitItems()
     dir = NULL;
 
     // Set Memory to Allowed Items here
-    GameItem.GI_AllowedItems = malloc(Level.MD_Count * sizeof(AllowedItems));
+    GameItem.GI_AllowedItems = malloc(6 * sizeof(AllowedItems));
 
     if(GameItem.GI_AllowedItems == NULL)
     {
@@ -143,17 +143,20 @@ bool CSFMLInitItems()
     }
 
     size_t i;
-    for(i = 0; i<Level.MD_Count; i++)
+    for(i = 0; i<6; i++)
     {
-        GameItem.GI_AllowedItems[i].Type = Level.MD_Allowed_Items[i].Type;
+        GameItem.GI_AllowedItems[i].Type = Level.MD_Details.ItemsAllowed[i].Type;
         GameItem.GI_AllowedItems[i].Actual_Count = 0;
-        GameItem.GI_AllowedItems[i].Max_Count = Level.MD_Allowed_Items[i].Count;
+        GameItem.GI_AllowedItems[i].Max_Count = Level.MD_Details.ItemsAllowed[i].Count;
     }
 
     // Setup general things
     GameItem.GI_Is_Init = true;
-    GameItem.GI_AllowedItems_Count = Level.MD_Count;
-    srand(time(NULL));
+    GameItem.GI_AllowedItems_Count = 6;
+
+    // Init Random Number Generator
+    time_t t;
+    srand((unsigned) time(&t));
 
     return true;
 }
@@ -212,6 +215,7 @@ bool CSFMLIncreaseItemCount(size_t ItemIndex)
 
     // Find ItemType in Allowed Items
     size_t i;
+    bool Result = false;
     for(i = 0; i<GameItem.GI_AllowedItems_Count; i++)
     {
         if(GameItem.GI_AllowedItems[i].Type == actualtype)
@@ -219,10 +223,16 @@ bool CSFMLIncreaseItemCount(size_t ItemIndex)
             if(GameItem.GI_AllowedItems[i].Actual_Count < GameItem.GI_AllowedItems[i].Max_Count)
             {
                 GameItem.GI_AllowedItems[i].Actual_Count++;
-                return true;
+                Result = true;
+            }
+            else
+            {
+                Result = false;
             }
         }
     }
+
+    return Result;
 }
 
 void CSFMLDecreaseItemCount(size_t ItemIndex)
@@ -256,7 +266,6 @@ void CSFMLSetPlaceItems()
         if(!GameItem.GI_Placed[i] && (GameItem.GI_Items[i].I_Chance > 0))
         {
             // Need it to Place ? Calculate it, with the Chance
-            bool Place_It = false;
             int random = rand() % 100 + 1;
 
             if((random > 0) && (random <= GameItem.GI_Items[i].I_Chance) && (CSFMLIncreaseItemCount(i)))

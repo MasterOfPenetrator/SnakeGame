@@ -140,5 +140,5 @@ void CSFMLGameShowHealth()
 void CSFMLGameUpdateTimeSnakeScore()
 {
     if(GameClock.GC_SecondTick && GameSnake.S_Is_Init && !GameSnake.S_Is_Dead)
-        GameSnake.S_Score += SNAKE_SCORE_PER_SECOND;
+        GameSnake.S_Score += Level.MD_Details.Score_per_Second;
 }
