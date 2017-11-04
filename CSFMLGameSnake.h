@@ -14,16 +14,14 @@
 typedef enum { LEFT, RIGHT, UP, DOWN, NONE } Direction;
 
 // Structs
-typedef struct
-{
+typedef struct {
     float x;
     float y;
     float w;
     float h;
 } Block;
 
-typedef struct
-{
+typedef struct {
     Block SB_Head;
     Block *SB_Body;
 

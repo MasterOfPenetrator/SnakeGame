@@ -15,7 +15,7 @@ bool CSFMLInit()
 
     // FPS Timer und Font initialisieren
     clck = sfClock_create();
-    if(clock == NULL)
+    if(clck == NULL)
     {
         printf("Video Subsystem Fehler: Kann FPS Timer nicht initialisieren.\n");
         return false;

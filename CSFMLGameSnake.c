@@ -213,6 +213,11 @@ bool CSFMLGrowSnake()
     }
     else
     {
+        size_t i;
+        for(i = 0; i<=GameSnake.SB_Body_Elements; i++)
+        {
+            printf("Address of Pointer[%d]: %p\n", i, GameSnake.SB_Body[i]);
+        }
         GameSnake.SB_Body[GameSnake.SB_Body_Elements].w = SNAKE_PICTURE_SIZE;
         GameSnake.SB_Body[GameSnake.SB_Body_Elements].h = SNAKE_PICTURE_SIZE;
 
@@ -221,12 +226,12 @@ bool CSFMLGrowSnake()
         if(GameSnake.S_Actual_Direction == UP)
         {
             GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x;
-            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y + (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y + (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
         }
         else if(GameSnake.S_Actual_Direction == DOWN)
         {
             GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x;
-            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-2].y - (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y - (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
         }
         else if(GameSnake.S_Actual_Direction == RIGHT)
         {
@@ -304,6 +309,7 @@ bool CSFMLCheckTileMapCollision()
     Direction dir = GameSnake.S_Actual_Direction;
     float fNew_X = GameSnake.SB_Head.x;
     float fNew_Y = GameSnake.SB_Head.y;
+    int p;
 
     if(dir == UP)
     {
@@ -333,7 +339,6 @@ bool CSFMLCheckTileMapCollision()
 
     // Degenerate Health and Change Direction
     bool Snake_Hit = false;
-    int p;
     for(p = 0; p<3; p++)
     {
         if(Level.TL_Map[New_Y][New_X] == Level.MD_Details.DMG[p].Type)
@@ -386,8 +391,9 @@ bool CSFMLCheckTileMapCollision()
             if(!(New_X-1 <= 0))
             {
                 // Now Check Tile Map for Left
-                if(Level.TL_Map[New_Y][New_X-1] == 1 || Level.TL_Map[New_Y][New_X-1] == 2 || Level.TL_Map[New_Y][New_X-1] == 3)
-                    Left = false;
+                for(p = 0; p<3; p++)
+                    if(Level.TL_Map[New_Y][New_X-1] == Level.MD_Details.DMG[p].Type)
+                        Left = false;
             }
             else
             {
@@ -398,8 +404,9 @@ bool CSFMLCheckTileMapCollision()
             if(!(New_X+1 >= MAX_TILES_X))
             {
                 // Now Check Tile Map for Right
-                if(Level.TL_Map[New_Y][New_X+1] == 1 || Level.TL_Map[New_Y][New_X+1] == 2 || Level.TL_Map[New_Y][New_X+1] == 3)
-                    Right = false;
+                for(p = 0; p<3; p++)
+                    if(Level.TL_Map[New_Y][New_X+1] == Level.MD_Details.DMG[p].Type)
+                        Right = false;
             }
             else
             {
@@ -443,8 +450,9 @@ bool CSFMLCheckTileMapCollision()
             if(!(New_Y+1 >= MAX_TILES_Y))
             {
                 // Now Check Tile Map for Down
-                if(Level.TL_Map[New_Y+1][New_X] == 1 || Level.TL_Map[New_Y+1][New_X] == 2 || Level.TL_Map[New_Y+1][New_X] == 3)
-                    Down = false;
+                for(p = 0; p<3; p++)
+                    if(Level.TL_Map[New_Y+1][New_X] == Level.MD_Details.DMG[p].Type)
+                        Down = false;
             }
             else
             {
@@ -455,8 +463,9 @@ bool CSFMLCheckTileMapCollision()
             if(!(New_Y-1 <= 0))
             {
                 // Now Check Tile Map for Up
-                if(Level.TL_Map[New_Y-1][New_X] == 1 || Level.TL_Map[New_Y-1][New_X] == 2 || Level.TL_Map[New_Y-1][New_X] == 3)
-                    Up = false;
+                for(p = 0; p<3; p++)
+                    if(Level.TL_Map[New_Y-1][New_X] == Level.MD_Details.DMG[p].Type)
+                        Up = false;
             }
             else
             {
@@ -506,6 +515,7 @@ bool CSFMLCheckSelfCollision()
     Direction dir = GameSnake.S_Actual_Direction;
     float fNew_X = GameSnake.SB_Head.x;
     float fNew_Y = GameSnake.SB_Head.y;
+    int p;
 
     if(dir == UP)
     {
@@ -581,8 +591,9 @@ bool CSFMLCheckSelfCollision()
             if(!(New_X-1 <= 0))
             {
                 // Now Check Tile Map for Left
-                if(Level.TL_Map[New_Y][New_X-1] == 1 || Level.TL_Map[New_Y][New_X-1] == 2 || Level.TL_Map[New_Y][New_X-1] == 3)
-                    Left = false;
+                for(p = 0; p<3; p++)
+                    if(Level.TL_Map[New_Y][New_X-1] == Level.MD_Details.DMG[p].Type)
+                        Left = false;
             }
             else
             {
@@ -593,8 +604,9 @@ bool CSFMLCheckSelfCollision()
             if(!(New_X+1 >= MAX_TILES_X))
             {
                 // Now Check Tile Map for Right
-                if(Level.TL_Map[New_Y][New_X+1] == 1 || Level.TL_Map[New_Y][New_X+1] == 2 || Level.TL_Map[New_Y][New_X+1] == 3)
-                    Right = false;
+                for(p = 0; p<3; p++)
+                    if(Level.TL_Map[New_Y][New_X+1] == Level.MD_Details.DMG[p].Type)
+                        Right = false;
             }
             else
             {
@@ -658,8 +670,9 @@ bool CSFMLCheckSelfCollision()
             if(!(New_Y+1 >= MAX_TILES_Y))
             {
                 // Now Check Tile Map for Down
-                if(Level.TL_Map[New_Y+1][New_X] == 1 || Level.TL_Map[New_Y+1][New_X] == 2 || Level.TL_Map[New_Y+1][New_X] == 3)
-                    Down = false;
+                for(p = 0; p<3; p++)
+                    if(Level.TL_Map[New_Y+1][New_X] == Level.MD_Details.DMG[p].Type)
+                        Down = false;
             }
             else
             {
@@ -671,8 +684,9 @@ bool CSFMLCheckSelfCollision()
             if(!(New_Y-1 <= 0))
             {
                 // Now Check Tile Map for Up
-                if(Level.TL_Map[New_Y-1][New_X] == 1 || Level.TL_Map[New_Y-1][New_X] == 2 || Level.TL_Map[New_Y-1][New_X] == 3)
-                    Up = false;
+                for(p = 0; p<3; p++)
+                    if(Level.TL_Map[New_Y-1][New_X] == Level.MD_Details.DMG[p].Type)
+                        Up = false;
             }
             else
             {
