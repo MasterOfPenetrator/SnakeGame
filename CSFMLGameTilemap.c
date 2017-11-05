@@ -81,10 +81,6 @@ void CSFMLQuitLevel()
     free(Level.EV_Map);
     Level.EV_Map = NULL;
 
-    // Clear Descirptor Stuff
-    //free(Level.MD_Allowed_Items);
-    //Level.MD_Allowed_Items = NULL;
-
     // Reset general things
     Level.Is_Init = false;
     Level.BG_Is_Init = false;
@@ -118,8 +114,6 @@ bool CSFMLLoadMapDescriptor()
         printf("Game Subsystem Fehler 'GameTilemap': Kann keine Daten aus Mapdescriptor lesen!\n");
         return false;
     }
-
-    printf("Mapname: %s\n", Level.MD_Details.MapName);
 
     // Setting up general things
     Level.MD_Is_Init = true;

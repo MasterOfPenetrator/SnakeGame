@@ -302,8 +302,12 @@ void CSFMLSetCoordinatesItems()
     {
         if(GameItem.GI_Coordinates_Setted[i])
         {
-            if(((size_t)floor(GameItem.GI_Blocks[i].x)) == random_x && ((size_t)floor(GameItem.GI_Blocks[i].y)) == random_y)
+            size_t G_X = floor(GameItem.GI_Blocks[i].x);
+            size_t G_Y = floor(GameItem.GI_Blocks[i].y);
+            if(G_X == random_x && G_Y == random_y)
+            {
                 Hit = true;
+            }
         }
     }
 
@@ -473,12 +477,12 @@ void CSFMLHandleItems()
                         if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
                         {
                             GameSnake.S_EndItemTime += GameClock.GC_Time + GameItem.GI_Items[i].I_Propertys[s].I_Duration;
-                            GameSnake.S_Speed += GameItem.GI_Items[i].I_Propertys[s].I_Amount * 0.1f;
+                            GameSnake.S_Speed += GameItem.GI_Items[i].I_Propertys[s].I_Amount;
                         }
                         else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
                         {
                             GameSnake.S_EndItemTime += GameClock.GC_Time + GameItem.GI_Items[i].I_Propertys[s].I_Duration;
-                            GameSnake.S_Speed -= GameItem.GI_Items[i].I_Propertys[s].I_Amount * 0.1f;
+                            GameSnake.S_Speed -= GameItem.GI_Items[i].I_Propertys[s].I_Amount;
                         }
                     }
                     else if(GameItem.GI_Items[i].I_Propertys[s].I_Effect == I_SCORE)

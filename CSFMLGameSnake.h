@@ -21,7 +21,7 @@ typedef struct {
     float h;
 } Block;
 
-typedef struct {
+typedef struct __attribute__((__packed__)) {
     Block SB_Head;
     Block *SB_Body;
 
@@ -33,7 +33,7 @@ typedef struct {
     sfRenderStates SB_Body_State;
 
     size_t SB_Body_Elements;
-    char S_Name[50];
+    char S_Name[20];
 
     int S_Health;
     int S_Rotate;

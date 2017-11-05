@@ -60,6 +60,7 @@ bool CSFMLInitSnake()
     GameSnake.SB_Body_Elements = SNAKE_START_BLOCKS;
 
     // Setup general things
+    GameSnake.S_Name[0] = 0;
     strcpy(GameSnake.S_Name, "Youre Cool!");
     GameSnake.S_Health = 100;
     GameSnake.S_Score = 0;
@@ -185,7 +186,7 @@ bool CSFMLPopSnakeBlock()
 
     // Move Blocks down
     size_t i;
-    for(i = GameSnake.SB_Body_Elements; i>0; i--)
+    for(i = GameSnake.SB_Body_Elements-1; i>0; i--)
     {
         GameSnake.SB_Body[i].x = GameSnake.SB_Body[i-1].x;
         GameSnake.SB_Body[i].y = GameSnake.SB_Body[i-1].y;
@@ -208,16 +209,15 @@ bool CSFMLGrowSnake()
     if(GameSnake.SB_Body == NULL)
     {
         printf("Game Subsystem Fehler 'GameSnake': Kann keinen zusaetzlichen Speicher fuer die Snake anfordern!\n");
-        perror("Genauer Fehler: ");
         return false;
     }
     else
     {
-        size_t i;
-        for(i = 0; i<=GameSnake.SB_Body_Elements; i++)
-        {
-            printf("Address of Pointer[%d]: %p\n", i, GameSnake.SB_Body[i]);
-        }
+        float fBody_X = 0.0f, fBody_Y = 0.0f;
+        bool Hit = false;
+        bool Ignore_Hit = false;
+        int p;
+        int loop_counter = 0;
         GameSnake.SB_Body[GameSnake.SB_Body_Elements].w = SNAKE_PICTURE_SIZE;
         GameSnake.SB_Body[GameSnake.SB_Body_Elements].h = SNAKE_PICTURE_SIZE;
 
@@ -225,24 +225,160 @@ bool CSFMLGrowSnake()
         // And Check if the New Blocks maybe in Tilemap Border or Item
         if(GameSnake.S_Actual_Direction == UP)
         {
-            GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x;
-            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y + (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+            fBody_X = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x;
+            fBody_Y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y + (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
         }
         else if(GameSnake.S_Actual_Direction == DOWN)
         {
-            GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x;
-            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y - (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+            fBody_X = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x;
+            fBody_Y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y - (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
         }
         else if(GameSnake.S_Actual_Direction == RIGHT)
         {
-            GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x - (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
-            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y;
+            fBody_X = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x - (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+            fBody_Y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y;
         }
         else if(GameSnake.S_Actual_Direction == LEFT)
         {
-            GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x + (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
-            GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y;
+            fBody_X = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x + (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+            fBody_Y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y;
         }
+
+        // Check for Spawning Block into Tilemap borders
+        do {
+            // Get Indices
+            size_t Body_X = floor(fBody_X);
+            size_t Body_Y = floor(fBody_Y);
+
+            // Reset Hit
+            Hit = false;
+
+            // Check for Tilemap Collide
+            for(p = 0; p<3; p++)
+                if(Level.TL_Map[Body_Y][Body_X] == Level.MD_Details.DMG[p].Type)
+                    Hit = true;
+
+            // When Hit is True, move Coordinates and Check again
+            if(Hit)
+            {
+                // Replace Block Left or Right -> Depend on Loops Counter
+                if(GameSnake.S_Actual_Direction == UP)
+                {
+                    // Set new Position Right instead of Down
+                    if(loop_counter == 0)
+                    {
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Right
+                        fBody_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Reset Y
+                    }
+                    // Second Try Left instead of Down, no need for Reset Y
+                    else if(loop_counter == 1)
+                    {
+                        fBody_X -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // Left
+                    }
+                    // Third Try?, so the Block must Spawn in the Border! No reason to set Snake dead or something
+                    else
+                    {
+                        printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
+
+                        // Set Origin!
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+
+                        // Activate Ignore Hit
+                        Ignore_Hit = true;
+                    }
+                }
+                // Replace Block Left or Right -> Depend on Loops Counter
+                else if(GameSnake.S_Actual_Direction == DOWN)
+                {
+                    // Set new Position Right instead of UP
+                    if(loop_counter == 0)
+                    {
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Right
+                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Reset Y
+                    }
+                    // Second Try Left instead of Down, no need for Reset Y
+                    else if(loop_counter == 1)
+                    {
+                        fBody_X -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // Left
+                    }
+                    // Third Try?, so the Block must Spawn in the Border! No reason to set Snake dead or something
+                    else
+                    {
+                        printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
+
+                        // Set Origin!
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+
+                        // Activate Ignore Hit
+                        Ignore_Hit = true;
+                    }
+                }
+                // Replace Block UP or DOWN -> Depend on Loops Counter
+                else if(GameSnake.S_Actual_Direction == LEFT)
+                {
+                    // Set new Position UP instead of LEFT
+                    if(loop_counter == 0)
+                    {
+                        fBody_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Reset X
+                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // New Y
+                    }
+                    // Second Try Left instead of Down, no need for Reset Y
+                    else if(loop_counter == 1)
+                    {
+                        fBody_Y -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // New Y
+                    }
+                    // Third Try?, so the Block must Spawn in the Border! No reason to set Snake dead or something
+                    else
+                    {
+                        printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
+
+                        // Set Origin!
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+
+                        // Activate Ignore Hit
+                        Ignore_Hit = true;
+                    }
+                }
+                // Replace Block UP or DOWN -> Depend on Loops Counter
+                else if(GameSnake.S_Actual_Direction == RIGHT)
+                {
+                    // Set new Position UP instead of LEFT
+                    if(loop_counter == 0)
+                    {
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Reset X
+                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // New Y
+                    }
+                    // Second Try Down instead of UP, no need for Reset Y
+                    else if(loop_counter == 1)
+                    {
+                        fBody_Y -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // New Y
+                    }
+                    // Third Try?, so the Block must Spawn in the Border! No reason to set Snake dead or something
+                    else
+                    {
+                        printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
+
+                        // Set Origin!
+                        fBody_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+
+                        // Activate Ignore Hit
+                        Ignore_Hit = true;
+                    }
+                }
+
+                loop_counter++;
+
+            }
+
+        } while(Hit && !Ignore_Hit); // If no Hit is detected move
+
+        // Move;
+        GameSnake.SB_Body[GameSnake.SB_Body_Elements].x = fBody_X;
+        GameSnake.SB_Body[GameSnake.SB_Body_Elements].y = fBody_Y;
 
     }
 
