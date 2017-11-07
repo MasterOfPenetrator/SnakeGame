@@ -27,9 +27,12 @@ typedef struct __attribute__((__packed__)) {
 
     sfTexture *SB_Head_Texture;
     sfShader *SB_Head_Shader;
+    sfSprite *SB_Head_Sprite;
     sfRenderStates SB_Head_State;
+
     sfTexture *SB_Body_Texture;
     sfShader *SB_Body_Shader;
+    sfSprite *SB_Body_Sprite;
     sfRenderStates SB_Body_State;
 
     size_t SB_Body_Elements;

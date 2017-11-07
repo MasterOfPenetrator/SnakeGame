@@ -7,33 +7,50 @@ bool CSFMLInitSnake()
     if(!GameClock.GC_Is_Init || !GameLight_Is_Init || !Level.Is_Loaded || !GameSnake.S_Name)
         return false;
 
-    // Init Textures, Shaders
+    // Init Textures, Sprites
     GameSnake.SB_Head_Texture = sfTexture_createFromFile("Bilder/Game/Tiles/Snake_Head.png", NULL);
     GameSnake.SB_Body_Texture = sfTexture_createFromFile("Bilder/Game/Tiles/Snake_Body.png", NULL);
-    GameSnake.SB_Head_Shader = sfShader_createFromFile(NULL, NULL, "Bilder/Shader/Snake_Head_Shader.frag");
-    GameSnake.SB_Body_Shader = sfShader_createFromFile(NULL, NULL, "Bilder/Shader/Snake_Body_Shader.frag");
+    GameSnake.SB_Head_Sprite = sfSprite_create();
+    GameSnake.SB_Body_Sprite = sfSprite_create();
 
-    if(GameSnake.SB_Head_Texture == NULL || GameSnake.SB_Head_Shader == NULL || GameSnake.SB_Body_Texture == NULL || GameSnake.SB_Body_Shader == NULL)
+    if(GameSnake.SB_Head_Texture == NULL ||GameSnake.SB_Body_Texture == NULL || GameSnake.SB_Head_Sprite == NULL || GameSnake.SB_Body_Sprite == NULL)
     {
-        printf("Game Subsystem Fehler 'GameSnake': Kann Snake Texturen oder Shader nicht laden!\n");
+        printf("Game Subsystem Fehler 'GameSnake': Kann Snake Texturen oder Sprite nicht laden!\n");
         return false;
     }
 
-    // Setup Snake Shaders
-    sfVector2f res = {sfTexture_getSize(GameSnake.SB_Head_Texture).x, sfTexture_getSize(GameSnake.SB_Head_Texture).y};
-    sfShader_setTextureUniform(GameSnake.SB_Head_Shader, "Head_Texture", GameSnake.SB_Head_Texture);
-    sfShader_setBoolUniform(GameSnake.SB_Head_Shader, "Head_Death", false);
-    sfShader_setVec2Uniform(GameSnake.SB_Head_Shader, "Head_Resolution", res);
-    sfShader_setTextureUniform(GameSnake.SB_Body_Shader, "Body_Texture", GameSnake.SB_Body_Texture);
-    sfShader_setBoolUniform(GameSnake.SB_Body_Shader, "Body_Death", false);
-    GameSnake.SB_Head_State.blendMode = sfBlendAlpha;
-    GameSnake.SB_Head_State.shader = GameSnake.SB_Head_Shader;
-    GameSnake.SB_Head_State.texture = GameSnake.SB_Head_Texture;
-    GameSnake.SB_Head_State.transform = sfTransform_Identity;
-    GameSnake.SB_Body_State.blendMode = sfBlendAlpha;
-    GameSnake.SB_Body_State.shader = GameSnake.SB_Body_Shader;
-    GameSnake.SB_Body_State.texture = GameSnake.SB_Body_Texture;
-    GameSnake.SB_Body_State.transform = sfTransform_Identity;
+    // Init Shader, if enabled
+    if(shader_enabled)
+    {
+        GameSnake.SB_Head_Shader = sfShader_createFromFile(NULL, NULL, "Bilder/Shader/Snake_Head_Shader.frag");
+        GameSnake.SB_Body_Shader = sfShader_createFromFile(NULL, NULL, "Bilder/Shader/Snake_Body_Shader.frag");
+
+        if(GameSnake.SB_Head_Shader == NULL || GameSnake.SB_Body_Shader == NULL)
+        {
+            printf("Game Subsystem Fehler 'GameSnake': Kann Snake Shader nicht laden!\n");
+            return false;
+        }
+
+        sfVector2f res = {sfTexture_getSize(GameSnake.SB_Head_Texture).x, sfTexture_getSize(GameSnake.SB_Head_Texture).y};
+        sfShader_setTextureUniform(GameSnake.SB_Head_Shader, "Head_Texture", GameSnake.SB_Head_Texture);
+        sfShader_setBoolUniform(GameSnake.SB_Head_Shader, "Head_Death", false);
+        sfShader_setVec2Uniform(GameSnake.SB_Head_Shader, "Head_Resolution", res);
+        sfShader_setTextureUniform(GameSnake.SB_Body_Shader, "Body_Texture", GameSnake.SB_Body_Texture);
+        sfShader_setBoolUniform(GameSnake.SB_Body_Shader, "Body_Death", false);
+        GameSnake.SB_Head_State.blendMode = sfBlendAlpha;
+        GameSnake.SB_Head_State.shader = GameSnake.SB_Head_Shader;
+        GameSnake.SB_Head_State.texture = GameSnake.SB_Head_Texture;
+        GameSnake.SB_Head_State.transform = sfTransform_Identity;
+        GameSnake.SB_Body_State.blendMode = sfBlendAlpha;
+        GameSnake.SB_Body_State.shader = GameSnake.SB_Body_Shader;
+        GameSnake.SB_Body_State.texture = GameSnake.SB_Body_Texture;
+        GameSnake.SB_Body_State.transform = sfTransform_Identity;
+    }
+    else
+    {
+        GameSnake.SB_Head_Shader = NULL;
+        GameSnake.SB_Body_Shader = NULL;
+    }
 
     // Init Snake Blocks
     GameSnake.SB_Head.x = Level.TL_Start_Position.x;
@@ -85,29 +102,43 @@ bool CSFMLRenderSnake()
     if(!GameSnake.S_Is_Init)
         return false;
 
-    // Render Head
-    sfSprite *head = sfSprite_create();
-    sfSprite_setPosition(head, CSFMLSnakeConvertIndexToVector(GameSnake.SB_Head));
-    sfSprite_setTexture(head, GameSnake.SB_Head_Texture, sfTrue);
-    sfShader_setIntUniform(GameSnake.SB_Head_Shader, "Head_Rotate_Angle", GameSnake.S_Rotate);
-    sfShader_setIntUniform(GameSnake.SB_Head_Shader, "Head_Health", GameSnake.S_Health);
-    sfShader_setBoolUniform(GameSnake.SB_Head_Shader, "Head_Death", GameSnake.S_Is_Dead);
-    sfRenderWindow_drawSprite(screen, head, &GameSnake.SB_Head_State);
-    sfSprite_destroy(head);
-    head = NULL;
+    // Set Texture and Position
+    sfSprite_setPosition(GameSnake.SB_Head_Sprite, CSFMLSnakeConvertIndexToVector(GameSnake.SB_Head));
+    sfSprite_setTexture(GameSnake.SB_Head_Sprite, GameSnake.SB_Head_Texture, sfTrue);
+
+    // Render it
+    if(shader_enabled)
+    {
+        sfShader_setIntUniform(GameSnake.SB_Head_Shader, "Head_Rotate_Angle", GameSnake.S_Rotate);
+        sfShader_setIntUniform(GameSnake.SB_Head_Shader, "Head_Health", GameSnake.S_Health);
+        sfShader_setBoolUniform(GameSnake.SB_Head_Shader, "Head_Death", GameSnake.S_Is_Dead);
+        sfRenderWindow_drawSprite(screen, GameSnake.SB_Head_Sprite, &GameSnake.SB_Head_State);
+    }
+    else
+    {
+        sfRenderWindow_drawSprite(screen, GameSnake.SB_Head_Sprite, NULL);
+    }
+
 
     // Render Body
     size_t i;
     for(i = 0; i<GameSnake.SB_Body_Elements; i++)
     {
-        sfSprite *body= sfSprite_create();
-        sfSprite_setPosition(body, CSFMLSnakeConvertIndexToVector(GameSnake.SB_Body[i]));
-        sfSprite_setTexture(body, GameSnake.SB_Body_Texture, sfTrue);
-        sfShader_setIntUniform(GameSnake.SB_Body_Shader, "Body_Health", GameSnake.S_Health);
-        sfShader_setBoolUniform(GameSnake.SB_Body_Shader, "Body_Death", GameSnake.S_Is_Dead);
-        sfRenderWindow_drawSprite(screen, body, &GameSnake.SB_Body_State);
-        sfSprite_destroy(body);
-        body = NULL;
+        // Set Texture and Position
+        sfSprite_setPosition(GameSnake.SB_Body_Sprite, CSFMLSnakeConvertIndexToVector(GameSnake.SB_Body[i]));
+        sfSprite_setTexture(GameSnake.SB_Body_Sprite, GameSnake.SB_Body_Texture, sfTrue);
+
+        // Render it
+        if(shader_enabled)
+        {
+            sfShader_setIntUniform(GameSnake.SB_Body_Shader, "Body_Health", GameSnake.S_Health);
+            sfShader_setBoolUniform(GameSnake.SB_Body_Shader, "Body_Death", GameSnake.S_Is_Dead);
+            sfRenderWindow_drawSprite(screen, GameSnake.SB_Body_Sprite, &GameSnake.SB_Body_State);
+        }
+        else
+        {
+            sfRenderWindow_drawSprite(screen, GameSnake.SB_Body_Sprite, NULL);
+        }
     }
 
     return true;
@@ -119,12 +150,21 @@ void CSFMLQuitSnake()
     // Clear SFML Stuff
     sfTexture_destroy(GameSnake.SB_Head_Texture);
     sfTexture_destroy(GameSnake.SB_Body_Texture);
-    sfShader_destroy(GameSnake.SB_Head_Shader);
-    sfShader_destroy(GameSnake.SB_Body_Shader);
+    sfSprite_destroy(GameSnake.SB_Head_Sprite);
+    sfSprite_destroy(GameSnake.SB_Body_Sprite);
+    GameSnake.SB_Body_Sprite = NULL;
+    GameSnake.SB_Head_Sprite = NULL;
     GameSnake.SB_Head_Texture = NULL;
     GameSnake.SB_Body_Texture = NULL;
-    GameSnake.SB_Head_Shader = NULL;
-    GameSnake.SB_Body_Shader = NULL;
+
+    // Clear Shader Stuff
+    if(shader_enabled)
+    {
+        sfShader_destroy(GameSnake.SB_Head_Shader);
+        sfShader_destroy(GameSnake.SB_Body_Shader);
+        GameSnake.SB_Head_Shader = NULL;
+        GameSnake.SB_Body_Shader = NULL;
+    }
 
     // Clear Block Stuff
     free(GameSnake.SB_Body);

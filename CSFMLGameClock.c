@@ -39,18 +39,18 @@ bool CSFMLUpdateClock()
     GameClock.GC_Last_Time = GameClock.GC_Actual_Time;
 
     // Set GameTime to Level Shader, if Level is loaded!
-    if(Level.Is_Loaded)
+    if(Level.Is_Loaded && shader_enabled)
         sfShader_setFloatUniform(Level.BG_Texture_Shader, "Time", GameClock.GC_Time);
 
     // Set GameTime to Snake Shader, if Snake is init
-    if(GameSnake.S_Is_Init)
+    if(GameSnake.S_Is_Init && shader_enabled)
     {
         sfShader_setFloatUniform(GameSnake.SB_Head_Shader, "Time", GameClock.GC_Time);
         sfShader_setFloatUniform(GameSnake.SB_Body_Shader, "Time", GameClock.GC_Time);
     }
 
     // Set GameTime to Item Shaders
-    if(GameItem.GI_Is_Init)
+    if(GameItem.GI_Is_Init && shader_enabled)
     {
         size_t it;
         for(it = 0; it<GameItem.GI_Items_Count; it++)

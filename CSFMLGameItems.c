@@ -37,19 +37,35 @@ bool CSFMLInitItems()
 
     // Set Memory
     GameItem.GI_Items = malloc(GameItem.GI_Items_Count*sizeof(Item));
-    GameItem.GI_Shaders = malloc(GameItem.GI_Items_Count*sizeof(sfShader*));
     GameItem.GI_Textures = malloc(GameItem.GI_Items_Count*sizeof(sfTexture*));
-    GameItem.GI_States = malloc(GameItem.GI_Items_Count*sizeof(sfRenderStates));
     GameItem.GI_Blocks = malloc(GameItem.GI_Items_Count*sizeof(iBlock));
     GameItem.GI_Placed = malloc(GameItem.GI_Items_Count*sizeof(bool));
     GameItem.GI_Coordinates_Setted = malloc(GameItem.GI_Items_Count*sizeof(bool));
 
     GameItem.GI_Sprite = sfSprite_create();
 
-    if(GameItem.GI_Items == NULL || GameItem.GI_Shaders == NULL || GameItem.GI_Textures == NULL || GameItem.GI_States == NULL || GameItem.GI_Blocks == NULL || GameItem.GI_Placed == NULL || GameItem.GI_Coordinates_Setted == NULL || GameItem.GI_Sprite == NULL)
+    if(GameItem.GI_Items == NULL || GameItem.GI_Textures == NULL || GameItem.GI_Blocks == NULL || GameItem.GI_Placed == NULL || GameItem.GI_Coordinates_Setted == NULL || GameItem.GI_Sprite == NULL)
     {
         printf("Game Subsystem Fehler 'GameItems': Kann Speicher nicht reservieren!\n");
         return false;
+    }
+
+    // Set Shader if enabled
+    if(shader_enabled)
+    {
+        GameItem.GI_Shaders = malloc(GameItem.GI_Items_Count*sizeof(sfShader*));
+        GameItem.GI_States = malloc(GameItem.GI_Items_Count*sizeof(sfRenderStates));
+
+        if(GameItem.GI_Shaders == NULL || GameItem.GI_States == NULL)
+        {
+            printf("Game Subsystem Fehler 'GameItems': Kann Speicher fuer Shader nicht reservieren!\n");
+            return false;
+        }
+    }
+    else
+    {
+        GameItem.GI_Shaders = NULL;
+        GameItem.GI_States = NULL;
     }
 
     // Open Directory
@@ -84,14 +100,6 @@ bool CSFMLInitItems()
                 return false;
             }
 
-            // Setup Shader
-            GameItem.GI_Shaders[counter] = sfShader_createFromFile(NULL, NULL, GameItem.GI_Items[counter].I_ShaderPath);
-            if(GameItem.GI_Shaders[counter] == NULL)
-            {
-                printf("Game Subsystem Fehler 'GameItems': Kann Shader nicht laden!\n");
-                return false;
-            }
-
             // Setup Texture
             GameItem.GI_Textures[counter] = sfTexture_createFromFile(GameItem.GI_Items[counter].I_TilePath, NULL);
             if(GameItem.GI_Textures[counter] == NULL)
@@ -100,9 +108,26 @@ bool CSFMLInitItems()
                 return false;
             }
 
-            // Setup Shader Values
-            sfShader_setTextureUniform(GameItem.GI_Shaders[counter], "Texture", GameItem.GI_Textures[counter]);
-            sfShader_setFloatUniform(GameItem.GI_Shaders[counter], "Time", GameClock.GC_Time);
+            // Setup Shader
+            if(shader_enabled)
+            {
+                GameItem.GI_Shaders[counter] = sfShader_createFromFile(NULL, NULL, GameItem.GI_Items[counter].I_ShaderPath);
+                if(GameItem.GI_Shaders[counter] == NULL)
+                {
+                    printf("Game Subsystem Fehler 'GameItems': Kann Shader nicht laden!\n");
+                    return false;
+                }
+
+                // Setup Shader Values
+                sfShader_setTextureUniform(GameItem.GI_Shaders[counter], "Texture", GameItem.GI_Textures[counter]);
+                sfShader_setFloatUniform(GameItem.GI_Shaders[counter], "Time", GameClock.GC_Time);
+
+                // Setup RenderState
+                GameItem.GI_States[counter].blendMode = sfBlendAlpha;
+                GameItem.GI_States[counter].shader = GameItem.GI_Shaders[counter];
+                GameItem.GI_States[counter].texture = GameItem.GI_Textures[counter];
+                GameItem.GI_States[counter].transform = sfTransform_Identity;
+            }
 
             // Setup Block Values
             GameItem.GI_Blocks[counter].x = 0;
@@ -110,11 +135,6 @@ bool CSFMLInitItems()
             GameItem.GI_Blocks[counter].w = (float)sfTexture_getSize(GameItem.GI_Textures[counter]).x;
             GameItem.GI_Blocks[counter].h = (float)sfTexture_getSize(GameItem.GI_Textures[counter]).y;
 
-            // Setup RenderState
-            GameItem.GI_States[counter].blendMode = sfBlendAlpha;
-            GameItem.GI_States[counter].shader = GameItem.GI_Shaders[counter];
-            GameItem.GI_States[counter].texture = GameItem.GI_Textures[counter];
-            GameItem.GI_States[counter].transform = sfTransform_Identity;
 
             // All Items all first not Placed and Coordinates are not setted
             GameItem.GI_Placed[counter] = false;
@@ -184,8 +204,11 @@ void CSFMLQuitItems()
     size_t i;
     for(i = 0; i<GameItem.GI_Items_Count; i++)
     {
-        sfShader_destroy(GameItem.GI_Shaders[i]);
-        GameItem.GI_Shaders[i] = NULL;
+        if(shader_enabled)
+        {
+            sfShader_destroy(GameItem.GI_Shaders[i]);
+            GameItem.GI_Shaders[i] = NULL;
+        }
 
         sfTexture_destroy(GameItem.GI_Textures[i]);
         GameItem.GI_Textures[i] = NULL;
@@ -200,9 +223,6 @@ void CSFMLQuitItems()
     sfSprite_destroy(GameItem.GI_Sprite);
     GameItem.GI_Sprite = NULL;
 
-    free(GameItem.GI_Shaders);
-    GameItem.GI_Shaders = NULL;
-
     free(GameItem.GI_Textures);
     GameItem.GI_Textures = NULL;
 
@@ -212,9 +232,6 @@ void CSFMLQuitItems()
     free(GameItem.GI_Blocks);
     GameItem.GI_Blocks = NULL;
 
-    free(GameItem.GI_States);
-    GameItem.GI_States = NULL;
-
     free(GameItem.GI_Items);
     GameItem.GI_Items = NULL;
 
@@ -223,6 +240,15 @@ void CSFMLQuitItems()
 
     free(GameItem.GI_Placed);
     GameItem.GI_Placed = NULL;
+
+    if(shader_enabled)
+    {
+        free(GameItem.GI_Shaders);
+        GameItem.GI_Shaders = NULL;
+
+        free(GameItem.GI_States);
+        GameItem.GI_States = NULL;
+    }
 
     GameItem.GI_Is_Init = false;
 }
@@ -406,9 +432,15 @@ void CSFMLRenderItems()
         // Just Render Items that are placed and got coordinates
         if(GameItem.GI_Coordinates_Setted[i] && GameItem.GI_Placed[i])
         {
+            // Set Texture & Position
             sfSprite_setTexture(GameItem.GI_Sprite, GameItem.GI_Textures[i], sfTrue);
             sfSprite_setPosition(GameItem.GI_Sprite, CSFMLItemConvertIndexToVector(GameItem.GI_Blocks[i]));
-            sfRenderWindow_drawSprite(screen, GameItem.GI_Sprite, &GameItem.GI_States[i]);
+
+            // Render it
+            if(shader_enabled)
+                sfRenderWindow_drawSprite(screen, GameItem.GI_Sprite, &GameItem.GI_States[i]);
+            else
+                sfRenderWindow_drawSprite(screen, GameItem.GI_Sprite, NULL);
         }
 
     }
