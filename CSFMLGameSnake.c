@@ -3,7 +3,8 @@
 // Init Snake
 bool CSFMLInitSnake()
 {
-    if(!GameClock.GC_Is_Init || !GameLight_Is_Init || !Level.Is_Loaded)
+    // Check Up Init Stuff
+    if(!GameClock.GC_Is_Init || !GameLight_Is_Init || !Level.Is_Loaded || !GameSnake.S_Name)
         return false;
 
     // Init Textures, Shaders
@@ -60,12 +61,10 @@ bool CSFMLInitSnake()
     GameSnake.SB_Body_Elements = SNAKE_START_BLOCKS;
 
     // Setup general things
-    GameSnake.S_Name[0] = 0;
-    strcpy(GameSnake.S_Name, "Youre Cool!");
     GameSnake.S_Health = 100;
     GameSnake.S_Score = 0;
-    GameSnake.S_Speed = 2.0f;
-    GameSnake.S_DefaultSpeed = 2.0f;
+    GameSnake.S_Speed = 3.0f;
+    GameSnake.S_DefaultSpeed = 3.0f;
     GameSnake.S_EndItemTime = 0.0f;
     GameSnake.S_Actual_Direction = NONE;
     GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
@@ -1019,6 +1018,9 @@ bool CSFMLHandleSnake()
             }
         }
     }
+
+    // Render Item Hint
+    CSFMLRenderItemText();
 
     // Set Viewport
     sfRenderWindow_setView(screen, Level.BG_View);

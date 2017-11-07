@@ -125,6 +125,66 @@ bool CSFMLLoadMapDescriptor()
     return true;
 }
 
+// Preload Mapname for the Menu
+bool CSFMLPreloadMapName(const char *Path, char *LevelName, size_t LevelName_Size)
+{
+    // Validate for Input
+    if(Path == NULL || LevelName == NULL)
+    {
+        printf("Game Menu Subsystem Fehler: Null Pointer uebergeben!\n");
+        return false;
+    }
+
+    // Validate for Illegal Input Size, Maximum is 20
+    if(LevelName_Size > 20)
+    {
+        printf("Game Menu Subsystem Fehler: Groesse der uebergebenen Groesse passt nicht!\n");
+        return false;
+    }
+
+    // Validate for Path Size
+    if(strlen(Path)+1 >= 82)
+    {
+        printf("Game Menu Subsystem Fehler: Pfadlaenge zu groess!!\n");
+        return false;
+    }
+
+    // Build Path
+    char CompletePath[100] = {0};
+    strncat(CompletePath, "Bilder/Game/LevelData/", 22);
+    strncat(CompletePath, Path, strlen(Path)+1);
+    strncat(CompletePath, "/", 1);
+    strncat(CompletePath, "Mapdescriptor.DAT", 18);
+
+    // Loading File
+    FILE *MD_File = fopen(CompletePath, "rb");
+    MapDescriptor MD_Name;
+
+    if(MD_File == NULL)
+    {
+        printf("Game Menu Subsystem Fehler: Kann Mapdescriptor Datei nicht oeffnen!\n");
+        return false;
+    }
+
+    if(fread(&MD_Name, sizeof(MapDescriptor), 1, MD_File) != 1)
+    {
+        printf("Game Menu Subsystem Fehler: Kann Mapdescriptor nicht laden!\n");
+        return false;
+    }
+
+    // Building Now Level Name!
+    size_t i;
+    for(i = 0; i<LevelName_Size; i++)
+    {
+        LevelName[i] = MD_Name.MapName[i];
+    }
+
+    fclose(MD_File);
+    MD_File = NULL;
+
+    return true;
+}
+
 // Loading Eventmap
 bool CSFMLLoadEventmap()
 {

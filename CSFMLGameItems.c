@@ -150,7 +150,23 @@ bool CSFMLInitItems()
         GameItem.GI_AllowedItems[i].Max_Count = Level.MD_Details.ItemsAllowed[i].Count;
     }
 
+    // Setup Text and Font
+    GameItem.GI_Font = sfFont_createFromFile("Bilder/Schriftarten/SEASERN.ttf");
+    GameItem.GI_Text = sfText_create();
+
+    if(GameItem.GI_Font == NULL || GameItem.GI_Text == NULL)
+    {
+        printf("Game Subsystem Fehler 'GameItems': Kann Item Hinweis Text/Font/Shader nicht laden!\n");
+        return false;
+    }
+
+    sfText_setFont(GameItem.GI_Text, GameItem.GI_Font);
+    sfText_setCharacterSize(GameItem.GI_Text, 20);
+
     // Setup general things
+    GameItem.GI_TextRenderIt = false;
+    GameItem.GI_TextAlpha = 255.0f;
+
     GameItem.GI_Is_Init = true;
     GameItem.GI_AllowedItems_Count = 6;
 
@@ -174,6 +190,12 @@ void CSFMLQuitItems()
         sfTexture_destroy(GameItem.GI_Textures[i]);
         GameItem.GI_Textures[i] = NULL;
     }
+
+    sfFont_destroy(GameItem.GI_Font);
+    GameItem.GI_Font = NULL;
+
+    sfText_destroy(GameItem.GI_Text);
+    GameItem.GI_Text = NULL;
 
     sfSprite_destroy(GameItem.GI_Sprite);
     GameItem.GI_Sprite = NULL;
@@ -287,10 +309,12 @@ void CSFMLSetCoordinatesItems()
     size_t random_y = rand() % MAX_TILES_Y;
 
     // Check Snake Collide Head !OK
+    // Todo: Prevent for XXX == Float Value, it could be undefined behavior
     if(random_x == GameSnake.SB_Head.x && random_y == GameSnake.SB_Head.y)
         Hit = true;
 
     // Check Snake Collide Body !OK
+    // Todo: Prevent for XXX = Float Value, it could be undefined behavior
     for(i = 0; i<GameSnake.SB_Body_Elements; i++)
     {
         if(GameSnake.SB_Body[i].x == random_x && GameSnake.SB_Body[i].y == random_y)
@@ -302,8 +326,8 @@ void CSFMLSetCoordinatesItems()
     {
         if(GameItem.GI_Coordinates_Setted[i])
         {
-            size_t G_X = floor(GameItem.GI_Blocks[i].x);
-            size_t G_Y = floor(GameItem.GI_Blocks[i].y);
+            size_t G_X = fabs(GameItem.GI_Blocks[i].x);
+            size_t G_Y = fabs(GameItem.GI_Blocks[i].y);
             if(G_X == random_x && G_Y == random_y)
             {
                 Hit = true;
@@ -390,6 +414,55 @@ void CSFMLRenderItems()
     }
 }
 
+// Spawn Text
+void CSFMLItemSpawnText(const char *text)
+{
+    // Set Text Properties
+    sfText_setString(GameItem.GI_Text, text);
+    sfVector2f res = {sfText_getLocalBounds(GameItem.GI_Text).width, sfText_getLocalBounds(GameItem.GI_Text).height};
+
+    // Determine Middle Position
+    float Position_X = ((572-res.x) / 2) + Level.BG_Screenposition.x;
+    float Position_Y = ((472-res.y) / 2) + Level.BG_Screenposition.y;
+    sfVector2f Position = {Position_X, Position_Y};
+    sfText_setPosition(GameItem.GI_Text, Position);
+    sfColor Col = {255, 184, 0, 255};
+    sfText_setColor(GameItem.GI_Text, Col);
+
+    // Release
+    GameItem.GI_TextRenderIt = true;
+}
+
+// Render Text
+void CSFMLRenderItemText()
+{
+    // Render Item Event Text!
+    if(GameItem.GI_TextRenderIt)
+    {
+        // Setup Variables
+        sfColor ActualColor = sfText_getColor(GameItem.GI_Text);
+        sfVector2f ActualScale = sfText_getScale(GameItem.GI_Text);
+
+        // Set Fade Out and Scale Out
+        GameItem.GI_TextAlpha -= GameClock.GC_DeltaTime * 1/GameClock.GC_DeltaTime;
+        ActualColor.a = (sfUint8) GameItem.GI_TextAlpha;
+        ActualScale.x = (GameItem.GI_TextAlpha / 255.0f);
+        ActualScale.y = (GameItem.GI_TextAlpha / 255.0f);
+
+        // Set New Alpha and Scale
+        sfText_setColor(GameItem.GI_Text, ActualColor);
+        sfText_setScale(GameItem.GI_Text, ActualScale);
+        sfRenderWindow_drawText(screen, GameItem.GI_Text, NULL);
+
+        // Reset things
+        if(GameItem.GI_TextAlpha < 1)
+        {
+            GameItem.GI_TextAlpha = 255.0f;
+            GameItem.GI_TextRenderIt = false;
+        }
+    }
+}
+
 // Handle now Items
 void CSFMLHandleItems()
 {
@@ -444,6 +517,9 @@ void CSFMLHandleItems()
                         GameItem.GI_Placed[i] = false;
                         GameItem.GI_Coordinates_Setted[i] = false;
 
+                        // Spawn Hint
+                        CSFMLItemSpawnText("First Aid Picked!");
+
                         // Set Health
                         if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
                         {
@@ -472,6 +548,9 @@ void CSFMLHandleItems()
                         GameItem.GI_Placed[i] = false;
                         GameItem.GI_Coordinates_Setted[i] = false;
 
+                        // Spawn Hint
+                        CSFMLItemSpawnText("Speed Picked!");
+
                         // Set Speed
                         // Seems a bit buggy..
                         if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
@@ -492,6 +571,9 @@ void CSFMLHandleItems()
                         GameItem.GI_Placed[i] = false;
                         GameItem.GI_Coordinates_Setted[i] = false;
                         CSFMLGrowSnake();
+
+                        // Spawn Hint
+                        CSFMLItemSpawnText("Food Picked!");
 
                         // Set Score
                         if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
@@ -516,6 +598,9 @@ void CSFMLHandleItems()
                         GameItem.GI_Placed[i] = false;
                         GameItem.GI_Coordinates_Setted[i] = false;
 
+                        // Spawn Hint
+                        CSFMLItemSpawnText("You foolish! Shame on you for God Mode :)");
+
                         // Set God Mode
                         GameSnake.S_GODMODE = true;
                     }
@@ -525,6 +610,9 @@ void CSFMLHandleItems()
                         CSFMLDecreaseItemCount(i);
                         GameItem.GI_Placed[i] = false;
                         GameItem.GI_Coordinates_Setted[i] = false;
+
+                        // Spawn Hint
+                        CSFMLItemSpawnText("You foolish! Shame on your family Noclip :)");
 
                         // Set NoClip Mode
                         GameSnake.S_NOCLIP = true;

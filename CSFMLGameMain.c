@@ -3,11 +3,18 @@
 // Init Game
 bool CSFMLGameInit()
 {
+    // Checkup Level ID
+    if(!GameMain.Game_Level_ID)
+    {
+        printf("Game Subsystem Fehler 'GameMain': Kein Level angegeben!\n");
+        return false;
+    }
+
     // Init General Things
     bool Init_Error = false;
 
     // Init TileMap
-    Init_Error |= !CSFMLLoadlevel(1);
+    Init_Error |= !CSFMLLoadlevel(GameMain.Game_Level_ID);
 
     // Init Lights
     Init_Error |= !CSFMLInitLights();
@@ -23,6 +30,7 @@ bool CSFMLGameInit()
     Init_Error |= !CSFMLInitItems();
 
     // Init Text for Score and Health
+    GameMain.Game_Is_Init = true;
     GameMain.GM_Font = sfFont_createFromFile("Bilder/Schriftarten/3Dventure.ttf");
     GameMain.GM_Health = sfText_create();
     GameMain.GM_Score = sfText_create();
@@ -52,6 +60,9 @@ void CSFMLGameQuit()
     CSFMLQuitClock();
     CSFMLQuitLights();
     CSFMLQuitLevel();
+
+    // Other Stuff
+    GameMain.Game_Is_Init = false;
 }
 
 // Render Game

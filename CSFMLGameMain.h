@@ -19,6 +19,8 @@ typedef struct {
     sfText *GM_Health;
     sfText *GM_Score;
     sfFont *GM_Font;
+    bool Game_Is_Init;
+    int Game_Level_ID;
 } Game;
 
 // Variables

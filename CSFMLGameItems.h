@@ -57,6 +57,11 @@ typedef struct {
     AllowedItems *GI_AllowedItems;
     size_t GI_AllowedItems_Count;
 
+    sfText *GI_Text;
+    sfFont *GI_Font;
+    bool GI_TextRenderIt;
+    float GI_TextAlpha;
+
     bool GI_Is_Init;
 
 } Items;
@@ -71,6 +76,8 @@ void CSFMLPlaceItems();
 void CSFMLSetCoordinatesItems();
 void CSFMLRenderItems();
 void CSFMLHandleItems();
+void CSFMLItemSpawnText(const char *text);
+void CSFMLRenderItemText();
 
 // Intern Functions
 sfVector2f CSFMLItemConvertIndexToVector(iBlock blk);

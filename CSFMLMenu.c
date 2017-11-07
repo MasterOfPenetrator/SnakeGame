@@ -133,6 +133,15 @@ bool CSFMLMenuInit()
     mstate.sliderCleared = true;
     mstate.entryCleared = true;
     mstate.startgame = false;
+    mstate.Level_Count = 0;
+    mstate.Level_Dir_Opened = false;
+    mstate.Level_Selected = false;
+    mstate.Level_ID = 0;
+    mstate.Allow_UserEnter = false;
+    mstate.Text_Field_Clicked = false;
+    mstate.UserName_Counter = 0;
+    mstate.Level_Username[0] = '\0';
+    mstate.User_Final_Enter = false;
 
     // Elemente des Menüs
     MenuClearButtonStack();
@@ -148,7 +157,7 @@ bool CSFMLMenuInit()
     sfColor grey = {77,77,77,255};
     sfColor other = {254,84,0,255};
     // MainSite
-    MenuPlaceButton(0, 5, 100, 230, true, GAMESITE_USERENTER, MAINSITE, false);
+    MenuPlaceButton(0, 5, 100, 230, true, GAMESITE_LEVEL, MAINSITE, false);
     MenuPlaceButton(0, 3, 100, 330, true, SCORESITE, MAINSITE, false);
     MenuPlaceButton(0, 4, 100, 430, true, SETTINGSSITE, MAINSITE, false);
     MenuPlaceButton(0, 0, 100, 530, true, EXITSITE, MAINSITE, false);
@@ -166,6 +175,11 @@ bool CSFMLMenuInit()
     MenuPlaceButton(0, 8, 480, 630, true, MAINSITE, SETTINGSSITE, false);
     MenuPlaceSlider(260, 225, 300, 40, sfWhite, grey, other, 0, SETTINGSSITE, false);
     MenuPlaceSlider(260, 275, 300, 40, sfWhite, grey, other, 1, SETTINGSSITE, false);
+
+    // GameSite
+    MenuPlaceButton(0, 8, 480, 630, true, MAINSITE, GAMESITE_LEVEL, false);
+    MenuPlaceButton(0, 8, 480, 630, true, MAINSITE, GAMESITE_USER, false);
+
 
     // Shader Effekte Aktiv ?
     size_t i;
@@ -224,6 +238,17 @@ void CSFMLMenuQuit()
     MenuClearButtonStack();
     MenuClearHighScoreStack();
     MenuClearSettingStack();
+
+    // Level names löschen!
+    size_t i = 0;
+    for(i = 0; i<mstate.Level_Count; i++)
+    {
+        free(mstate.Level_Names[i]);
+        mstate.Level_Names = NULL;
+    }
+
+    free(mstate.Level_Names);
+    mstate.Level_Names = NULL;
 }
 
 void CSFMLQuit()
@@ -1144,6 +1169,349 @@ void ToggleVsync()
     }
 }
 
+bool CSFMLPrintLevels()
+{
+    // Levels Preloaded?
+    if(!mstate.Level_Dir_Opened)
+    {
+        // Get Count of Levels
+        DIR *dir;
+        struct dirent *entrys;
+
+        if((dir = opendir("Bilder/Game/LevelData/")) == NULL)
+        {
+            printf("Menu Subsystem Fehler: Keine Levels verfuegbar!\n");
+            return false;
+        }
+
+        while((entrys = readdir(dir)) != NULL)
+        {
+            // Ignore File Name "." and ".."
+            if(strcmp(entrys->d_name, ".") && strcmp(entrys->d_name, ".."))
+            {
+                mstate.Level_Count++;
+            }
+        }
+
+        closedir(dir);
+        dir = NULL;
+
+        if(mstate.Level_Count == 0)
+        {
+            printf("Menu Subsystem Fehler: Keine Level verfuegbar!\n");
+            return false;
+        }
+
+        // Init Memory for Level Names
+        mstate.Level_Names = malloc(mstate.Level_Count * sizeof(char *));
+
+        if(mstate.Level_Names == NULL)
+        {
+            printf("Menu Subsystem Fehler: Kann Speicher fuer Level Namen nicht anlegen!\n");
+            return false;
+        }
+
+        if((dir = opendir("Bilder/Game/LevelData/")) == NULL)
+        {
+            printf("Menu Subsystem Fehler: Keine Levels verfuegbar!\n");
+            return false;
+        }
+
+        size_t counter = 0;
+        while((entrys = readdir(dir)) != NULL)
+        {
+            // Ignore File Name "." and ".."
+            if(strcmp(entrys->d_name, ".") && strcmp(entrys->d_name, ".."))
+            {
+                mstate.Level_Names[counter] = malloc(strlen(entrys->d_name)+1 * sizeof(char));
+
+                if(mstate.Level_Names[counter] == NULL)
+                {
+                    printf("Menu Subsystem Fehler: Kann Speicher fuer Levelstring nicht anlegen!\n");
+                    return false;
+                }
+
+                strcpy(mstate.Level_Names[counter], entrys->d_name);
+            }
+        }
+
+        closedir(dir);
+        dir = NULL;
+
+        mstate.Level_Dir_Opened = true;
+    }
+
+    // Print Now the Levels
+    sfColor Title = {255, 74, 0, 255};
+    MenuPlaceText("Level Auswahl:", 100, 220, 45, Title);
+
+    size_t i;
+    for(i = 0; i<mstate.Level_Count; i++)
+    {
+        // Get Text
+        char CompleteString[100] = {0};
+        char Mapname[20];
+        CSFMLPreloadMapName(mstate.Level_Names[i], Mapname, 20);
+        strncat(CompleteString, mstate.Level_Names[i], strlen(mstate.Level_Names[i])+1);
+        strncat(CompleteString, ": ", 2);
+        strncat(CompleteString, Mapname, 20);
+
+        // Print Button
+        // Max 4 Entries per Page
+        // Todo: Make it
+        if(i < 4)
+        {
+           CSFMLPrintLevelButton(CompleteString, i);
+        }
+    }
+
+    return true;
+}
+
+void CSFMLPrintLevelButton(const char *Text, size_t i)
+{
+    // Init Stuff
+    sfText *actualtext = sfText_create();
+    sfRectangleShape *shape = sfRectangleShape_create();
+
+    // Set Text Properties
+    sfText_setString(actualtext, Text);
+    sfText_setFont(actualtext, media.normal_font);
+    sfText_setCharacterSize(actualtext, 30);
+
+    // Init Position & Size
+    sfVector2f LocalBounds = {sfText_getLocalBounds(actualtext).width, sfText_getLocalBounds(actualtext).height};
+    sfVector2f Position = {(SCREEN_WIDTH/2) - (LocalBounds.x/2), (320 + (LocalBounds.y*i)) };
+    sfVector2f Position_Rect = {Position.x - 10, Position.y - 7};
+    sfVector2f Size_Rect = {LocalBounds.x + 20, LocalBounds.y + 20};
+
+    // Prepare for Click
+    sfColor Tex_Col;
+    if(!(mstate.mouse_pos.x < Position_Rect.x ||
+                 mstate.mouse_pos.y < Position_Rect.y ||
+                 mstate.mouse_pos.x >= Position_Rect.x + Size_Rect.x ||
+                 mstate.mouse_pos.y >= Position_Rect.y + Size_Rect.y))
+    {
+        // Set Highlight Color
+        Tex_Col.a = 255;
+        Tex_Col.r = 254;
+        Tex_Col.g = 74;
+        Tex_Col.b = 0;
+
+        // Proceed Click
+        if(mstate.isPress)
+        {
+            // Get LevelID
+            mstate.Level_ID = i +1;
+            mstate.Level_Selected = true;
+            mstate.Allow_UserEnter = true;
+            mstate.prevsite = mstate.actualsite;
+            mstate.actualsite = GAMESITE_USER;
+        }
+    }
+    else
+    {
+        Tex_Col.a = 255;
+        Tex_Col.r = 131;
+        Tex_Col.g = 131;
+        Tex_Col.b = 131;
+    }
+    sfColor Box_Col = {0,0,0,0};
+
+    // Set Positions
+    sfText_setPosition(actualtext, Position);
+    sfRectangleShape_setPosition(shape, Position_Rect);
+    sfRectangleShape_setSize(shape, Size_Rect);
+
+    // Set Colors
+    sfText_setColor(actualtext, Tex_Col);
+    sfRectangleShape_setFillColor(shape, Box_Col);
+    sfRectangleShape_setOutlineColor(shape, Tex_Col);
+    sfRectangleShape_setOutlineThickness(shape, 5.0f);
+
+    // Render Stuff
+    sfRenderWindow_drawRectangleShape(screen, shape, NULL);
+    sfRenderWindow_drawText(screen, actualtext, NULL);
+
+    // Clear Stuff
+    sfText_destroy(actualtext);
+    sfRectangleShape_destroy(shape);
+    shape = NULL;
+    actualtext = NULL;
+}
+
+void CSFMLCLRLevelStuff()
+{
+    mstate.Level_ID = 0;
+    mstate.Level_Selected = false;
+    mstate.Allow_UserEnter = false;
+    mstate.Text_Field_Clicked = false;
+    mstate.User_Final_Enter = false;
+    mstate.UserName_Counter = 0;
+
+    // Fill UserName with Zeros
+    size_t i;
+    for(i = 0; i<20; i++)
+    {
+        mstate.Level_Username[i] = '\0';
+    }
+}
+
+void CSFMLPrintUserEnter()
+{
+    // Print Text Stuff
+    sfColor Title = {255, 74, 0, 255};
+    sfColor Grey = {131,131,131,255};
+    sfColor Black = {0,0,0,0};
+    MenuPlaceText("Enter your Name", 65, 220, 45, Title);
+    MenuPlaceText("Maximum Size of your Name: 19 Chars!", 50, 300, 20, sfWhite);
+    MenuPlaceText("Minimum Size of your Name: 5 Chars!", 50, 340, 20, sfWhite);
+    MenuPlaceText("Username", 35, 400, 25, sfWhite);
+
+    // Setup Text Input Box and Outline Box for Text
+    sfRectangleShape *Box = sfRectangleShape_create();
+    sfRectangleShape *B2 = sfRectangleShape_create();
+    sfText *UserEnterStuff = sfText_create();
+    sfText_setFont(UserEnterStuff, media.normal_font);
+    sfText_setColor(UserEnterStuff, Title);
+    sfText_setCharacterSize(UserEnterStuff, 20);
+    sfRectangleShape_setFillColor(Box, Black);
+    sfRectangleShape_setOutlineColor(Box, Grey);
+    sfRectangleShape_setOutlineThickness(Box, 3.0f);
+    sfRectangleShape_setFillColor(B2, Black);
+    sfRectangleShape_setOutlineColor(B2, Grey);
+    sfRectangleShape_setOutlineThickness(B2, 3.0f);
+
+    // Set Positions
+    sfVector2f Size = {375, 50};
+    sfVector2f Position = {195, 390};
+
+    sfVector2f Size_2 = {155, 50};
+    sfVector2f Position_2 = {30, 390};
+
+    sfVector2f Position_Text = {200, 403};
+
+    sfRectangleShape_setPosition(Box, Position);
+    sfRectangleShape_setSize(Box, Size);
+
+    sfRectangleShape_setPosition(B2, Position_2);
+    sfRectangleShape_setSize(B2, Size_2);
+
+    sfText_setPosition(UserEnterStuff, Position_Text);
+
+    // Proceed User Enter
+    if(!(mstate.mouse_pos.x < Position.x ||
+                 mstate.mouse_pos.y < Position.y ||
+                 mstate.mouse_pos.x >= Position.x + Size.x ||
+                 mstate.mouse_pos.y >= Position.y + Size.y))
+    {
+        if(mstate.isPress)
+        {
+            mstate.Text_Field_Clicked = true;
+        }
+    }
+    else
+    {
+        if(mstate.isPress)
+        {
+            mstate.Text_Field_Clicked = false;
+        }
+    }
+
+    // Set Text
+    sfText_setString(UserEnterStuff, mstate.Level_Username);
+
+    // Print Button if Next Step
+    if(mstate.UserName_Counter > 5)
+        CSFMLUserLevelButton("Now Go to Play!");
+
+    // Render Stuff
+    sfRenderWindow_drawText(screen, UserEnterStuff, NULL);
+    sfRenderWindow_drawRectangleShape(screen, Box, NULL);
+    sfRenderWindow_drawRectangleShape(screen, B2, NULL);
+
+    // Clear Stuff
+    sfRectangleShape_destroy(Box);
+    sfRectangleShape_destroy(B2);
+    sfText_destroy(UserEnterStuff);
+    UserEnterStuff = NULL;
+    Box = NULL;
+    B2 = NULL;
+}
+
+void CSFMLUserLevelButton(const char *Text)
+{
+    // Init Stuff
+    sfText *actualtext = sfText_create();
+    sfRectangleShape *shape = sfRectangleShape_create();
+
+    // Set Text Properties
+    sfText_setString(actualtext, Text);
+    sfText_setFont(actualtext, media.normal_font);
+    sfText_setCharacterSize(actualtext, 30);
+
+    // Init Position & Size
+    sfVector2f Position = {140, 500 };
+    sfVector2f Position_Rect = {Position.x - 10, Position.y - 7};
+    sfVector2f Size_Rect = {335, 50};
+
+    // Prepare for Click
+    sfColor Tex_Col;
+    if(!(mstate.mouse_pos.x < Position_Rect.x ||
+                 mstate.mouse_pos.y < Position_Rect.y ||
+                 mstate.mouse_pos.x >= Position_Rect.x + Size_Rect.x ||
+                 mstate.mouse_pos.y >= Position_Rect.y + Size_Rect.y))
+    {
+        // Set Highlight Color
+        Tex_Col.a = 255;
+        Tex_Col.r = 254;
+        Tex_Col.g = 74;
+        Tex_Col.b = 0;
+
+        // Proceed Click
+        if(mstate.isPress)
+        {
+            // Go to next Page
+            mstate.prevsite = mstate.actualsite;
+            mstate.actualsite = GAMESITE_PLAY;
+            MenuPlace();
+
+            // Setup Game Variables
+            strncpy(GameSnake.S_Name, mstate.Level_Username, strlen(mstate.Level_Username)+1);
+            GameMain.Game_Level_ID = mstate.Level_ID + 1;
+        }
+    }
+    else
+    {
+        Tex_Col.a = 255;
+        Tex_Col.r = 131;
+        Tex_Col.g = 131;
+        Tex_Col.b = 131;
+    }
+    sfColor Box_Col = {0,0,0,0};
+
+    // Set Positions
+    sfText_setPosition(actualtext, Position);
+    sfRectangleShape_setPosition(shape, Position_Rect);
+    sfRectangleShape_setSize(shape, Size_Rect);
+
+    // Set Colors
+    sfText_setColor(actualtext, Tex_Col);
+    sfRectangleShape_setFillColor(shape, Box_Col);
+    sfRectangleShape_setOutlineColor(shape, Tex_Col);
+    sfRectangleShape_setOutlineThickness(shape, 5.0f);
+
+    // Render Stuff
+    sfRenderWindow_drawRectangleShape(screen, shape, NULL);
+    sfRenderWindow_drawText(screen, actualtext, NULL);
+
+    // Clear Stuff
+    sfText_destroy(actualtext);
+    sfRectangleShape_destroy(shape);
+    shape = NULL;
+    actualtext = NULL;
+}
+
 bool MenuPlace()
 {
     if(!CSFMLIsInit || !mstate.isInit)
@@ -1161,6 +1529,7 @@ bool MenuPlace()
 
             // Aufräumen
             CSFMLCLRSCR();
+            CSFMLCLRLevelStuff();
             sfRenderWindow_setTitle(screen, "Snake Game: Hauptmenü");
 
             // Normale Elemente Platzieren
@@ -1287,13 +1656,46 @@ bool MenuPlace()
                 MenuPlacePopup("Fehler beim Laden !", SETTINGSSITE, SETTINGDEF, true);
         break;
 
-        // Spiele Seite
-        case GAMESITE_USERENTER:
+        // Level Selection
+        case GAMESITE_LEVEL:
             CSFMLCLRSCR();
-            sfRenderWindow_setTitle(screen, "Snake Game: Spiele!");
+            sfRenderWindow_setTitle(screen, "Snake Game: Level Auswahl");
+
+            MenuPlaceIMG(0, 0, false, 0);
+            MenuPlaceIMG(0, 200, true, 0);
+
+            // Print Levels
+            CSFMLPrintLevels();
+
+            MenuSetElementsVisible(GAMESITE_LEVEL);
+        break;
+
+        // User Enter
+        case GAMESITE_USER:
+            CSFMLCLRSCR();
+            sfRenderWindow_setTitle(screen, "Snake Game: Gebe deinen Namen ein");
+
+            MenuPlaceIMG(0,0, false, 0);
+            MenuPlaceIMG(0, 200, true, 0);
+
+            // Print User Enter with Button
+            CSFMLPrintUserEnter();
+
+            MenuSetElementsVisible(GAMESITE_USER);
+        break;
+
+        // Play Now!
+        case GAMESITE_PLAY:
+            CSFMLCLRSCR();
+            CSFMLCLRLevelStuff();
+            sfRenderWindow_setTitle(screen, "Snake Game: Spiele jetzt!");
 
             mstate.startgame = true;
 
+        break;
+
+        // Snake Dead Page
+        case GAMESITE_END:
         break;
 
         // Layout und Funktionen für Exitseite

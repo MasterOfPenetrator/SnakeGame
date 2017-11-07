@@ -25,7 +25,7 @@
 #define ENTRYS_PER_PAGE 10
 
 // Aufzählungen
-typedef enum { MAINSITE, SCORESITE, SCORESITE_NEXT, SCORESITE_BACK, SETTINGSSITE, SETTING_SHAD, SETTING_VSYNC, SETTINGSAVE, SETTINGDEF, GAMESITE_USERENTER, EXITSITE } MENUSITES;
+typedef enum { MAINSITE, SCORESITE, SCORESITE_NEXT, SCORESITE_BACK, SETTINGSSITE, SETTING_SHAD, SETTING_VSYNC, SETTINGSAVE, SETTINGDEF, GAMESITE_LEVEL, GAMESITE_USER, GAMESITE_PLAY, GAMESITE_END, EXITSITE } MENUSITES;
 
 // Medien Strukturen
 typedef struct {
@@ -120,6 +120,19 @@ typedef struct
     size_t entry_stack;
     bool entryCleared;
 
+    // Level Stuff
+    char **Level_Names;
+    bool Level_Dir_Opened;
+    size_t Level_Count;
+    bool Level_Selected;
+    int Level_ID;
+
+    bool Allow_UserEnter;
+    bool Text_Field_Clicked;
+    size_t UserName_Counter;
+    char Level_Username[20];
+    bool User_Final_Enter;
+
     // Start Game
     bool startgame;
 
@@ -185,6 +198,11 @@ bool MenuPlaceHighScore(bool visible);
 
 bool MenuProcessButtons();
 bool MenuProcessSliders();
+bool CSFMLPrintLevels();
+void CSFMLPrintLevelButton(const char *Text, size_t i);
+void CSFMLCLRLevelStuff();
+void CSFMLPrintUserEnter();
+void CSFMLUserLevelButton(const char *Text);
 bool MenuPlace();
 
 

@@ -82,6 +82,7 @@ bool CSFMLLoadlevel(int id);
 bool CSFMLRenderLevel();
 void CSFMLQuitLevel();
 bool CSFMLLoadMapDescriptor();
+bool CSFMLPreloadMapName(const char *Path, char *LevelName, size_t LevelName_Size); // For Menu Level Names
 bool CSFMLLoadEventmap();
 bool CSFMLLoadTilemap();
 bool CSFMLLoadBackground();
