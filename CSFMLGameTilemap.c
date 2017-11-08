@@ -331,7 +331,6 @@ bool CSFMLLoadBackground()
     char CompletePath_Diffuse_Texture[100] = {0};
     char CompletePath_Normal_Texture[100] = {0};
     char CompletePath_Specular_Texture[100] = {0};
-    char CompletePath_Shader[100] = {0};
 
     strcat(CompletePath_Diffuse_Texture, Level.Level_Path);
     strcat(CompletePath_Diffuse_Texture, "Diffuse.png");
@@ -339,31 +338,48 @@ bool CSFMLLoadBackground()
     strcat(CompletePath_Normal_Texture, "Normal.png");
     strcat(CompletePath_Specular_Texture, Level.Level_Path);
     strcat(CompletePath_Specular_Texture, "Specular.png");
-    strcat(CompletePath_Shader, Level.Level_Path);
-    strcat(CompletePath_Shader, "Shader.frag");
-
     // Initialize Textures, Sprite and Shader
     Level.BG_Texture_Diffuse = sfTexture_createFromFile(CompletePath_Diffuse_Texture, NULL);
     Level.BG_Texture_Normal = sfTexture_createFromFile(CompletePath_Normal_Texture, NULL);
     Level.BG_Texture_Specular = sfTexture_createFromFile(CompletePath_Specular_Texture, NULL);
-    Level.BG_Texture_Shader = sfShader_createFromFile(NULL, NULL, CompletePath_Shader);
     Level.BG_Sprite = sfSprite_create();
     Level.BG_View = sfView_create();
 
-    if(Level.BG_Texture_Diffuse == NULL || Level.BG_Texture_Normal == NULL || Level.BG_Texture_Specular == NULL || Level.BG_Texture_Shader == NULL || Level.BG_Sprite == NULL || Level.BG_View == NULL)
+    if(Level.BG_Texture_Diffuse == NULL || Level.BG_Texture_Normal == NULL || Level.BG_Texture_Specular == NULL || Level.BG_Sprite == NULL || Level.BG_View == NULL)
     {
         printf("Game Subsystem Fehler 'GameTilemap': Dateien zu BG konnte nicht geladen werden!\n");
         return false;
     }
 
-    // Setting up Shader Parameters
-    sfShader_setTextureUniform(Level.BG_Texture_Shader, "Diffuse_Textur", Level.BG_Texture_Diffuse);
-    sfShader_setTextureUniform(Level.BG_Texture_Shader, "Normal_Textur", Level.BG_Texture_Normal);
-    sfShader_setTextureUniform(Level.BG_Texture_Shader, "Spiegel_Textur", Level.BG_Texture_Specular);
-    Level.BG_Texture_State.blendMode = sfBlendNone;
-    Level.BG_Texture_State.shader = Level.BG_Texture_Shader;
-    Level.BG_Texture_State.texture = Level.BG_Texture_Diffuse;
-    Level.BG_Texture_State.transform = sfTransform_Identity;
+    if(shader_enabled)
+    {
+        // Build Path
+        char CompletePath_Shader[100] = {0};
+        strcat(CompletePath_Shader, Level.Level_Path);
+        strcat(CompletePath_Shader, "Shader.frag");
+
+        // Load Shader
+        Level.BG_Texture_Shader = sfShader_createFromFile(NULL, NULL, CompletePath_Shader);
+
+        if(Level.BG_Texture_Shader == NULL)
+        {
+            printf("Game Subsystem Fehler 'GameTilemap': Konnte Shader fuer Background nicht laden!\n");
+            return false;
+        }
+
+        // Setting up Shader Parameters
+        sfShader_setTextureUniform(Level.BG_Texture_Shader, "Diffuse_Textur", Level.BG_Texture_Diffuse);
+        sfShader_setTextureUniform(Level.BG_Texture_Shader, "Normal_Textur", Level.BG_Texture_Normal);
+        sfShader_setTextureUniform(Level.BG_Texture_Shader, "Spiegel_Textur", Level.BG_Texture_Specular);
+        Level.BG_Texture_State.blendMode = sfBlendNone;
+        Level.BG_Texture_State.shader = Level.BG_Texture_Shader;
+        Level.BG_Texture_State.texture = Level.BG_Texture_Diffuse;
+        Level.BG_Texture_State.transform = sfTransform_Identity;
+    }
+    else
+    {
+        Level.BG_Texture_Shader = NULL;
+    }
 
     // Setup Views
     sfFloatRect View_Rect;

@@ -1116,55 +1116,26 @@ bool MenuSetElementsVisible(MENUSITES page)
 void ToggleShader()
 {
     size_t t;
-    if(shader_enabled)
+    shader_enabled = !shader_enabled;
+    for(t = 0; t<mstate.set_stack; t++)
     {
-        shader_enabled = false;
-        for(t = 0; t<mstate.set_stack; t++)
+        if(mstate.setting[t].effect == 2)
         {
-            if(mstate.setting[t].effect == 2)
-            {
-                mstate.setting[t].actual_value = 0;
-            }
-        }
-    }
-    else
-    {
-        shader_enabled = true;
-        for(t = 0; t<mstate.set_stack; t++)
-        {
-            if(mstate.setting[t].effect == 2)
-            {
-                mstate.setting[t].actual_value = 1;
-            }
+            mstate.setting[t].actual_value = shader_enabled;
         }
     }
 }
 
 void ToggleVsync()
 {
+    vsync_enabled = !vsync_enabled;
     size_t t;
-    if(vsync_enabled)
+    for(t = 0; t<mstate.set_stack; t++)
     {
-        vsync_enabled = false;
-        for(t = 0; t<mstate.set_stack; t++)
+        if(mstate.setting[t].effect == 3)
         {
-            if(mstate.setting[t].effect == 3)
-            {
-                mstate.setting[t].actual_value = 0;
-                sfRenderWindow_setVerticalSyncEnabled(screen, sfFalse);
-            }
-        }
-    }
-    else
-    {
-        vsync_enabled = true;
-        for(t = 0; t<mstate.set_stack; t++)
-        {
-            if(mstate.setting[t].effect == 3)
-            {
-                mstate.setting[t].actual_value = 1;
-                sfRenderWindow_setVerticalSyncEnabled(screen, sfTrue);
-            }
+            mstate.setting[t].actual_value = vsync_enabled;
+            sfRenderWindow_setVerticalSyncEnabled(screen, sfFalse);
         }
     }
 }
