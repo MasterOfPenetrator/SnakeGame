@@ -31,6 +31,7 @@ typedef struct {
     float GC_Time;
     TimeEvent *GC_ItemEvents;
     size_t GC_ItemEvents_Count;
+    bool GC_ItemEvents_Init;
     bool GC_Is_Init;
 } Clock;
 

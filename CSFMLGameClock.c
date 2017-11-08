@@ -23,6 +23,7 @@ bool CSFMLInitClock()
     GameClock.GC_Is_Init = true;
     GameClock.GC_ItemEvents = NULL; // Prevent dangling pointer
     GameClock.GC_ItemEvents_Count = 0;
+    GameClock.GC_ItemEvents_Init = false;
 
     return true;
 }
@@ -303,7 +304,7 @@ void CSFMLQuitClock()
     GameClock.GC_Clock = NULL;
 
     // Clearing Time Events
-    if(GameClock.GC_ItemEvents_Count > 0)
+    if(GameClock.GC_ItemEvents_Init)
     {
         free(GameClock.GC_ItemEvents);
         GameClock.GC_ItemEvents = NULL;
@@ -367,6 +368,7 @@ bool CSFMLAddTimeEvent(EffectType Effect, int Duration, int NewValue, bool Direc
 
         // Count up
         GameClock.GC_ItemEvents_Count++;
+        GameClock.GC_ItemEvents_Init = true;
     }
     else
     {
