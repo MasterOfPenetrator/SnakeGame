@@ -48,8 +48,8 @@ bool CSFMLInitSnake()
     }
     else
     {
-        GameSnake.SB_Head_Shader = NULL;
-        GameSnake.SB_Body_Shader = NULL;
+        GameSnake.SB_Head_Shader = NULL; // prevent dangling pointer
+        GameSnake.SB_Body_Shader = NULL; // prevent dangling pointer
     }
 
     // Init Snake Blocks
@@ -802,11 +802,11 @@ bool CSFMLCheckSelfCollision()
             for(i = 0; i<GameSnake.SB_Body_Elements; i++)
             {
                 // Another Self Hit on Left Direction
-                if(GameSnake.SB_Body[i].x == Left_X && GameSnake.SB_Body[i].y == Move_Y)
+                if(CompareFloats(GameSnake.SB_Body[i].x, Left_X) && CompareFloats(GameSnake.SB_Body[i].y, Move_Y))
                     Left = false;
 
                 // Another Self Hit on Right Direction
-                if(GameSnake.SB_Body[i].x == Right_X && GameSnake.SB_Body[i].y == Move_Y)
+                if(CompareFloats(GameSnake.SB_Body[i].x, Right_X) && CompareFloats(GameSnake.SB_Body[i].y, Move_Y))
                     Right = false;
             }
 
@@ -882,11 +882,11 @@ bool CSFMLCheckSelfCollision()
             for(i = 0; i<GameSnake.SB_Body_Elements; i++)
             {
                 // Another Self Hit on Up Direction
-                if(GameSnake.SB_Body[i].x == Move_X && GameSnake.SB_Body[i].y ==  Up_Y)
+                if(CompareFloats(GameSnake.SB_Body[i].x, Move_X) && CompareFloats(GameSnake.SB_Body[i].y, Up_Y))
                     Up = false;
 
                 // Another Self Hit on Down Direction
-                if(GameSnake.SB_Body[i].x == Move_X && GameSnake.SB_Body[i].y == Down_Y)
+                if(CompareFloats(GameSnake.SB_Body[i].x, Move_X) && CompareFloats(GameSnake.SB_Body[i].y, Down_Y))
                     Down = false;
             }
 

@@ -7,6 +7,7 @@ typedef enum { IT_HEALTH, IT_SPEED, IT_FOOD, IT_GOD, IT_NOCLIP, IT_CUSTOM } Item
 
 // Includes
 #include "CSFMLMenu.h"
+#include "CSFMLOtherStuff.h"
 #include "CSFMLGameTilemap.h"
 #include "CSFMLGameLights.h"
 #include "CSFMLGameClock.h"

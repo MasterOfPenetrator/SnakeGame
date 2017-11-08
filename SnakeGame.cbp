@@ -140,6 +140,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="CSFMLMenu.h" />
+		<Unit filename="CSFMLOtherStuff.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLOtherStuff.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -1393,7 +1393,7 @@ void CSFMLPrintUserEnter()
     sfText_setString(UserEnterStuff, mstate.Level_Username);
 
     // Print Button if Next Step
-    if(mstate.UserName_Counter > 5)
+    if(mstate.UserName_Counter >= 5)
         CSFMLUserLevelButton("Now Go to Play!");
 
     // Render Stuff

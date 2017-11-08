@@ -63,17 +63,22 @@ void CSFMLQuitLevel()
     sfSprite_setColor(Level.BG_Sprite, sfBlack);
     sfRenderWindow_drawSprite(screen, Level.BG_Sprite, NULL);
 
+    // Clear Shader
+    if(shader_enabled)
+    {
+        sfShader_destroy(Level.BG_Texture_Shader);
+        Level.BG_Texture_Shader = NULL;
+    }
+
     // Clear SFML Stuff
     sfTexture_destroy(Level.BG_Texture_Diffuse);
     sfTexture_destroy(Level.BG_Texture_Normal);
     sfTexture_destroy(Level.BG_Texture_Specular);
-    sfShader_destroy(Level.BG_Texture_Shader);
     sfSprite_destroy(Level.BG_Sprite);
     sfView_destroy(Level.BG_View);
     Level.BG_Texture_Diffuse = NULL;
     Level.BG_Texture_Normal = NULL;
     Level.BG_Texture_Specular = NULL;
-    Level.BG_Texture_Shader = NULL;
     Level.BG_Sprite = NULL;
     Level.BG_View = NULL;
 
@@ -378,7 +383,7 @@ bool CSFMLLoadBackground()
     }
     else
     {
-        Level.BG_Texture_Shader = NULL;
+        Level.BG_Texture_Shader = NULL; // prevent dangling pointer
     }
 
     // Setup Views

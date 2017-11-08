@@ -36,14 +36,17 @@ bool CSFMLRenderLights()
         return false;
 
     // Set Shader Variables
-    sfShader_setFloatUniformArray(Level.BG_Texture_Shader, "Licht_Kegel_Aktiv", GameLight_Coneactive, GameLight_Count);
-    sfShader_setFloatUniformArray(Level.BG_Texture_Shader, "FBM_Kegel_Aktiv", GameLight_FBMactive, GameLight_Count);
-    sfShader_setFloatUniformArray(Level.BG_Texture_Shader, "Ambient_Staerke", GameLight_Ambientpower, GameLight_Count);
-    sfShader_setVec3UniformArray(Level.BG_Texture_Shader, "Licht_Position", GameLight_Lightpos, GameLight_Count);
-    sfShader_setVec3UniformArray(Level.BG_Texture_Shader, "Kegel_Position", GameLight_Conepos, GameLight_Count);
-    sfShader_setFloatUniformArray(Level.BG_Texture_Shader, "Licht_Kegel_Winkel", GameLight_Coneangle, GameLight_Count);
-    sfShader_setFloatUniformArray(Level.BG_Texture_Shader, "Licht_Aktiv", GameLight_Active, GameLight_Count);
-    sfShader_setIntUniform(Level.BG_Texture_Shader, "Anzahl_Lichter", GameLight_Count);
+    if(shader_enabled)
+    {
+        sfShader_setFloatUniformArray(Level.BG_Texture_Shader, "Licht_Kegel_Aktiv", GameLight_Coneactive, GameLight_Count);
+        sfShader_setFloatUniformArray(Level.BG_Texture_Shader, "FBM_Kegel_Aktiv", GameLight_FBMactive, GameLight_Count);
+        sfShader_setFloatUniformArray(Level.BG_Texture_Shader, "Ambient_Staerke", GameLight_Ambientpower, GameLight_Count);
+        sfShader_setVec3UniformArray(Level.BG_Texture_Shader, "Licht_Position", GameLight_Lightpos, GameLight_Count);
+        sfShader_setVec3UniformArray(Level.BG_Texture_Shader, "Kegel_Position", GameLight_Conepos, GameLight_Count);
+        sfShader_setFloatUniformArray(Level.BG_Texture_Shader, "Licht_Kegel_Winkel", GameLight_Coneangle, GameLight_Count);
+        sfShader_setFloatUniformArray(Level.BG_Texture_Shader, "Licht_Aktiv", GameLight_Active, GameLight_Count);
+        sfShader_setIntUniform(Level.BG_Texture_Shader, "Anzahl_Lichter", GameLight_Count);
+    }
 
     return true;
 }

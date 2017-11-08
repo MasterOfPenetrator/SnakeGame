@@ -2,7 +2,7 @@
 
 bool CSFMLInitClock()
 {
-    // Game Timer initialisieren
+    // Init Game Timer
     GameClock.GC_Clock = sfClock_create();
 
     if(GameClock.GC_Clock == NULL)
@@ -21,6 +21,8 @@ bool CSFMLInitClock()
     GameClock.GC_SecondTick = false;
     GameClock.GC_SecondTime = 0.0f;
     GameClock.GC_Is_Init = true;
+    GameClock.GC_ItemEvents = NULL; // Prevent dangling pointer
+    GameClock.GC_ItemEvents_Count = 0;
 
     return true;
 }
@@ -90,6 +92,207 @@ bool CSFMLUpdateClock()
         }
     }
 
+    // Update Time Events, only when Time Events putted
+    if(GameClock.GC_ItemEvents_Count > 0)
+    {
+        // Iterate over all Items
+        size_t i;
+        for(i = 0; i<GameClock.GC_ItemEvents_Count; i++)
+        {
+            // Is Time Over?
+            // If Yes, returning to normal and Delete TimeEvent
+            if(GameClock.GC_Time > (GameClock.GC_ItemEvents[i].StartTime + (float)GameClock.GC_ItemEvents[i].Duration))
+            {
+                printf("Event Deleted!\n");
+                // Restore Values
+                switch(GameClock.GC_ItemEvents[i].Effect_Type)
+                {
+                    case HEALTH:
+                        // Item Effect had a increased Effect
+                        if(!GameClock.GC_ItemEvents[i].Direction)
+                        {
+                            if(GameSnake.S_Health - GameClock.GC_ItemEvents[i].Act_Value <= 0)
+                            {
+                                GameSnake.S_Health = 0;
+                                GameSnake.S_Is_Dead = true;
+                            }
+                            else
+                            {
+                                GameSnake.S_Health -= GameClock.GC_ItemEvents[i].Act_Value;
+                            }
+                        }
+                        // Item Effect had a decreased Effect
+                        else
+                        {
+                            if((GameSnake.S_Health + GameClock.GC_ItemEvents[i].Act_Value) >= 100)
+                            {
+                                GameSnake.S_Health = 100;
+                            }
+                            else
+                            {
+                                GameSnake.S_Health += GameClock.GC_ItemEvents[i].Act_Value;
+                            }
+                        }
+                    break;
+
+                    case SPEED:
+                        // Item Effect had a increased Effect
+                        if(!GameClock.GC_ItemEvents[i].Direction)
+                        {
+                            if((GameSnake.S_Speed - GameClock.GC_ItemEvents[i].Act_Value) < 0 || (GameSnake.S_Speed - GameClock.GC_ItemEvents[i].Act_Value) < GameSnake.S_DefaultSpeed)
+                            {
+                                GameSnake.S_Speed = GameSnake.S_DefaultSpeed;
+                            }
+                            else
+                            {
+                                GameSnake.S_Speed -= (float)GameClock.GC_ItemEvents[i].Act_Value;
+                            }
+                        }
+                        // Item Effect had a decreased Effect
+                        else
+                        {
+                            // No Upper Limit for Speed
+                            GameSnake.S_Speed += (float)GameClock.GC_ItemEvents[i].Act_Value;
+                        }
+                    break;
+
+                    case SCORE:
+                        // Item Effect had a increased Effect
+                        if(!GameClock.GC_ItemEvents[i].Direction)
+                        {
+                            if((GameSnake.S_Score - GameClock.GC_ItemEvents[i].Act_Value) <= 0)
+                            {
+                                GameSnake.S_Score = 0;
+                            }
+                            else
+                            {
+                                GameSnake.S_Score -= GameClock.GC_ItemEvents[i].Act_Value;
+                            }
+                        }
+                        // Item Effect had a decreased Effect
+                        else
+                        {
+                            // No Upper Limit for Score
+                            GameSnake.S_Score += GameClock.GC_ItemEvents[i].Act_Value;
+                        }
+                    break;
+
+                    case GOD:
+                        GameSnake.S_GODMODE = (bool)GameClock.GC_ItemEvents[i].Act_Value;
+                    break;
+
+                    case NOCLIP:
+                        GameSnake.S_NOCLIP = (bool)GameClock.GC_ItemEvents[i].Act_Value;
+                    break;
+
+                    default:
+                    break;
+                }
+
+                // Delete Element by ID
+                if(!CSFMLDeleteTimeEventByIndex(i))
+                {
+                    printf("Game Subsystem Fehler 'GameClock': Kann Element nicht loeschen!\n");
+                    return false;
+                }
+            }
+            else
+            {
+                // Set Time, if it not setted before!
+                if(!GameClock.GC_ItemEvents[i].Event_Setted)
+                {
+                    printf("Event Setted!\n");
+                    switch(GameClock.GC_ItemEvents[i].Effect_Type)
+                    {
+                        case HEALTH:
+                            // Item Effect had a increased Effect
+                            if(!GameClock.GC_ItemEvents[i].Direction)
+                            {
+                                if((GameSnake.S_Health + GameClock.GC_ItemEvents[i].Act_Value) >= 100)
+                                {
+                                    GameSnake.S_Health = 100;
+                                }
+                                else
+                                {
+                                    GameSnake.S_Health += GameClock.GC_ItemEvents[i].Act_Value;
+                                }
+                            }
+                            // Item Effect had a decreased Effect
+                            else
+                            {
+                                if(GameSnake.S_Health - GameClock.GC_ItemEvents[i].Act_Value <= 0)
+                                {
+                                    GameSnake.S_Health = 0;
+                                    GameSnake.S_Is_Dead = true;
+                                }
+                                else
+                                {
+                                    GameSnake.S_Health -= GameClock.GC_ItemEvents[i].Act_Value;
+                                }
+                            }
+                        break;
+
+                        case SPEED:
+                            // Item Effect had a increased Effect
+                            if(!GameClock.GC_ItemEvents[i].Direction)
+                            {
+                                // No Upper Limit for Speed
+                                GameSnake.S_Speed += (float)GameClock.GC_ItemEvents[i].Act_Value;
+                            }
+                            // Item Effect had a decreased Effect
+                            else
+                            {
+                                if((GameSnake.S_Speed - GameClock.GC_ItemEvents[i].Act_Value) < 0 || (GameSnake.S_Speed - GameClock.GC_ItemEvents[i].Act_Value) < GameSnake.S_DefaultSpeed)
+                                {
+                                    GameSnake.S_Speed = GameSnake.S_DefaultSpeed;
+                                }
+                                else
+                                {
+                                    GameSnake.S_Speed -= (float)GameClock.GC_ItemEvents[i].Act_Value;
+                                }
+                            }
+                        break;
+
+                        case SCORE:
+                            // Item Effect had a increased Effect
+                            if(!GameClock.GC_ItemEvents[i].Direction)
+                            {
+                                // No Upper Limit for Score
+                                GameSnake.S_Score += GameClock.GC_ItemEvents[i].Act_Value;
+                            }
+                            // Item Effect had a decreased Effect
+                            else
+                            {
+                                if((GameSnake.S_Score - GameClock.GC_ItemEvents[i].Act_Value) <= 0)
+                                {
+                                    GameSnake.S_Score = 0;
+                                }
+                                else
+                                {
+                                    GameSnake.S_Score -= GameClock.GC_ItemEvents[i].Act_Value;
+                                }
+                            }
+                        break;
+
+                        case GOD:
+                            GameSnake.S_GODMODE = (bool)GameClock.GC_ItemEvents[i].Act_Value;
+                        break;
+
+                        case NOCLIP:
+                            GameSnake.S_NOCLIP = (bool)GameClock.GC_ItemEvents[i].Act_Value;
+                        break;
+
+                        default:
+                        break;
+                    }
+
+                    // Set TimeEvent Setted
+                    GameClock.GC_ItemEvents[i].Event_Setted = true;
+                }
+            }
+        }
+    }
+
     return true;
 }
 
@@ -99,9 +302,145 @@ void CSFMLQuitClock()
     sfClock_destroy(GameClock.GC_Clock);
     GameClock.GC_Clock = NULL;
 
+    // Clearing Time Events
+    if(GameClock.GC_ItemEvents_Count > 0)
+    {
+        free(GameClock.GC_ItemEvents);
+        GameClock.GC_ItemEvents = NULL;
+    }
+
     // Reset General Things
     GameClock.GC_SnakeTick = false;
     GameClock.GC_Is_Init = false;
+}
+
+// Adding Time Event
+bool CSFMLAddTimeEvent(EffectType Effect, int Duration, int NewValue, bool Direction)
+{
+    // There 0 Time Events
+    if(GameClock.GC_ItemEvents_Count == 0)
+    {
+        // Init Initial Memory
+        GameClock.GC_ItemEvents = malloc(sizeof(TimeEvent));
+
+        if(GameClock.GC_ItemEvents == NULL)
+        {
+            printf("Game Subsystem Fehler 'GameClock': Kann keinen Speicher fuer TimeEvents reservieren!\n");
+            return false;
+        }
+
+        // Now Fill Event with Values
+        GameClock.GC_ItemEvents[0].Effect_Type = Effect;
+        GameClock.GC_ItemEvents[0].Duration = Duration;
+        GameClock.GC_ItemEvents[0].StartTime = GameClock.GC_Time;
+        GameClock.GC_ItemEvents[0].Act_Value = NewValue;
+        GameClock.GC_ItemEvents[0].Direction = Direction;
+        GameClock.GC_ItemEvents[0].Event_Setted = false;
+
+        switch(Effect)
+        {
+            case HEALTH:
+                GameClock.GC_ItemEvents[0].Prev_Value = GameSnake.S_Health;
+            break;
+
+            case SPEED:
+                GameClock.GC_ItemEvents[0].Prev_Value = (int)GameSnake.S_Speed;
+            break;
+
+            case SCORE:
+                GameClock.GC_ItemEvents[0].Prev_Value = GameSnake.S_Score;
+            break;
+
+            case GOD:
+                GameClock.GC_ItemEvents[0].Prev_Value = (int)GameSnake.S_GODMODE;
+            break;
+
+            case NOCLIP:
+                GameClock.GC_ItemEvents[0].Prev_Value = (int)GameSnake.S_NOCLIP;
+            break;
+
+            default:
+                printf("Game Subsystem Fehler 'GameClock': Unbekannter Effect Type!\n");
+                return false;
+            break;
+        }
+
+        // Count up
+        GameClock.GC_ItemEvents_Count++;
+    }
+    else
+    {
+        // Init Memory Only, if No Memory allocated!
+        if((GameClock.GC_ItemEvents_Count+1) != (sizeof(GameClock.GC_ItemEvents) / sizeof(GameClock.GC_ItemEvents[0])))
+        {
+            GameClock.GC_ItemEvents = realloc(GameClock.GC_ItemEvents, (GameClock.GC_ItemEvents_Count+1)*sizeof(TimeEvent));
+
+            if(GameClock.GC_ItemEvents == NULL)
+            {
+                printf("Game Subsystem Fehler 'GameClock': Kann keinen zusaetzlichen Speicher fuer ItemEvents anlegen!\n");
+                return false;
+            }
+        }
+
+        // Now Fill Event with Values
+        GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Effect_Type = Effect;
+        GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Duration = Duration;
+        GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].StartTime = GameClock.GC_Time;
+        GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Act_Value = NewValue;
+        GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Direction = Direction;
+        GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Event_Setted = false;
+
+        switch(Effect)
+        {
+            case HEALTH:
+                GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Prev_Value = GameSnake.S_Health;
+            break;
+
+            case SPEED:
+                GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Prev_Value = (int)GameSnake.S_Speed;
+            break;
+
+            case SCORE:
+                GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Prev_Value = GameSnake.S_Score;
+            break;
+
+            case GOD:
+                GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Prev_Value = (int)GameSnake.S_GODMODE;
+            break;
+
+            case NOCLIP:
+                GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Prev_Value = (int)GameSnake.S_NOCLIP;
+            break;
+
+            default:
+                printf("Game Subsystem Fehler 'GameClock': Unbekannter Effect Type!\n");
+                return false;
+            break;
+        }
+
+        // Count up
+        GameClock.GC_ItemEvents_Count++;
+    }
+
+    return true;
+}
+
+// Deleting the latest Time Event
+bool CSFMLDeleteTimeEventByIndex(size_t index)
+{
+    // Checkup
+    if(index > GameClock.GC_ItemEvents_Count)
+        return false;
+
+    // Shift Elements
+    size_t i;
+    for(i = index; i<GameClock.GC_ItemEvents_Count-1; i++)
+        GameClock.GC_ItemEvents[i] = GameClock.GC_ItemEvents[i+1];
+
+    // Count down
+    GameClock.GC_ItemEvents_Count--;
+
+    return true;
 }
 
 

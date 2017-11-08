@@ -64,8 +64,8 @@ bool CSFMLInitItems()
     }
     else
     {
-        GameItem.GI_Shaders = NULL;
-        GameItem.GI_States = NULL;
+        GameItem.GI_Shaders = NULL; // Prevent dangling pointer
+        GameItem.GI_States = NULL; // Prevent dangling pointer
     }
 
     // Open Directory
@@ -335,30 +335,22 @@ void CSFMLSetCoordinatesItems()
     size_t random_y = rand() % MAX_TILES_Y;
 
     // Check Snake Collide Head !OK
-    // Todo: Prevent for XXX == Float Value, it could be undefined behavior
-    if(random_x == GameSnake.SB_Head.x && random_y == GameSnake.SB_Head.y)
+    if(CompareFloats(random_x, GameSnake.SB_Head.x) && CompareFloats(random_y, GameSnake.SB_Head.y))
         Hit = true;
 
     // Check Snake Collide Body !OK
     // Todo: Prevent for XXX = Float Value, it could be undefined behavior
     for(i = 0; i<GameSnake.SB_Body_Elements; i++)
     {
-        if(GameSnake.SB_Body[i].x == random_x && GameSnake.SB_Body[i].y == random_y)
+        if(CompareFloats(GameSnake.SB_Body[i].x, random_x) && CompareFloats(GameSnake.SB_Body[i].y, random_y))
             Hit = true;
     }
 
     // Check Item Collide -> Fail?!
     for(i = 0; i<GameItem.GI_Items_Count; i++)
     {
-        if(GameItem.GI_Coordinates_Setted[i])
-        {
-            size_t G_X = fabs(GameItem.GI_Blocks[i].x);
-            size_t G_Y = fabs(GameItem.GI_Blocks[i].y);
-            if(G_X == random_x && G_Y == random_y)
-            {
-                Hit = true;
-            }
-        }
+        if(CompareFloats(GameItem.GI_Blocks[i].x, random_x) && CompareFloats(GameItem.GI_Blocks[i].y, random_y))
+            Hit = true;
     }
 
     // Iterate over all Items
@@ -498,10 +490,6 @@ void CSFMLRenderItemText()
 // Handle now Items
 void CSFMLHandleItems()
 {
-    // First Handle Timer Events;
-    if(GameSnake.S_EndItemTime <= GameClock.GC_Time)
-        GameSnake.S_Speed = GameSnake.S_DefaultSpeed;
-
     // Getting Actual Direction
     Direction dir = GameSnake.S_Actual_Direction;
 
@@ -553,23 +541,39 @@ void CSFMLHandleItems()
                         CSFMLItemSpawnText("First Aid Picked!");
 
                         // Set Health
-                        if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
+                        // Timelimited Health Item
+                        if(GameItem.GI_Items[i].I_Propertys[s].I_Duration > 0)
                         {
-                            if((GameSnake.S_Health + GameItem.GI_Items[i].I_Propertys[s].I_Amount) < 100)
-                                GameSnake.S_Health += GameItem.GI_Items[i].I_Propertys[s].I_Amount;
-                            else
-                                GameSnake.S_Health = 100;
-                        }
-                        else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
-                        {
-                            if((GameSnake.S_Health - GameItem.GI_Items[i].I_Propertys[s].I_Amount) > 0)
-                                GameSnake.S_Health -= GameItem.GI_Items[i].I_Propertys[s].I_Amount;
-                            else
+                            if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
                             {
-                                GameSnake.S_Health = 0;
-                                GameSnake.S_Is_Dead = true;
+                                CSFMLAddTimeEvent(HEALTH, GameItem.GI_Items[i].I_Propertys[s].I_Duration, GameItem.GI_Items[i].I_Propertys[s].I_Amount, 0);
                             }
+                            else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
+                            {
+                                CSFMLAddTimeEvent(HEALTH, GameItem.GI_Items[i].I_Propertys[s].I_Duration, GameItem.GI_Items[i].I_Propertys[s].I_Amount, 1);
+                            }
+                        }
+                        // Fix Health Item
+                        else
+                        {
+                            if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
+                            {
+                                if((GameSnake.S_Health + GameItem.GI_Items[i].I_Propertys[s].I_Amount) < 100)
+                                    GameSnake.S_Health += GameItem.GI_Items[i].I_Propertys[s].I_Amount;
+                                else
+                                    GameSnake.S_Health = 100;
+                            }
+                            else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
+                            {
+                                if((GameSnake.S_Health - GameItem.GI_Items[i].I_Propertys[s].I_Amount) > 0)
+                                    GameSnake.S_Health -= GameItem.GI_Items[i].I_Propertys[s].I_Amount;
+                                else
+                                {
+                                    GameSnake.S_Health = 0;
+                                    GameSnake.S_Is_Dead = true;
+                                }
 
+                            }
                         }
 
                     }
@@ -584,16 +588,29 @@ void CSFMLHandleItems()
                         CSFMLItemSpawnText("Speed Picked!");
 
                         // Set Speed
-                        // Seems a bit buggy..
-                        if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
+                        // Timelimited Speed Item
+                        if(GameItem.GI_Items[i].I_Propertys[s].I_Duration > 0)
                         {
-                            GameSnake.S_EndItemTime += GameClock.GC_Time + GameItem.GI_Items[i].I_Propertys[s].I_Duration;
-                            GameSnake.S_Speed += GameItem.GI_Items[i].I_Propertys[s].I_Amount;
+                            if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
+                            {
+                                CSFMLAddTimeEvent(SPEED, GameItem.GI_Items[i].I_Propertys[s].I_Duration, GameItem.GI_Items[i].I_Propertys[s].I_Amount, 0);
+                            }
+                            else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
+                            {
+                                CSFMLAddTimeEvent(SPEED, GameItem.GI_Items[i].I_Propertys[s].I_Duration, GameItem.GI_Items[i].I_Propertys[s].I_Amount, 1);
+                            }
                         }
-                        else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
+                        // Fixed Speed Item
+                        else
                         {
-                            GameSnake.S_EndItemTime += GameClock.GC_Time + GameItem.GI_Items[i].I_Propertys[s].I_Duration;
-                            GameSnake.S_Speed -= GameItem.GI_Items[i].I_Propertys[s].I_Amount;
+                            if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
+                            {
+                                GameSnake.S_Speed += GameItem.GI_Items[i].I_Propertys[s].I_Amount;
+                            }
+                            else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
+                            {
+                                GameSnake.S_Speed -= GameItem.GI_Items[i].I_Propertys[s].I_Amount;
+                            }
                         }
                     }
                     else if(GameItem.GI_Items[i].I_Propertys[s].I_Effect == I_SCORE)
@@ -608,19 +625,35 @@ void CSFMLHandleItems()
                         CSFMLItemSpawnText("Food Picked!");
 
                         // Set Score
-                        if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
+                        // Timelimited Score Event
+                        if(GameItem.GI_Items[i].I_Propertys[s].I_Duration > 0)
                         {
-                            GameSnake.S_Score += GameItem.GI_Items[i].I_Propertys[s].I_Amount;
-                        }
-                        else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
-                        {
-                            if((GameSnake.S_Score - GameItem.GI_Items[i].I_Propertys[s].I_Amount) > 0)
-                                GameSnake.S_Score -= GameItem.GI_Items[i].I_Propertys[s].I_Amount;
-                            else
+                            if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
                             {
-                                GameSnake.S_Score = 0;
+                                CSFMLAddTimeEvent(SCORE, GameItem.GI_Items[i].I_Propertys[s].I_Duration, GameItem.GI_Items[i].I_Propertys[s].I_Amount, 0);
                             }
+                            else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
+                            {
+                                CSFMLAddTimeEvent(SCORE, GameItem.GI_Items[i].I_Propertys[s].I_Duration, GameItem.GI_Items[i].I_Propertys[s].I_Amount, 1);
+                            }
+                        }
+                        // Fixed Score Event
+                        else
+                        {
+                            if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
+                            {
+                                GameSnake.S_Score += GameItem.GI_Items[i].I_Propertys[s].I_Amount;
+                            }
+                            else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
+                            {
+                                if((GameSnake.S_Score - GameItem.GI_Items[i].I_Propertys[s].I_Amount) > 0)
+                                    GameSnake.S_Score -= GameItem.GI_Items[i].I_Propertys[s].I_Amount;
+                                else
+                                {
+                                    GameSnake.S_Score = 0;
+                                }
 
+                            }
                         }
                     }
                     else if(GameItem.GI_Items[i].I_Propertys[s].I_Effect == I_GOD)
@@ -634,7 +667,23 @@ void CSFMLHandleItems()
                         CSFMLItemSpawnText("You foolish! Shame on you for God Mode :)");
 
                         // Set God Mode
-                        GameSnake.S_GODMODE = true;
+                        // Timelimited God Item
+                        if(GameItem.GI_Items[i].I_Propertys[s].I_Duration > 0)
+                        {
+                            if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
+                            {
+                                CSFMLAddTimeEvent(GOD, GameItem.GI_Items[i].I_Propertys[s].I_Duration, GameItem.GI_Items[i].I_Propertys[s].I_Amount, 0);
+                            }
+                            else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
+                            {
+                                CSFMLAddTimeEvent(GOD, GameItem.GI_Items[i].I_Propertys[s].I_Duration, GameItem.GI_Items[i].I_Propertys[s].I_Amount, 1);
+                            }
+                        }
+                        // Fixed God Item
+                        else
+                        {
+                            GameSnake.S_GODMODE = true;
+                        }
                     }
                     else if(GameItem.GI_Items[i].I_Propertys[s].I_Effect == I_CLIP)
                     {
@@ -647,7 +696,23 @@ void CSFMLHandleItems()
                         CSFMLItemSpawnText("You foolish! Shame on your family Noclip :)");
 
                         // Set NoClip Mode
-                        GameSnake.S_NOCLIP = true;
+                        // Timelimited Noclip Item
+                        if(GameItem.GI_Items[i].I_Propertys[s].I_Duration > 0)
+                        {
+                            if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_INCREASE)
+                            {
+                                CSFMLAddTimeEvent(NOCLIP, GameItem.GI_Items[i].I_Propertys[s].I_Duration, GameItem.GI_Items[i].I_Propertys[s].I_Amount, 0);
+                            }
+                            else if(GameItem.GI_Items[i].I_Propertys[s].I_Direction == I_DECREASE)
+                            {
+                                CSFMLAddTimeEvent(NOCLIP, GameItem.GI_Items[i].I_Propertys[s].I_Duration, GameItem.GI_Items[i].I_Propertys[s].I_Amount, 1);
+                            }
+                        }
+                        // Fixed Noclip Item
+                        else
+                        {
+                            GameSnake.S_NOCLIP = true;
+                        }
                     }
                 }
             }
