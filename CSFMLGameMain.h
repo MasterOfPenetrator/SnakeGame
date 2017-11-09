@@ -13,7 +13,8 @@ typedef enum { IT_HEALTH, IT_SPEED, IT_FOOD, IT_GOD, IT_NOCLIP, IT_CUSTOM } Item
 #include "CSFMLGameClock.h"
 #include "CSFMLGameSnake.h"
 #include "CSFMLGameItems.h"
-
+#include "CSFMLGameWeapons.h"
+#include "CSFMLGameEnemies.h"
 
 // Structs
 typedef struct {

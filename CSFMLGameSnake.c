@@ -82,7 +82,6 @@ bool CSFMLInitSnake()
     GameSnake.S_Score = 0;
     GameSnake.S_Speed = 3.0f;
     GameSnake.S_DefaultSpeed = 3.0f;
-    GameSnake.S_EndItemTime = 0.0f;
     GameSnake.S_Actual_Direction = NONE;
     GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
     GameSnake.S_Rotate = 0;
@@ -968,6 +967,7 @@ bool CSFMLHandleSnake()
                     sfVector2f Offset = {-SNAKE_PICTURE_SIZE, 0};
                     sfView_move(Level.BG_View, Offset);
                 }
+
             }
             // Move Left
             else if(GameSnake.S_Actual_Direction == LEFT)

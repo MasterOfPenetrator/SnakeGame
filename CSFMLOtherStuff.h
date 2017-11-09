@@ -7,5 +7,6 @@
 
 // Functions
 bool CompareFloats(float Value1, float Value2);
+float GetRandomFloatNumber(int MAX);
 
 #endif /* CSFMLOtherStuff_H */

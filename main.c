@@ -121,7 +121,6 @@ int main (void)
 
         // Display all Things!
         sfRenderWindow_display(screen);
-
     }
 
     // Clear Up things

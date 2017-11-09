@@ -9,6 +9,7 @@
 #define SNAKE_START_BLOCKS 5
 #define SNAKE_PICTURE_SIZE 25
 #define SNAKE_SELFHIT_DMG 45
+#define SNAKE_BITE_DMG 10
 
 // Enums
 typedef enum { LEFT, RIGHT, UP, DOWN, NONE } Direction;
@@ -22,9 +23,12 @@ typedef struct {
 } Block;
 
 typedef struct __attribute__((__packed__)) {
+
+    // Blocks
     Block SB_Head;
     Block *SB_Body;
 
+    // CSFML Stuff
     sfTexture *SB_Head_Texture;
     sfShader *SB_Head_Shader;
     sfSprite *SB_Head_Sprite;
@@ -35,6 +39,7 @@ typedef struct __attribute__((__packed__)) {
     sfSprite *SB_Body_Sprite;
     sfRenderStates SB_Body_State;
 
+    // Properties
     size_t SB_Body_Elements;
     char S_Name[20];
 
@@ -48,16 +53,18 @@ typedef struct __attribute__((__packed__)) {
     bool S_Light_FBM;
     bool S_Light_OnOff;
 
-    Direction S_Actual_Direction;
-    Direction S_Prev_Direction;
-
     bool S_Is_Init;
     bool S_Is_Dead;
 
     bool S_GODMODE;
     bool S_NOCLIP;
 
-    float S_EndItemTime;
+    Direction S_Actual_Direction;
+    Direction S_Prev_Direction;
+
+    // TODO Snake Weapons
+    int S_Actual_Bite_DMG;
+
 
 } Snake;
 

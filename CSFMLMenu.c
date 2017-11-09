@@ -1,10 +1,9 @@
-// Includes
 #include "CSFMLMenu.h"
 
 bool CSFMLInit()
 {
     // Subsysteme initialisieren
-    sfVideoMode mode = {600, 700, 32};
+    sfVideoMode mode = {SCREEN_WIDTH, SCREEN_HEIGHT, 32};
     screen = sfRenderWindow_create(mode, "Snake Game", sfClose, NULL);
 
     if(screen == NULL)
