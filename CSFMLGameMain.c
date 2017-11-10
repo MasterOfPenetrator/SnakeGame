@@ -75,30 +75,63 @@ void CSFMLGameUpdate()
     // Is Snake Alive
     if(!GameSnake.S_Is_Dead)
     {
-        // Activate seperate Game Clock
-        CSFMLUpdateClock();
-
-        // Activate Time Score Update
-        CSFMLGameUpdateTimeSnakeScore();
-
-        // Activate Lights
-        CSFMLRenderLights();
+        // Render Stuff
+        // Viewed Stuff
+        sfRenderWindow_setView(screen, Level.BG_View);
 
         // Render Level
         CSFMLRenderLevel();
 
-        // Handle Snake Events
-        CSFMLHandleSnake();
+        // Render Snake
+        CSFMLRenderSnake();
 
-        // Place Score and Health String
-        CSFMLGameShowScore();
-        CSFMLGameShowHealth();
+        // Render SnakeLight
+        CSFMLSetSnakeLight();
+
+        // Render Items
+        CSFMLRenderItems();
+
+        // Render Weapons
+        CSFMLRenderWeapons();
+
+        // Default Viewed Stuff
+        sfRenderWindow_setView(screen, sfRenderWindow_getDefaultView(screen));
+
+        // Other Stuff
+        CSFMLMainRenderOther();
+
+        // Update Handles
+        if(GameClock.GC_SnakeTick)
+        {
+            CSFMLHandleWeapons();
+            CSFMLHandleItems();
+            CSFMLHandleSnake();
+        }
     }
+
+}
+
+void CSFMLMainRenderOther()
+{
+    // Render Item Hint
+    CSFMLRenderItemText();
+
+    // Activate Lights
+    CSFMLRenderLights();
+
+    // Activate seperate Game Clock
+    CSFMLUpdateClock();
+
+    // Activate Time Score Update
+    CSFMLGameUpdateTimeSnakeScore();
+
+    // Place Score and Health String
+    CSFMLGameShowScore();
+    CSFMLGameShowHealth();
 
     // Place Background Pictures
     MenuPlaceIMG(0, 0, false, 0);
     MenuPlaceIMG(0, 200, true, 0);
-
 }
 
 // Show game score

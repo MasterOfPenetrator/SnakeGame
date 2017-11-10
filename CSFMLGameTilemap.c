@@ -40,18 +40,12 @@ bool CSFMLRenderLevel()
     if(!Level.Is_Init || !Level.Is_Loaded)
         return false;
 
-    // Render Normal Map
-    // Set View
-    sfRenderWindow_setView(screen, Level.BG_View);
-
     // Render
     if(shader_enabled)
         sfRenderWindow_drawSprite(screen, Level.BG_Sprite, &Level.BG_Texture_State);
     else
         sfRenderWindow_drawSprite(screen, Level.BG_Sprite, NULL);
 
-    // Set Default View
-    sfRenderWindow_setView(screen, sfRenderWindow_getDefaultView(screen));
 
     return true;
 }

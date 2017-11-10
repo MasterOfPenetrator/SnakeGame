@@ -929,159 +929,130 @@ bool CSFMLHandleSnake()
     if(!GameSnake.S_Is_Init)
         return false;
 
-    // Move Snake with SnakeTick
-    if(GameClock.GC_SnakeTick)
+    // Todo: Making sfView Move smoother
+
+    // Check TileMap Collide, Self Collide, if Noclip On, Ignore both
+    // Its a bit Tricky, if first equation true, the if skips next elements, so they will not execute :)
+    if(GameSnake.S_NOCLIP || (CSFMLCheckTileMapCollision() && CSFMLCheckSelfCollision()))
     {
-        // Check TileMap Collide, Self Collide, if Noclip On, Ignore both
-        // Its a bit Tricky, if first equation true, the if skips next elements, so they will not execute :)
-        if(GameSnake.S_NOCLIP || (CSFMLCheckTileMapCollision() && CSFMLCheckSelfCollision()))
+        // Right Movement
+        if(GameSnake.S_Actual_Direction == RIGHT)
         {
-            // Handle Weapons
-            CSFMLHandleWeapons();
+            // Delete Last Block
+            CSFMLPopSnakeBlock();
 
-            // Handle Items here!
-            CSFMLHandleItems();
-
-            // Right Movement
-            if(GameSnake.S_Actual_Direction == RIGHT)
+            // Just Move if Prev Move was not LEFT
+            if(!(GameSnake.S_Prev_Direction == LEFT))
             {
-                // Delete Last Block
-                CSFMLPopSnakeBlock();
-
-                // Just Move if Prev Move was not LEFT
-                if(!(GameSnake.S_Prev_Direction == LEFT))
+                // Update Rotation
+                if(GameSnake.S_Rotate != 0)
                 {
-                    // Update Rotation
-                    if(GameSnake.S_Rotate != 0)
-                    {
-                        GameSnake.S_Rotate = 0;
-                    }
-
-                    // Move
-                    CSFMLPushSnakeBlock(RIGHT);
-                    sfVector2f Offset = {SNAKE_PICTURE_SIZE, 0};
-                    sfView_move(Level.BG_View, Offset);
-                    GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
-                }
-                else
-                {
-                    // Move
-                    CSFMLPushSnakeBlock(LEFT);
-                    sfVector2f Offset = {-SNAKE_PICTURE_SIZE, 0};
-                    sfView_move(Level.BG_View, Offset);
+                    GameSnake.S_Rotate = 0;
                 }
 
+                // Move
+                CSFMLPushSnakeBlock(RIGHT);
+                sfVector2f Offset = {SNAKE_PICTURE_SIZE, 0};
+                sfView_move(Level.BG_View, Offset);
+                GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
             }
-            // Move Left
-            else if(GameSnake.S_Actual_Direction == LEFT)
+            else
             {
-                // Delete Last Block
-                CSFMLPopSnakeBlock();
-
-                // Just Move if Prev Move was not RIGHT
-                if(!(GameSnake.S_Prev_Direction == RIGHT))
-                {
-                    // Update Rotation
-                    if(GameSnake.S_Rotate != 180)
-                    {
-                        GameSnake.S_Rotate = 180;
-                    }
-
-                    // Move
-                    CSFMLPushSnakeBlock(LEFT);
-                    sfVector2f Offset = {-SNAKE_PICTURE_SIZE, 0};
-                    sfView_move(Level.BG_View, Offset);
-                    GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
-                }
-                else
-                {
-                    // Move
-                    CSFMLPushSnakeBlock(RIGHT);
-                    sfVector2f Offset = {SNAKE_PICTURE_SIZE, 0};
-                    sfView_move(Level.BG_View, Offset);
-                }
+                // Move
+                CSFMLPushSnakeBlock(LEFT);
+                sfVector2f Offset = {-SNAKE_PICTURE_SIZE, 0};
+                sfView_move(Level.BG_View, Offset);
             }
-            // Move Up
-            else if(GameSnake.S_Actual_Direction == UP)
+
+        }
+        // Move Left
+        else if(GameSnake.S_Actual_Direction == LEFT)
+        {
+            // Delete Last Block
+            CSFMLPopSnakeBlock();
+
+            // Just Move if Prev Move was not RIGHT
+            if(!(GameSnake.S_Prev_Direction == RIGHT))
             {
-                // Delete Last Block
-                CSFMLPopSnakeBlock();
-
-                // Just Move if Prev Move was not DOWN
-                if(!(GameSnake.S_Prev_Direction == DOWN))
+                // Update Rotation
+                if(GameSnake.S_Rotate != 180)
                 {
-                    // Update Rotation
-                    if(GameSnake.S_Rotate != 90)
-                    {
-                        GameSnake.S_Rotate = 90;
-                    }
+                    GameSnake.S_Rotate = 180;
+                }
 
-                    // Move
-                    CSFMLPushSnakeBlock(UP);
-                    sfVector2f Offset = {0, -SNAKE_PICTURE_SIZE};
-                    sfView_move(Level.BG_View, Offset);
-                    GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
-                }
-                else
-                {
-                    // Move
-                    CSFMLPushSnakeBlock(DOWN);
-                    sfVector2f Offset = {0, SNAKE_PICTURE_SIZE};
-                    sfView_move(Level.BG_View, Offset);
-                }
+                // Move
+                CSFMLPushSnakeBlock(LEFT);
+                sfVector2f Offset = {-SNAKE_PICTURE_SIZE, 0};
+                sfView_move(Level.BG_View, Offset);
+                GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
             }
-            // Move Down
-            else if(GameSnake.S_Actual_Direction == DOWN)
+            else
             {
-                // Delete Last Block
-                CSFMLPopSnakeBlock();
+                // Move
+                CSFMLPushSnakeBlock(RIGHT);
+                sfVector2f Offset = {SNAKE_PICTURE_SIZE, 0};
+                sfView_move(Level.BG_View, Offset);
+            }
+        }
+        // Move Up
+        else if(GameSnake.S_Actual_Direction == UP)
+        {
+            // Delete Last Block
+            CSFMLPopSnakeBlock();
 
-                // Just Move if Prev Move was not UP
-                if(!(GameSnake.S_Prev_Direction == UP))
+            // Just Move if Prev Move was not DOWN
+            if(!(GameSnake.S_Prev_Direction == DOWN))
+            {
+                // Update Rotation
+                if(GameSnake.S_Rotate != 90)
                 {
-                    // Update Rotation
-                    if(GameSnake.S_Rotate != 270)
-                    {
-                        GameSnake.S_Rotate = 270;
-                    }
+                    GameSnake.S_Rotate = 90;
+                }
 
-                    // Move
-                    CSFMLPushSnakeBlock(DOWN);
-                    sfVector2f Offset = {0, SNAKE_PICTURE_SIZE};
-                    sfView_move(Level.BG_View, Offset);
-                    GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
-                }
-                else
+                // Move
+                CSFMLPushSnakeBlock(UP);
+                sfVector2f Offset = {0, -SNAKE_PICTURE_SIZE};
+                sfView_move(Level.BG_View, Offset);
+                GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
+            }
+            else
+            {
+                // Move
+                CSFMLPushSnakeBlock(DOWN);
+                sfVector2f Offset = {0, SNAKE_PICTURE_SIZE};
+                sfView_move(Level.BG_View, Offset);
+            }
+        }
+        // Move Down
+        else if(GameSnake.S_Actual_Direction == DOWN)
+        {
+            // Delete Last Block
+            CSFMLPopSnakeBlock();
+
+            // Just Move if Prev Move was not UP
+            if(!(GameSnake.S_Prev_Direction == UP))
+            {
+                // Update Rotation
+                if(GameSnake.S_Rotate != 270)
                 {
-                    // Move
-                    CSFMLPushSnakeBlock(UP);
-                    sfVector2f Offset = {0, -SNAKE_PICTURE_SIZE};
-                    sfView_move(Level.BG_View, Offset);
+                    GameSnake.S_Rotate = 270;
                 }
+
+                // Move
+                CSFMLPushSnakeBlock(DOWN);
+                sfVector2f Offset = {0, SNAKE_PICTURE_SIZE};
+                sfView_move(Level.BG_View, Offset);
+                GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
+            }
+            else
+            {
+                // Move
+                CSFMLPushSnakeBlock(UP);
+                sfVector2f Offset = {0, -SNAKE_PICTURE_SIZE};
+                sfView_move(Level.BG_View, Offset);
             }
         }
     }
-
-    // Render Item Hint
-    CSFMLRenderItemText();
-
-    // Set Viewport
-    sfRenderWindow_setView(screen, Level.BG_View);
-
-    // Render Items
-    CSFMLRenderItems();
-
-    // Place Light
-    CSFMLSetSnakeLight();
-
-    // Render Snake
-    CSFMLRenderSnake();
-
-    // Render Weapons
-    CSFMLRenderWeapons();
-
-    // Set Default Viewport
-    sfRenderWindow_setView(screen, sfRenderWindow_getDefaultView(screen));
 
     return true;
 }

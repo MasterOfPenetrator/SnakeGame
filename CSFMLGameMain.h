@@ -35,6 +35,7 @@ void CSFMLGameQuit();
 void CSFMLGameShowScore();
 void CSFMLGameShowHealth();
 void CSFMLGameUpdateTimeSnakeScore();
+void CSFMLMainRenderOther();
 
 #endif /* CSFMLGameMain_H */
 
