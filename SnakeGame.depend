@@ -720,13 +720,13 @@
 
 1509822683 c:\users\master of penetrator\desktop\snakegame sdl\snakegame\memcheck.h
 
-1510225802 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlfilehandling.c
+1510229251 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlfilehandling.c
 	"CSFMLFileHandling.h"
 
-1510064824 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlfilehandling.h
+1510229251 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlfilehandling.h
 	"CSFMLMenu.h"
 
-1510223717 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlmenu.h
+1510229251 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlmenu.h
 	<stdio.h>
 	<stddef.h>
 	<stdbool.h>
@@ -1144,7 +1144,7 @@
 	<OpenGL/gl.h>
 	<OpenGL/glu.h>
 
-1510228597 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamemain.h
+1510229251 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamemain.h
 	"CSFMLMenu.h"
 	"CSFMLOtherStuff.h"
 	"CSFMLGameTilemap.h"
@@ -1152,55 +1152,56 @@
 	"CSFMLGameClock.h"
 	"CSFMLGameSnake.h"
 	"CSFMLGameItems.h"
+	"CSFMLGameWeapons.h"
 	"CSFMLGameEnemies.h"
 
-1510064824 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgametilemap.h
+1510229251 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgametilemap.h
 	"CSFMLGameMain.h"
 
-1510064824 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamelights.h
+1510229251 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamelights.h
 	"CSFMLGameMain.h"
 
-1510151665 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameclock.h
+1510229251 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameclock.h
 	"CSFMLGameMain.h"
 
-1510229051 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamesnake.h
+1510229251 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamesnake.h
 	"CSFMLGameMain.h"
 
-1510064824 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameitems.h
+1510229251 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameitems.h
 	"CSFMLGameMain.h"
 
-1510225760 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameclock.c
+1510331724 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameclock.c
 	"CSFMLGameClock.h"
 
-1510225760 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamelights.c
+1510229251 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamelights.c
 	"CSFMLGameLights.h"
 
-1510225760 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamemain.c
+1510256594 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamemain.c
 	"CSFMLGameMain.h"
 
-1510225760 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamesnake.c
+1510333770 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgamesnake.c
 	"CSFMLGameSnake.h"
 
-1510225729 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgametilemap.c
+1510229251 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgametilemap.c
 	"CSFMLGameTilemap.h"
 
-1510225940 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlmenu.c
+1510229251 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlmenu.c
 	"CSFMLMenu.h"
 
-1510224242 source:c:\users\master of penetrator\desktop\snakegame\snakegame\main.c
+1510257941 source:c:\users\master of penetrator\desktop\snakegame\snakegame\main.c
 	<stdio.h>
 	<stdbool.h>
 	<windows.h>
 	"CSFMLMenu.h"
 	"CSFMLGameMain.h"
 
-1510225760 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameitems.c
+1510229251 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameitems.c
 	"CSFMLGameItems.h"
 
-1510223739 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlotherstuff.h
+1510229251 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlotherstuff.h
 	"CSFMLGameMain.h"
 
-1510223711 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlotherstuff.c
+1510229251 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlotherstuff.c
 	"CSFMLOtherStuff.h"
 
 1044040692 source:c:\users\master of penetrator\desktop\snakegame\snakegame\cmemleak.c
@@ -1212,9 +1213,15 @@
 
 1510225681 c:\users\master of penetrator\desktop\snakegame\snakegame\cmemleak.h
 
-1510228749 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameenemies.h
+1510229251 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameenemies.h
 	"CSFMLGameMain.h"
 
-1510228573 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameenemies.c
+1510229251 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameenemies.c
 	"CSFMLGameEnemies.h"
+
+1510253893 c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameweapons.h
+	"CSFMLGameMain.h"
+
+1510333852 source:c:\users\master of penetrator\desktop\snakegame\snakegame\csfmlgameweapons.c
+	"CSFMLGameWeapons.h"
 

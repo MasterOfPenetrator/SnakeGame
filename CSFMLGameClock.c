@@ -65,6 +65,17 @@ bool CSFMLUpdateClock()
         }
     }
 
+    // Set GameTime to Weapon Shaders
+    if(GameWeapons.GW_Is_Init && shader_enabled)
+    {
+        size_t it;
+        for(it = 0; it<GameWeapons.GW_Weapon_Count; it++)
+        {
+            sfShader_setIntUniform(GameWeapons.GW_BarrelShader[it], "Time", GameClock.GC_Time);
+            sfShader_setIntUniform(GameWeapons.GW_WeaponShader[it], "Time", GameClock.GC_Time);
+        }
+    }
+
     // Update SecondTick Timer
     if(GameSnake.S_Is_Init)
     {

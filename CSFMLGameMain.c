@@ -29,6 +29,9 @@ bool CSFMLGameInit()
     // Init Game Items
     Init_Error |= !CSFMLInitItems();
 
+    // Init Game Weapons
+    Init_Error |= !CSFMLInitWeapons();
+
     // Init Text for Score and Health
     GameMain.Game_Is_Init = true;
     GameMain.GM_Font = sfFont_createFromFile("Bilder/Schriftarten/3Dventure.ttf");
@@ -55,6 +58,7 @@ void CSFMLGameQuit()
     GameMain.GM_Score = NULL;
 
     // Clear Elements
+    CSFMLQuitWeapons();
     CSFMLQuitItems();
     CSFMLQuitSnake();
     CSFMLQuitClock();

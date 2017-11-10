@@ -51,7 +51,7 @@ void main()
     }
 
     // Convert Angle to Radians
-    float Angle = radians(Head_Rotate_Angle);
+    float Angle = radians(float(Head_Rotate_Angle));
 
     // Getting Texture Coordinates and correct for Aspect Ratio of our Texture Resolution
     // Setting the new origin to center of your Picture vec2 - 0.5

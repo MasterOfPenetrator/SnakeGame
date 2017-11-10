@@ -12,9 +12,14 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-g" />
+					<Add option="-O3" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
 					<Add option="-Wl,--stack,4194304" />
 				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/SnakeGame" prefix_auto="1" extension_auto="1" />
@@ -45,14 +50,44 @@
 		</Linker>
 		<Unit filename="Bilder/Einstellungen/HighscoresDATA.MOP" />
 		<Unit filename="Bilder/Einstellungen/SettingsDATA.MOP" />
+		<Unit filename="Bilder/GameItem_Layout.txt" />
+		<Unit filename="Bilder/Game/ItemData/FirstAid_10.DAT" />
+		<Unit filename="Bilder/Game/ItemData/FirstAid_20.DAT" />
+		<Unit filename="Bilder/Game/ItemData/FirstAid_35.DAT" />
+		<Unit filename="Bilder/Game/ItemData/Food_L.DAT" />
+		<Unit filename="Bilder/Game/ItemData/Food_M.DAT" />
+		<Unit filename="Bilder/Game/ItemData/Food_XL.DAT" />
+		<Unit filename="Bilder/Game/ItemData/GodMode.DAT" />
+		<Unit filename="Bilder/Game/ItemData/Noclip.DAT" />
+		<Unit filename="Bilder/Game/ItemData/Speed_X2.DAT" />
+		<Unit filename="Bilder/Game/ItemData/Speed_X4.DAT" />
+		<Unit filename="Bilder/Game/ItemData/Speed_X8.DAT" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Diffuse.png" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Eventmap.DAT" />
+		<Unit filename="Bilder/Game/LevelData/Level1/MapDescriptor.DAT" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Normal.png" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Shader.frag" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Specular.png" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Tilemap.DAT" />
+		<Unit filename="Bilder/Game/Tiles/FirstAid_10.png" />
+		<Unit filename="Bilder/Game/Tiles/FirstAid_20.png" />
+		<Unit filename="Bilder/Game/Tiles/FirstAid_35.png" />
+		<Unit filename="Bilder/Game/Tiles/Food_L.png" />
+		<Unit filename="Bilder/Game/Tiles/Food_M.png" />
+		<Unit filename="Bilder/Game/Tiles/Food_XL.png" />
+		<Unit filename="Bilder/Game/Tiles/GodMode.png" />
+		<Unit filename="Bilder/Game/Tiles/Noclip.png" />
 		<Unit filename="Bilder/Game/Tiles/Snake_Body.png" />
 		<Unit filename="Bilder/Game/Tiles/Snake_Head.png" />
+		<Unit filename="Bilder/Game/Tiles/Speed_X2.png" />
+		<Unit filename="Bilder/Game/Tiles/Speed_X4.png" />
+		<Unit filename="Bilder/Game/Tiles/Speed_X8.png" />
+		<Unit filename="Bilder/Game/WeaponData/SimplePistol/Barrel_Shader.frag" />
+		<Unit filename="Bilder/Game/WeaponData/SimplePistol/Barrel_Texture.png" />
+		<Unit filename="Bilder/Game/WeaponData/SimplePistol/Weapon_Descriptor.DAT" />
+		<Unit filename="Bilder/Game/WeaponData/SimplePistol/Weapon_Shader.frag" />
+		<Unit filename="Bilder/Game/WeaponData/SimplePistol/Weapon_Texture.png" />
+		<Unit filename="Bilder/Mapdescriptor_Layout.txt" />
 		<Unit filename="Bilder/Menu/AktivButtonClicked.png" />
 		<Unit filename="Bilder/Menu/AktivButtonNormal.png" />
 		<Unit filename="Bilder/Menu/AktivButtonOnMouseOver.png" />
@@ -102,6 +137,7 @@
 		<Unit filename="Bilder/Shader/Snake_Body_Shader.frag" />
 		<Unit filename="Bilder/Shader/Snake_Head_Shader.frag" />
 		<Unit filename="Bilder/Shader/Speed.frag" />
+		<Unit filename="Bilder/Weapondescriptor_Layout.txt" />
 		<Unit filename="CSFMLFileHandling.c">
 			<Option compilerVar="CC" />
 		</Unit>

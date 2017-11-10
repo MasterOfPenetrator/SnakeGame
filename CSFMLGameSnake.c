@@ -198,11 +198,11 @@ bool CSFMLPushSnakeBlock(Direction dir)
 
     if(dir == UP)
     {
-        GameSnake.SB_Head.y -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        GameSnake.SB_Head.y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
     }
     else if(dir == DOWN)
     {
-        GameSnake.SB_Head.y += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        GameSnake.SB_Head.y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
     }
     else if(dir == LEFT)
     {
@@ -305,13 +305,13 @@ bool CSFMLGrowSnake()
                     // Set new Position Right instead of Down
                     if(loop_counter == 0)
                     {
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Right
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size; // Right
                         fBody_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Reset Y
                     }
                     // Second Try Left instead of Down, no need for Reset Y
                     else if(loop_counter == 1)
                     {
-                        fBody_X -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // Left
+                        fBody_X -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_X_Size); // Left
                     }
                     // Third Try?, so the Block must Spawn in the Border! No reason to set Snake dead or something
                     else
@@ -319,7 +319,7 @@ bool CSFMLGrowSnake()
                         printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
 
                         // Set Origin!
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
                         fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
 
                         // Activate Ignore Hit
@@ -332,13 +332,13 @@ bool CSFMLGrowSnake()
                     // Set new Position Right instead of UP
                     if(loop_counter == 0)
                     {
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Right
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size; // Right
                         fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Reset Y
                     }
                     // Second Try Left instead of Down, no need for Reset Y
                     else if(loop_counter == 1)
                     {
-                        fBody_X -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // Left
+                        fBody_X -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_X_Size); // Left
                     }
                     // Third Try?, so the Block must Spawn in the Border! No reason to set Snake dead or something
                     else
@@ -346,7 +346,7 @@ bool CSFMLGrowSnake()
                         printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
 
                         // Set Origin!
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
                         fBody_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
 
                         // Activate Ignore Hit
@@ -359,7 +359,7 @@ bool CSFMLGrowSnake()
                     // Set new Position UP instead of LEFT
                     if(loop_counter == 0)
                     {
-                        fBody_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Reset X
+                        fBody_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size; // Reset X
                         fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // New Y
                     }
                     // Second Try Left instead of Down, no need for Reset Y
@@ -373,7 +373,7 @@ bool CSFMLGrowSnake()
                         printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
 
                         // Set Origin!
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
                         fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
 
                         // Activate Ignore Hit
@@ -386,7 +386,7 @@ bool CSFMLGrowSnake()
                     // Set new Position UP instead of LEFT
                     if(loop_counter == 0)
                     {
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Reset X
+                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size; // Reset X
                         fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // New Y
                     }
                     // Second Try Down instead of UP, no need for Reset Y
@@ -400,7 +400,7 @@ bool CSFMLGrowSnake()
                         printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
 
                         // Set Origin!
-                        fBody_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
                         fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
 
                         // Activate Ignore Hit
@@ -487,11 +487,11 @@ bool CSFMLCheckTileMapCollision()
 
     if(dir == UP)
     {
-        fNew_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        fNew_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
     }
     else if(dir == DOWN)
     {
-        fNew_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        fNew_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
     }
     else if(dir == LEFT)
     {
@@ -693,11 +693,11 @@ bool CSFMLCheckSelfCollision()
 
     if(dir == UP)
     {
-        fNew_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        fNew_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
     }
     else if(dir == DOWN)
     {
-        fNew_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        fNew_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
     }
     else if(dir == LEFT)
     {
@@ -794,9 +794,9 @@ bool CSFMLCheckSelfCollision()
             // Restore Old Values
             float Move_Y = fNew_Y;
             if(dir == UP)
-                Move_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+                Move_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
             if(dir == DOWN)
-                Move_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+                Move_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
 
             for(i = 0; i<GameSnake.SB_Body_Elements; i++)
             {
@@ -868,8 +868,8 @@ bool CSFMLCheckSelfCollision()
             }
 
             // Check for Another Self-Hit
-            float Up_Y = fNew_Y - ((float)SNAKE_PICTURE_SIZE/Level.TL_X_Size); // Minus Movement for Left Movement
-            float Down_Y = fNew_Y + ((float)SNAKE_PICTURE_SIZE/Level.TL_X_Size); // Plus Movement for Right Movement
+            float Up_Y = fNew_Y - ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // Minus Movement for Left Movement
+            float Down_Y = fNew_Y + ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // Plus Movement for Right Movement
 
             // Restore Old Values
             float Move_X = fNew_X;
@@ -936,6 +936,9 @@ bool CSFMLHandleSnake()
         // Its a bit Tricky, if first equation true, the if skips next elements, so they will not execute :)
         if(GameSnake.S_NOCLIP || (CSFMLCheckTileMapCollision() && CSFMLCheckSelfCollision()))
         {
+            // Handle Weapons
+            CSFMLHandleWeapons();
+
             // Handle Items here!
             CSFMLHandleItems();
 
@@ -1065,7 +1068,7 @@ bool CSFMLHandleSnake()
     // Set Viewport
     sfRenderWindow_setView(screen, Level.BG_View);
 
-    // Handle Items
+    // Render Items
     CSFMLRenderItems();
 
     // Place Light
@@ -1073,6 +1076,9 @@ bool CSFMLHandleSnake()
 
     // Render Snake
     CSFMLRenderSnake();
+
+    // Render Weapons
+    CSFMLRenderWeapons();
 
     // Set Default Viewport
     sfRenderWindow_setView(screen, sfRenderWindow_getDefaultView(screen));
