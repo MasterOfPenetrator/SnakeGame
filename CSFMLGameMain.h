@@ -18,11 +18,18 @@ typedef enum { IT_HEALTH, IT_SPEED, IT_FOOD, IT_GOD, IT_NOCLIP, IT_CUSTOM } Item
 
 // Structs
 typedef struct {
+    // SFML Stuff
     sfText *GM_Health;
     sfText *GM_Score;
     sfFont *GM_Font;
-    bool Game_Is_Init;
-    int Game_Level_ID;
+
+    // General Stuff
+    bool GM_Is_Init;
+    int GM_Level_ID;
+
+    // sfView Stuff
+    float GM_View_SumMovement;
+    bool GM_View_Movement_ResetFlag;
 } Game;
 
 // Variables
@@ -35,6 +42,7 @@ void CSFMLGameQuit();
 void CSFMLGameShowScore();
 void CSFMLGameShowHealth();
 void CSFMLGameUpdateTimeSnakeScore();
+void CSFMLMainMoveView();
 void CSFMLMainRenderOther();
 
 #endif /* CSFMLGameMain_H */

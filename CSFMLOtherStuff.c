@@ -16,3 +16,11 @@ float GetRandomFloatNumber(int MAX)
     return floorf(fabs(val)*2.f) / 2.f * sign;
 }
 
+// Check if a char is an Number / Alphabet
+bool CheckUnicode(char Check)
+{
+    if((Check >= 48 && Check <= 57) || (Check >= 97 && Check <= 122) || (Check >= 65 && Check <= 97))
+        return true;
+    else
+        return false;
+}

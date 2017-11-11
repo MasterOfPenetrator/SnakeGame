@@ -1448,7 +1448,7 @@ void CSFMLUserLevelButton(const char *Text)
 
             // Setup Game Variables
             strncpy(GameSnake.S_Name, mstate.Level_Username, strlen(mstate.Level_Username)+1);
-            GameMain.Game_Level_ID = mstate.Level_ID + 1;
+            GameMain.GM_Level_ID = mstate.Level_ID + 1;
         }
     }
     else

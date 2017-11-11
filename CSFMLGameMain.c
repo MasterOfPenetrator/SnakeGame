@@ -4,7 +4,7 @@
 bool CSFMLGameInit()
 {
     // Checkup Level ID
-    if(!GameMain.Game_Level_ID)
+    if(!GameMain.GM_Level_ID)
     {
         printf("Game Subsystem Fehler 'GameMain': Kein Level angegeben!\n");
         return false;
@@ -14,7 +14,7 @@ bool CSFMLGameInit()
     bool Init_Error = false;
 
     // Init TileMap
-    Init_Error |= !CSFMLLoadlevel(GameMain.Game_Level_ID);
+    Init_Error |= !CSFMLLoadlevel(GameMain.GM_Level_ID);
 
     // Init Lights
     Init_Error |= !CSFMLInitLights();
@@ -33,7 +33,6 @@ bool CSFMLGameInit()
     Init_Error |= !CSFMLInitWeapons();
 
     // Init Text for Score and Health
-    GameMain.Game_Is_Init = true;
     GameMain.GM_Font = sfFont_createFromFile("Bilder/Schriftarten/3Dventure.ttf");
     GameMain.GM_Health = sfText_create();
     GameMain.GM_Score = sfText_create();
@@ -42,6 +41,11 @@ bool CSFMLGameInit()
     {
         Init_Error |= true;
     }
+
+    // Setup other things
+    GameMain.GM_Is_Init = true;
+    GameMain.GM_View_SumMovement = 0.0f;
+    GameMain.GM_View_Movement_ResetFlag = false;
 
     return Init_Error;
 }
@@ -66,51 +70,159 @@ void CSFMLGameQuit()
     CSFMLQuitLevel();
 
     // Other Stuff
-    GameMain.Game_Is_Init = false;
+    GameMain.GM_View_SumMovement = 0.0f;
+    GameMain.GM_View_Movement_ResetFlag = false;
+    GameMain.GM_Is_Init = false;
 }
 
 // Render Game
 void CSFMLGameUpdate()
 {
-    // Is Snake Alive
+    // Game Update centralized
     if(!GameSnake.S_Is_Dead)
     {
-        // Render Stuff
-        // Viewed Stuff
-        sfRenderWindow_setView(screen, Level.BG_View);
-
-        // Render Level
-        CSFMLRenderLevel();
-
-        // Render Snake
-        CSFMLRenderSnake();
-
-        // Render SnakeLight
-        CSFMLSetSnakeLight();
-
-        // Render Items
-        CSFMLRenderItems();
-
-        // Render Weapons
-        CSFMLRenderWeapons();
-
-        // Default Viewed Stuff
-        sfRenderWindow_setView(screen, sfRenderWindow_getDefaultView(screen));
-
-        // Other Stuff
-        CSFMLMainRenderOther();
-
-        // Update Handles
-        if(GameClock.GC_SnakeTick)
+        // Update Stuff
         {
-            CSFMLHandleWeapons();
-            CSFMLHandleItems();
-            CSFMLHandleSnake();
+            // Update GameClock
+            CSFMLUpdateClock();
+
+            // Update Tick Based Stuff
+            if(GameClock.GC_SnakeTick)
+            {
+                // Update Handles
+                CSFMLHandleWeapons();
+                CSFMLHandleItems();
+                CSFMLHandleSnake();
+            }
+
+            // Move The View
+            CSFMLMainMoveView();
+        }
+
+        // Render Stuff
+        {
+            // Render Stuff
+            // Viewed Stuff
+            sfRenderWindow_setView(screen, Level.BG_View);
+
+            // Render Level
+            CSFMLRenderLevel();
+
+            // Render Snake
+            CSFMLRenderSnake();
+
+            // Render SnakeLight
+            CSFMLSetSnakeLight();
+
+            // Render Items
+            CSFMLRenderItems();
+
+            // Render Weapons
+            CSFMLRenderWeapons();
+
+            // Default Viewed Stuff
+            sfRenderWindow_setView(screen, sfRenderWindow_getDefaultView(screen));
+
+            // Other Stuff
+            CSFMLMainRenderOther();
         }
     }
 
 }
 
+// Move View by Snake Speed
+void CSFMLMainMoveView()
+{
+    // Get Frame Movement depend on the Snake Direction
+    float Frame_Movement = 0.0f;
+
+    // Up or Down
+    if(GameSnake.S_Actual_Direction == UP || GameSnake.S_Actual_Direction == DOWN)
+    {
+        // Calculate Frame Movement
+        Frame_Movement = (GameSnake.SB_Head.h / ((1.0f / GameSnake.S_Speed) * 1000.0f)) * GameClock.GC_DeltaTime * 1000.0f;
+
+        // Add to the Sum of the Movement
+        // Add to the Sum only, if it under the the complete Movement Size and set the flag!
+        if(Frame_Movement + GameMain.GM_View_SumMovement < GameSnake.SB_Head.h)
+        {
+            GameMain.GM_View_SumMovement += Frame_Movement;
+        }
+        else
+        {
+            GameMain.GM_View_Movement_ResetFlag = true;
+        }
+
+        // Now check for Last Step and determine it
+        if(!CompareFloats(GameMain.GM_View_SumMovement, GameSnake.SB_Head.h) && GameMain.GM_View_Movement_ResetFlag)
+        {
+            // Get for this the Actual Movement
+            Frame_Movement = GameSnake.SB_Head.h - GameMain.GM_View_SumMovement;
+            GameMain.GM_View_Movement_ResetFlag = false;
+
+            // Reset the Sum
+            GameMain.GM_View_SumMovement = 0.0f;
+        }
+
+    }
+    // Left or Right
+    else if(GameSnake.S_Actual_Direction == LEFT || GameSnake.S_Actual_Direction == RIGHT)
+    {
+        // Calculate Frame Movement
+        Frame_Movement = (GameSnake.SB_Head.w / ((1.0f / GameSnake.S_Speed) * 1000.0f)) * GameClock.GC_DeltaTime * 1000.0f;
+
+        // Add to the Sum of the Movement
+        // Add to the Sum only, if it under the the complete Movement Size and set the flag!
+        if(Frame_Movement + GameMain.GM_View_SumMovement < GameSnake.SB_Head.w)
+        {
+            GameMain.GM_View_SumMovement += Frame_Movement;
+        }
+        else
+        {
+            GameMain.GM_View_Movement_ResetFlag = true;
+        }
+
+        // Now check for Last Step and determine it
+        if(!CompareFloats(GameMain.GM_View_SumMovement, GameSnake.SB_Head.w) && GameMain.GM_View_Movement_ResetFlag)
+        {
+            Frame_Movement = GameSnake.SB_Head.w - GameMain.GM_View_SumMovement;
+            GameMain.GM_View_Movement_ResetFlag = false;
+
+            // Reset the Sum
+            GameMain.GM_View_SumMovement = 0.0f;
+        }
+    }
+
+    // Now Move the View
+    sfVector2f View_Movement = {0.0f, 0.0f};
+
+    if(GameSnake.S_Actual_Direction == LEFT)
+    {
+        View_Movement.x = -Frame_Movement;
+        View_Movement.y = 0.0f;
+        sfView_move(Level.BG_View, View_Movement);
+    }
+    else if(GameSnake.S_Actual_Direction == RIGHT)
+    {
+        View_Movement.x = Frame_Movement;
+        View_Movement.y = 0.0f;
+        sfView_move(Level.BG_View, View_Movement);
+    }
+    else if(GameSnake.S_Actual_Direction == UP)
+    {
+        View_Movement.x = 0.0f;
+        View_Movement.y = -Frame_Movement;
+        sfView_move(Level.BG_View, View_Movement);
+    }
+    else if(GameSnake.S_Actual_Direction == DOWN)
+    {
+        View_Movement.x = 0.0f;
+        View_Movement.y = Frame_Movement;
+        sfView_move(Level.BG_View, View_Movement);
+    }
+}
+
+// Render Other Stuff
 void CSFMLMainRenderOther()
 {
     // Render Item Hint
@@ -118,9 +230,6 @@ void CSFMLMainRenderOther()
 
     // Activate Lights
     CSFMLRenderLights();
-
-    // Activate seperate Game Clock
-    CSFMLUpdateClock();
 
     // Activate Time Score Update
     CSFMLGameUpdateTimeSnakeScore();

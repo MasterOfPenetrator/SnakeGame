@@ -499,19 +499,19 @@ void CSFMLHandleItems()
 
     if(dir == UP)
     {
-        Next_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        Next_Y -= (float)GameSnake.SB_Head.h/Level.TL_X_Size;
     }
     else if(dir == DOWN)
     {
-        Next_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        Next_Y += (float)GameSnake.SB_Head.h/Level.TL_X_Size;
     }
     else if(dir == LEFT)
     {
-        Next_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        Next_X -= (float)GameSnake.SB_Head.w/Level.TL_X_Size;
     }
     else if(dir == RIGHT)
     {
-        Next_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        Next_X += (float)GameSnake.SB_Head.w/Level.TL_X_Size;
     }
 
     // Check Collision

@@ -168,6 +168,7 @@ bool CSFMLInitWeapons()
 
             // Init Barrel Blocks
             GameWeapons.GW_Barrel_Block_Count[counter] = 0;
+            GameWeapons.GW_Barrel_Block[counter] = NULL; // Prevent dangling Pointers
 
             // Close things
             fclose(Desc);

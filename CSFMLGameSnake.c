@@ -55,8 +55,8 @@ bool CSFMLInitSnake()
     // Init Snake Blocks
     GameSnake.SB_Head.x = Level.TL_Start_Position.x;
     GameSnake.SB_Head.y = Level.TL_Start_Position.y;
-    GameSnake.SB_Head.w = SNAKE_PICTURE_SIZE;
-    GameSnake.SB_Head.h = SNAKE_PICTURE_SIZE;
+    GameSnake.SB_Head.w = sfTexture_getSize(GameSnake.SB_Head_Texture).x;
+    GameSnake.SB_Head.h = sfTexture_getSize(GameSnake.SB_Head_Texture).y;
 
     GameSnake.SB_Body = malloc(SNAKE_START_BLOCKS * sizeof(Block));
 
@@ -69,9 +69,9 @@ bool CSFMLInitSnake()
     size_t i;
     for(i = 0; i<SNAKE_START_BLOCKS; i++)
     {
-        GameSnake.SB_Body[i].w = SNAKE_PICTURE_SIZE;
-        GameSnake.SB_Body[i].h = SNAKE_PICTURE_SIZE;
-        GameSnake.SB_Body[i].x = GameSnake.SB_Head.x - (((float)i*(float)SNAKE_PICTURE_SIZE/Level.TL_X_Size)+(float)SNAKE_PICTURE_SIZE/Level.TL_X_Size);
+        GameSnake.SB_Body[i].w = sfTexture_getSize(GameSnake.SB_Body_Texture).x;
+        GameSnake.SB_Body[i].h = sfTexture_getSize(GameSnake.SB_Body_Texture).y;
+        GameSnake.SB_Body[i].x = GameSnake.SB_Head.x - (((float)i*(float)GameSnake.SB_Body[i].w/Level.TL_X_Size)+(float)GameSnake.SB_Body[i].w/Level.TL_X_Size);
         GameSnake.SB_Body[i].y = GameSnake.SB_Head.y;
     }
 
@@ -198,19 +198,19 @@ bool CSFMLPushSnakeBlock(Direction dir)
 
     if(dir == UP)
     {
-        GameSnake.SB_Head.y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+        GameSnake.SB_Head.y -= (float)GameSnake.SB_Head.h/Level.TL_Y_Size;
     }
     else if(dir == DOWN)
     {
-        GameSnake.SB_Head.y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+        GameSnake.SB_Head.y += (float)GameSnake.SB_Head.h/Level.TL_Y_Size;
     }
     else if(dir == LEFT)
     {
-        GameSnake.SB_Head.x -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        GameSnake.SB_Head.x -= (float)GameSnake.SB_Head.w/Level.TL_X_Size;
     }
     else if(dir == RIGHT)
     {
-        GameSnake.SB_Head.x += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        GameSnake.SB_Head.x += (float)GameSnake.SB_Head.w/Level.TL_X_Size;
     }
 
     return true;
@@ -256,29 +256,29 @@ bool CSFMLGrowSnake()
         bool Ignore_Hit = false;
         int p;
         int loop_counter = 0;
-        GameSnake.SB_Body[GameSnake.SB_Body_Elements].w = SNAKE_PICTURE_SIZE;
-        GameSnake.SB_Body[GameSnake.SB_Body_Elements].h = SNAKE_PICTURE_SIZE;
+        GameSnake.SB_Body[GameSnake.SB_Body_Elements].w = GameSnake.SB_Body[0].w;
+        GameSnake.SB_Body[GameSnake.SB_Body_Elements].h = GameSnake.SB_Body[0].h;
 
         // Check Direction and Setup the new Block
         // And Check if the New Blocks maybe in Tilemap Border or Item
         if(GameSnake.S_Actual_Direction == UP)
         {
             fBody_X = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x;
-            fBody_Y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y + (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+            fBody_Y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y + (float)GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].h/Level.TL_Y_Size;
         }
         else if(GameSnake.S_Actual_Direction == DOWN)
         {
             fBody_X = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x;
-            fBody_Y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y - (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+            fBody_Y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y - (float)GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].h/Level.TL_Y_Size;
         }
         else if(GameSnake.S_Actual_Direction == RIGHT)
         {
-            fBody_X = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x - (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+            fBody_X = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x - (float)GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].w/Level.TL_X_Size;
             fBody_Y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y;
         }
         else if(GameSnake.S_Actual_Direction == LEFT)
         {
-            fBody_X = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x + (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+            fBody_X = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].x + (float)GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].w/Level.TL_X_Size;
             fBody_Y = GameSnake.SB_Body[GameSnake.SB_Body_Elements-1].y;
         }
 
@@ -305,13 +305,13 @@ bool CSFMLGrowSnake()
                     // Set new Position Right instead of Down
                     if(loop_counter == 0)
                     {
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size; // Right
-                        fBody_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Reset Y
+                        fBody_X += (float)GameSnake.SB_Body[0].w/Level.TL_X_Size; // Right
+                        fBody_Y -= (float)GameSnake.SB_Body[0].h/Level.TL_Y_Size; // Reset Y
                     }
                     // Second Try Left instead of Down, no need for Reset Y
                     else if(loop_counter == 1)
                     {
-                        fBody_X -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_X_Size); // Left
+                        fBody_X -= 2 * ((float)GameSnake.SB_Body[0].w/Level.TL_X_Size); // Left
                     }
                     // Third Try?, so the Block must Spawn in the Border! No reason to set Snake dead or something
                     else
@@ -319,8 +319,8 @@ bool CSFMLGrowSnake()
                         printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
 
                         // Set Origin!
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
-                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_X += (float)GameSnake.SB_Body[0].w/Level.TL_X_Size;
+                        fBody_Y += (float)GameSnake.SB_Body[0].h/Level.TL_Y_Size;
 
                         // Activate Ignore Hit
                         Ignore_Hit = true;
@@ -332,13 +332,13 @@ bool CSFMLGrowSnake()
                     // Set new Position Right instead of UP
                     if(loop_counter == 0)
                     {
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size; // Right
-                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // Reset Y
+                        fBody_X += (float)GameSnake.SB_Body[0].w/Level.TL_X_Size; // Right
+                        fBody_Y += (float)GameSnake.SB_Body[0].h/Level.TL_Y_Size; // Reset Y
                     }
                     // Second Try Left instead of Down, no need for Reset Y
                     else if(loop_counter == 1)
                     {
-                        fBody_X -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_X_Size); // Left
+                        fBody_X -= 2 * ((float)GameSnake.SB_Body[0].w/Level.TL_X_Size); // Left
                     }
                     // Third Try?, so the Block must Spawn in the Border! No reason to set Snake dead or something
                     else
@@ -346,8 +346,8 @@ bool CSFMLGrowSnake()
                         printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
 
                         // Set Origin!
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
-                        fBody_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_X += (float)GameSnake.SB_Body[0].w/Level.TL_X_Size;
+                        fBody_Y -= (float)GameSnake.SB_Body[0].h/Level.TL_Y_Size;
 
                         // Activate Ignore Hit
                         Ignore_Hit = true;
@@ -359,13 +359,13 @@ bool CSFMLGrowSnake()
                     // Set new Position UP instead of LEFT
                     if(loop_counter == 0)
                     {
-                        fBody_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size; // Reset X
-                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // New Y
+                        fBody_X -= (float)GameSnake.SB_Body[0].w/Level.TL_X_Size; // Reset X
+                        fBody_Y += (float)GameSnake.SB_Body[0].h/Level.TL_Y_Size; // New Y
                     }
                     // Second Try Left instead of Down, no need for Reset Y
                     else if(loop_counter == 1)
                     {
-                        fBody_Y -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // New Y
+                        fBody_Y -= 2 * ((float)GameSnake.SB_Body[0].h/Level.TL_Y_Size); // New Y
                     }
                     // Third Try?, so the Block must Spawn in the Border! No reason to set Snake dead or something
                     else
@@ -373,8 +373,8 @@ bool CSFMLGrowSnake()
                         printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
 
                         // Set Origin!
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
-                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_X += (float)GameSnake.SB_Body[0].w/Level.TL_X_Size;
+                        fBody_Y += (float)GameSnake.SB_Body[0].h/Level.TL_Y_Size;
 
                         // Activate Ignore Hit
                         Ignore_Hit = true;
@@ -386,13 +386,13 @@ bool CSFMLGrowSnake()
                     // Set new Position UP instead of LEFT
                     if(loop_counter == 0)
                     {
-                        fBody_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size; // Reset X
-                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size; // New Y
+                        fBody_X += (float)GameSnake.SB_Body[0].w/Level.TL_X_Size; // Reset X
+                        fBody_Y += (float)GameSnake.SB_Body[0].h/Level.TL_Y_Size; // New Y
                     }
                     // Second Try Down instead of UP, no need for Reset Y
                     else if(loop_counter == 1)
                     {
-                        fBody_Y -= 2 * ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // New Y
+                        fBody_Y -= 2 * ((float)GameSnake.SB_Body[0].h/Level.TL_Y_Size); // New Y
                     }
                     // Third Try?, so the Block must Spawn in the Border! No reason to set Snake dead or something
                     else
@@ -400,8 +400,8 @@ bool CSFMLGrowSnake()
                         printf("Game Subsystem Warning 'GameSnake': Snake Block wird in Border platziert! Keine andere Moeglichkeit!\n");
 
                         // Set Origin!
-                        fBody_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
-                        fBody_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                        fBody_X -= (float)GameSnake.SB_Body[0].w/Level.TL_X_Size;
+                        fBody_Y += (float)GameSnake.SB_Body[0].h/Level.TL_Y_Size;
 
                         // Activate Ignore Hit
                         Ignore_Hit = true;
@@ -426,6 +426,7 @@ bool CSFMLGrowSnake()
 }
 
 // Set Snake Light
+// Todo Fix the Light, because Smoother Movement, Light moves bs
 bool CSFMLSetSnakeLight()
 {
     if(!GameSnake.S_Is_Init)
@@ -435,31 +436,31 @@ bool CSFMLSetSnakeLight()
     float light_x, light_y, cone_x, cone_y;
     if(GameSnake.S_Rotate == 0)
     {
-        cone_x = (Level.TL_Start_Position.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.S_LightDistance;
-        cone_y = (Level.TL_Start_Position.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + SNAKE_PICTURE_SIZE/2;
-        light_x = (Level.TL_Start_Position.x * Level.TL_X_Size) + Level.BG_Screenposition.x;
-        light_y = (Level.TL_Start_Position.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + SNAKE_PICTURE_SIZE/2;
+        cone_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.S_LightDistance;
+        cone_y = (GameSnake.SB_Head.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + GameSnake.SB_Head.h/2;
+        light_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x;
+        light_y = (GameSnake.SB_Head.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + GameSnake.SB_Head.h/2;
     }
     else if(GameSnake.S_Rotate == 180)
     {
-        cone_x = ((Level.TL_Start_Position.x+1) * Level.TL_X_Size) - (Level.BG_Screenposition.x + GameSnake.S_LightDistance);
-        cone_y = (Level.TL_Start_Position.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + SNAKE_PICTURE_SIZE/2;
-        light_x = ((Level.TL_Start_Position.x+1) * Level.TL_X_Size) - Level.BG_Screenposition.x;
-        light_y = (Level.TL_Start_Position.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + SNAKE_PICTURE_SIZE/2;
+        cone_x = ((GameSnake.SB_Head.x) * Level.TL_X_Size) - (Level.BG_Screenposition.x + GameSnake.S_LightDistance);
+        cone_y = (GameSnake.SB_Head.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + GameSnake.SB_Head.h/2;
+        light_x = ((GameSnake.SB_Head.x) * Level.TL_X_Size) - Level.BG_Screenposition.x;
+        light_y = (GameSnake.SB_Head.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + GameSnake.SB_Head.h/2;
     }
     else if(GameSnake.S_Rotate == 90)
     {
-        cone_x = (Level.TL_Start_Position.x * Level.TL_X_Size) + Level.BG_Screenposition.x + SNAKE_PICTURE_SIZE/2;
-        cone_y = ((Level.TL_Start_Position.y+1) * Level.TL_Y_Size) + Level.BG_Screenposition.y - GameSnake.S_LightDistance;
-        light_x = (Level.TL_Start_Position.x * Level.TL_X_Size) + Level.BG_Screenposition.x + SNAKE_PICTURE_SIZE/2;
-        light_y = ((Level.TL_Start_Position.y+1) * Level.TL_Y_Size) + Level.BG_Screenposition.y;
+        cone_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.SB_Head.w/2;
+        cone_y = ((GameSnake.SB_Head.y) * Level.TL_Y_Size) + Level.BG_Screenposition.y - GameSnake.S_LightDistance;
+        light_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.SB_Head.w/2;
+        light_y = ((GameSnake.SB_Head.y) * Level.TL_Y_Size) + Level.BG_Screenposition.y;
     }
     else if(GameSnake.S_Rotate == 270)
     {
-        cone_x = (Level.TL_Start_Position.x * Level.TL_X_Size) + Level.BG_Screenposition.x + SNAKE_PICTURE_SIZE/2;
-        cone_y = ((Level.TL_Start_Position.y) * Level.TL_Y_Size) + (Level.BG_Screenposition.y + GameSnake.S_LightDistance);
-        light_x = (Level.TL_Start_Position.x * Level.TL_X_Size) + Level.BG_Screenposition.x + SNAKE_PICTURE_SIZE/2;;
-        light_y = ((Level.TL_Start_Position.y) * Level.TL_Y_Size) + Level.BG_Screenposition.y;
+        cone_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.SB_Head.w/2;
+        cone_y = ((GameSnake.SB_Head.y) * Level.TL_Y_Size) + (Level.BG_Screenposition.y + GameSnake.S_LightDistance);
+        light_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.SB_Head.w/2;;
+        light_y = ((GameSnake.SB_Head.y) * Level.TL_Y_Size) + Level.BG_Screenposition.y;
     }
     else
     {
@@ -487,19 +488,19 @@ bool CSFMLCheckTileMapCollision()
 
     if(dir == UP)
     {
-        fNew_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+        fNew_Y -= (float)GameSnake.SB_Head.h/Level.TL_Y_Size;
     }
     else if(dir == DOWN)
     {
-        fNew_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+        fNew_Y += (float)GameSnake.SB_Head.h/Level.TL_Y_Size;
     }
     else if(dir == LEFT)
     {
-        fNew_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        fNew_X -= (float)GameSnake.SB_Head.w/Level.TL_X_Size;
     }
     else if(dir == RIGHT)
     {
-        fNew_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        fNew_X += (float)GameSnake.SB_Head.w/Level.TL_X_Size;
     }
 
     size_t New_X = floor(fNew_X);
@@ -693,19 +694,19 @@ bool CSFMLCheckSelfCollision()
 
     if(dir == UP)
     {
-        fNew_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+        fNew_Y -= (float)GameSnake.SB_Head.h/Level.TL_Y_Size;
     }
     else if(dir == DOWN)
     {
-        fNew_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+        fNew_Y += (float)GameSnake.SB_Head.h/Level.TL_Y_Size;
     }
     else if(dir == LEFT)
     {
-        fNew_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        fNew_X -= (float)GameSnake.SB_Head.w/Level.TL_X_Size;
     }
     else if(dir == RIGHT)
     {
-        fNew_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+        fNew_X += (float)GameSnake.SB_Head.w/Level.TL_X_Size;
     }
 
     // Iterate over all Body Elements and Check for Collision
@@ -788,15 +789,15 @@ bool CSFMLCheckSelfCollision()
             }
 
             // Check for Another Self-Hit
-            float Left_X = fNew_X - ((float)SNAKE_PICTURE_SIZE/Level.TL_X_Size); // Minus Movement for Left Movement
-            float Right_X = fNew_X + ((float)SNAKE_PICTURE_SIZE/Level.TL_X_Size); // Plus Movement for Right Movement
+            float Left_X = fNew_X - ((float)GameSnake.SB_Head.w/Level.TL_X_Size); // Minus Movement for Left Movement
+            float Right_X = fNew_X + ((float)GameSnake.SB_Head.w/Level.TL_X_Size); // Plus Movement for Right Movement
 
             // Restore Old Values
             float Move_Y = fNew_Y;
             if(dir == UP)
-                Move_Y -= (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                Move_Y -= (float)GameSnake.SB_Head.h/Level.TL_Y_Size;
             if(dir == DOWN)
-                Move_Y += (float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size;
+                Move_Y += (float)GameSnake.SB_Head.h/Level.TL_Y_Size;
 
             for(i = 0; i<GameSnake.SB_Body_Elements; i++)
             {
@@ -868,15 +869,15 @@ bool CSFMLCheckSelfCollision()
             }
 
             // Check for Another Self-Hit
-            float Up_Y = fNew_Y - ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // Minus Movement for Left Movement
-            float Down_Y = fNew_Y + ((float)SNAKE_PICTURE_SIZE/Level.TL_Y_Size); // Plus Movement for Right Movement
+            float Up_Y = fNew_Y - ((float)GameSnake.SB_Head.h/Level.TL_Y_Size); // Minus Movement for Left Movement
+            float Down_Y = fNew_Y + ((float)GameSnake.SB_Head.h/Level.TL_Y_Size); // Plus Movement for Right Movement
 
             // Restore Old Values
             float Move_X = fNew_X;
             if(dir == LEFT)
-                Move_X -= (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+                Move_X -= (float)GameSnake.SB_Head.w/Level.TL_X_Size;
             if(dir == RIGHT)
-                Move_X += (float)SNAKE_PICTURE_SIZE/Level.TL_X_Size;
+                Move_X += (float)GameSnake.SB_Head.w/Level.TL_X_Size;
 
             for(i = 0; i<GameSnake.SB_Body_Elements; i++)
             {
@@ -952,16 +953,12 @@ bool CSFMLHandleSnake()
 
                 // Move
                 CSFMLPushSnakeBlock(RIGHT);
-                sfVector2f Offset = {SNAKE_PICTURE_SIZE, 0};
-                sfView_move(Level.BG_View, Offset);
                 GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
             }
             else
             {
                 // Move
                 CSFMLPushSnakeBlock(LEFT);
-                sfVector2f Offset = {-SNAKE_PICTURE_SIZE, 0};
-                sfView_move(Level.BG_View, Offset);
             }
 
         }
@@ -982,16 +979,12 @@ bool CSFMLHandleSnake()
 
                 // Move
                 CSFMLPushSnakeBlock(LEFT);
-                sfVector2f Offset = {-SNAKE_PICTURE_SIZE, 0};
-                sfView_move(Level.BG_View, Offset);
                 GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
             }
             else
             {
                 // Move
                 CSFMLPushSnakeBlock(RIGHT);
-                sfVector2f Offset = {SNAKE_PICTURE_SIZE, 0};
-                sfView_move(Level.BG_View, Offset);
             }
         }
         // Move Up
@@ -1011,16 +1004,12 @@ bool CSFMLHandleSnake()
 
                 // Move
                 CSFMLPushSnakeBlock(UP);
-                sfVector2f Offset = {0, -SNAKE_PICTURE_SIZE};
-                sfView_move(Level.BG_View, Offset);
                 GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
             }
             else
             {
                 // Move
                 CSFMLPushSnakeBlock(DOWN);
-                sfVector2f Offset = {0, SNAKE_PICTURE_SIZE};
-                sfView_move(Level.BG_View, Offset);
             }
         }
         // Move Down
@@ -1040,16 +1029,12 @@ bool CSFMLHandleSnake()
 
                 // Move
                 CSFMLPushSnakeBlock(DOWN);
-                sfVector2f Offset = {0, SNAKE_PICTURE_SIZE};
-                sfView_move(Level.BG_View, Offset);
                 GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
             }
             else
             {
                 // Move
                 CSFMLPushSnakeBlock(UP);
-                sfVector2f Offset = {0, -SNAKE_PICTURE_SIZE};
-                sfView_move(Level.BG_View, Offset);
             }
         }
     }

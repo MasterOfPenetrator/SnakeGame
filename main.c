@@ -7,7 +7,7 @@
 int main (void)
 {
     // Set First Game Off
-    GameMain.Game_Is_Init = false;
+    GameMain.GM_Is_Init = false;
 
     // Init all things
     bool InitError = false;
@@ -35,7 +35,7 @@ int main (void)
             }
 
             // Proceed Keys
-            if(EventLoop.type == sfEvtKeyReleased && GameMain.Game_Is_Init)
+            if(EventLoop.type == sfEvtKeyReleased && GameMain.GM_Is_Init)
             {
                 if(EventLoop.key.code == sfKeyUp)
                 {
@@ -72,7 +72,7 @@ int main (void)
                                 mstate.UserName_Counter--;
                             }
                         }
-                        else
+                        else if (CheckUnicode((char)EventLoop.text.unicode))
                         {
                             mstate.Level_Username[mstate.UserName_Counter] = (char) EventLoop.text.unicode;
                             mstate.UserName_Counter++;
@@ -109,11 +109,11 @@ int main (void)
         // Process Game
         if(mstate.startgame)
         {
-            if(!GameMain.Game_Is_Init)
+            if(!GameMain.GM_Is_Init)
             {
                 CSFMLGameInit(mstate.Level_ID);
             }
-            if(GameMain.Game_Is_Init)
+            if(GameMain.GM_Is_Init)
             {
                 CSFMLGameUpdate();
             }
@@ -124,7 +124,7 @@ int main (void)
     }
 
     // Clear Up things
-    if(GameMain.Game_Is_Init)
+    if(GameMain.GM_Is_Init)
         CSFMLGameQuit();
     CSFMLMenuQuit();
     CSFMLQuit();
