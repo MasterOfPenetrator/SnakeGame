@@ -16,6 +16,7 @@ int main (void)
 
     while (!InitError && sfRenderWindow_isOpen(screen))
     {
+        // Proceed Events
         while (sfRenderWindow_pollEvent(screen, &EventLoop))
         {
             // Proceed Close
@@ -37,19 +38,19 @@ int main (void)
             // Proceed Keys
             if(EventLoop.type == sfEvtKeyReleased && GameMain.GM_Is_Init)
             {
-                if(EventLoop.key.code == sfKeyUp)
+                if(EventLoop.key.code == sfKeyUp && GameSnake.S_Prev_Direction != DOWN)
                 {
                     GameSnake.S_Actual_Direction = UP;
                 }
-                if(EventLoop.key.code == sfKeyDown)
+                if(EventLoop.key.code == sfKeyDown && GameSnake.S_Prev_Direction != UP)
                 {
                     GameSnake.S_Actual_Direction = DOWN;
                 }
-                if(EventLoop.key.code == sfKeyRight)
+                if(EventLoop.key.code == sfKeyRight && GameSnake.S_Prev_Direction != LEFT)
                 {
                     GameSnake.S_Actual_Direction = RIGHT;
                 }
-                if(EventLoop.key.code == sfKeyLeft)
+                if(EventLoop.key.code == sfKeyLeft && GameSnake.S_Prev_Direction != RIGHT)
                 {
                     GameSnake.S_Actual_Direction = LEFT;
                 }
@@ -121,6 +122,9 @@ int main (void)
 
         // Display all Things!
         sfRenderWindow_display(screen);
+
+        // Clear Stuff
+        sfRenderWindow_clear(screen, sfBlack);
     }
 
     // Clear Up things

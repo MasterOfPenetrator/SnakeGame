@@ -32,12 +32,16 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-fexpensive-optimizations" />
-			<Add option="-O3" />
+			<Add option="-Wshadow" />
+			<Add option="-Wcast-align" />
+			<Add option="-Wextra" />
+			<Add option="-Wall" />
+			<Add option="-m32" />
+			<Add option="-g" />
 			<Add directory="../Bibliotheken/CSFML/include" />
 		</Compiler>
 		<Linker>
-			<Add option="-s" />
+			<Add option="-m32" />
 			<Add option="-lmingw32 -lopengl32 -lglu32" />
 			<Add library="libcsfml-audio" />
 			<Add library="libcsfml-network" />

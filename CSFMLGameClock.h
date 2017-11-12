@@ -42,7 +42,7 @@ Clock GameClock;
 bool CSFMLInitClock();
 bool CSFMLUpdateClock();
 void CSFMLQuitClock();
-bool CSFMLAddTimeEvent(EffectType Effect, int Duration, int NewValue, bool Direction);
+bool CSFMLAddTimeEvent(EffectType Effect, int Duration, int NewValue, bool Dir);
 bool CSFMLDeleteTimeEventByIndex(size_t index);
 
 #endif /* CSFMLGameClock_H */

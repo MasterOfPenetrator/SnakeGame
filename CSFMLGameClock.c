@@ -327,7 +327,7 @@ void CSFMLQuitClock()
 }
 
 // Adding Time Event
-bool CSFMLAddTimeEvent(EffectType Effect, int Duration, int NewValue, bool Direction)
+bool CSFMLAddTimeEvent(EffectType Effect, int Duration, int NewValue, bool Dir)
 {
     // There 0 Time Events
     if(GameClock.GC_ItemEvents_Count == 0)
@@ -346,7 +346,7 @@ bool CSFMLAddTimeEvent(EffectType Effect, int Duration, int NewValue, bool Direc
         GameClock.GC_ItemEvents[0].Duration = Duration;
         GameClock.GC_ItemEvents[0].StartTime = GameClock.GC_Time;
         GameClock.GC_ItemEvents[0].Act_Value = NewValue;
-        GameClock.GC_ItemEvents[0].Direction = Direction;
+        GameClock.GC_ItemEvents[0].Direction = Dir;
         GameClock.GC_ItemEvents[0].Event_Setted = false;
 
         switch(Effect)
@@ -400,7 +400,7 @@ bool CSFMLAddTimeEvent(EffectType Effect, int Duration, int NewValue, bool Direc
         GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Duration = Duration;
         GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].StartTime = GameClock.GC_Time;
         GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Act_Value = NewValue;
-        GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Direction = Direction;
+        GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Direction = Dir;
         GameClock.GC_ItemEvents[GameClock.GC_ItemEvents_Count].Event_Setted = false;
 
         switch(Effect)

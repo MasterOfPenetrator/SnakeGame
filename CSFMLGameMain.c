@@ -94,13 +94,13 @@ void CSFMLGameUpdate()
                 CSFMLHandleItems();
                 CSFMLHandleSnake();
             }
-
-            // Move The View
-            CSFMLMainMoveView();
         }
 
         // Render Stuff
         {
+            // Move The View
+            CSFMLMainMoveView();
+
             // Render Stuff
             // Viewed Stuff
             sfRenderWindow_setView(screen, Level.BG_View);
@@ -111,8 +111,11 @@ void CSFMLGameUpdate()
             // Render Snake
             CSFMLRenderSnake();
 
-            // Render SnakeLight
+            // Update Snake Light
             CSFMLSetSnakeLight();
+
+            // Render Lights
+            CSFMLRenderLights();
 
             // Render Items
             CSFMLRenderItems();
@@ -131,6 +134,7 @@ void CSFMLGameUpdate()
 }
 
 // Move View by Snake Speed
+// Todo: Move to a center of Max Map Size!
 void CSFMLMainMoveView()
 {
     // Get Frame Movement depend on the Snake Direction
@@ -142,8 +146,6 @@ void CSFMLMainMoveView()
         // Calculate Frame Movement
         Frame_Movement = (GameSnake.SB_Head.h / ((1.0f / GameSnake.S_Speed) * 1000.0f)) * GameClock.GC_DeltaTime * 1000.0f;
 
-        // Add to the Sum of the Movement
-        // Add to the Sum only, if it under the the complete Movement Size and set the flag!
         if(Frame_Movement + GameMain.GM_View_SumMovement < GameSnake.SB_Head.h)
         {
             GameMain.GM_View_SumMovement += Frame_Movement;
@@ -154,7 +156,7 @@ void CSFMLMainMoveView()
         }
 
         // Now check for Last Step and determine it
-        if(!CompareFloats(GameMain.GM_View_SumMovement, GameSnake.SB_Head.h) && GameMain.GM_View_Movement_ResetFlag)
+        if(GameClock.GC_SnakeTick && !CompareFloats(GameSnake.SB_Head.h, GameMain.GM_View_SumMovement) && GameMain.GM_View_Movement_ResetFlag)
         {
             // Get for this the Actual Movement
             Frame_Movement = GameSnake.SB_Head.h - GameMain.GM_View_SumMovement;
@@ -171,8 +173,6 @@ void CSFMLMainMoveView()
         // Calculate Frame Movement
         Frame_Movement = (GameSnake.SB_Head.w / ((1.0f / GameSnake.S_Speed) * 1000.0f)) * GameClock.GC_DeltaTime * 1000.0f;
 
-        // Add to the Sum of the Movement
-        // Add to the Sum only, if it under the the complete Movement Size and set the flag!
         if(Frame_Movement + GameMain.GM_View_SumMovement < GameSnake.SB_Head.w)
         {
             GameMain.GM_View_SumMovement += Frame_Movement;
@@ -183,11 +183,10 @@ void CSFMLMainMoveView()
         }
 
         // Now check for Last Step and determine it
-        if(!CompareFloats(GameMain.GM_View_SumMovement, GameSnake.SB_Head.w) && GameMain.GM_View_Movement_ResetFlag)
+        if(GameClock.GC_SnakeTick && !CompareFloats(GameSnake.SB_Head.h, GameMain.GM_View_SumMovement) && GameMain.GM_View_Movement_ResetFlag)
         {
             Frame_Movement = GameSnake.SB_Head.w - GameMain.GM_View_SumMovement;
             GameMain.GM_View_Movement_ResetFlag = false;
-
             // Reset the Sum
             GameMain.GM_View_SumMovement = 0.0f;
         }
@@ -227,9 +226,6 @@ void CSFMLMainRenderOther()
 {
     // Render Item Hint
     CSFMLRenderItemText();
-
-    // Activate Lights
-    CSFMLRenderLights();
 
     // Activate Time Score Update
     CSFMLGameUpdateTimeSnakeScore();

@@ -433,44 +433,33 @@ bool CSFMLSetSnakeLight()
         return false;
 
     // Licht setzen
-    float light_x, light_y, cone_x, cone_y;
+    // Fix It!
+    /*
+    float Light_X, Light_Y, Cone_X, Cone_Y;
     if(GameSnake.S_Rotate == 0)
     {
-        cone_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.S_LightDistance;
-        cone_y = (GameSnake.SB_Head.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + GameSnake.SB_Head.h/2;
-        light_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x;
-        light_y = (GameSnake.SB_Head.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + GameSnake.SB_Head.h/2;
+        Light_X = ((GameSnake.SB_Head.x - (GameSnake.SB_Head.x*(sfView_getCenter(Level.BG_View).x / 1000))) * 50.0f) + (GameSnake.SB_Head.w / 2) + Level.BG_Screenposition.x;
+        Light_Y = (GameSnake.SB_Head.y * 50.0f) + (GameSnake.SB_Head.h / 2) + Level.BG_Screenposition.y;
+        Cone_X = Light_X + GameSnake.S_LightDistance;
+        Cone_Y = Light_Y;
+
+        printf("View X: %f\n", sfView_getCenter(Level.BG_View).x);
     }
     else if(GameSnake.S_Rotate == 180)
     {
-        cone_x = ((GameSnake.SB_Head.x) * Level.TL_X_Size) - (Level.BG_Screenposition.x + GameSnake.S_LightDistance);
-        cone_y = (GameSnake.SB_Head.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + GameSnake.SB_Head.h/2;
-        light_x = ((GameSnake.SB_Head.x) * Level.TL_X_Size) - Level.BG_Screenposition.x;
-        light_y = (GameSnake.SB_Head.y * Level.TL_Y_Size) + Level.BG_Screenposition.y + GameSnake.SB_Head.h/2;
+
     }
     else if(GameSnake.S_Rotate == 90)
     {
-        cone_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.SB_Head.w/2;
-        cone_y = ((GameSnake.SB_Head.y) * Level.TL_Y_Size) + Level.BG_Screenposition.y - GameSnake.S_LightDistance;
-        light_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.SB_Head.w/2;
-        light_y = ((GameSnake.SB_Head.y) * Level.TL_Y_Size) + Level.BG_Screenposition.y;
+
     }
     else if(GameSnake.S_Rotate == 270)
     {
-        cone_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.SB_Head.w/2;
-        cone_y = ((GameSnake.SB_Head.y) * Level.TL_Y_Size) + (Level.BG_Screenposition.y + GameSnake.S_LightDistance);
-        light_x = (GameSnake.SB_Head.x * Level.TL_X_Size) + Level.BG_Screenposition.x + GameSnake.SB_Head.w/2;;
-        light_y = ((GameSnake.SB_Head.y) * Level.TL_Y_Size) + Level.BG_Screenposition.y;
-    }
-    else
-    {
-        cone_x = 0.0f;
-        cone_y = 0.0f;
-        light_x = 0.0f;
-        light_y = 0.0f;
+
     }
 
-    CSFMLSetLight(light_x, light_y, cone_x, cone_y, 0, true, GameSnake.S_Light_FBM, 20, 1, GameSnake.S_Light_OnOff);
+    CSFMLSetLight(Light_X, Light_Y, Cone_X, Cone_Y, 0, true, GameSnake.S_Light_FBM, 20, 1, GameSnake.S_Light_OnOff);
+    */
 
     return true;
 }
@@ -929,8 +918,6 @@ bool CSFMLHandleSnake()
 {
     if(!GameSnake.S_Is_Init)
         return false;
-
-    // Todo: Making sfView Move smoother
 
     // Check TileMap Collide, Self Collide, if Noclip On, Ignore both
     // Its a bit Tricky, if first equation true, the if skips next elements, so they will not execute :)
