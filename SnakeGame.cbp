@@ -29,24 +29,17 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-march=corei7-avx" />
+			<Add option="-march=corei7" />
 			<Add option="-fomit-frame-pointer" />
 			<Add option="-fexpensive-optimizations" />
 			<Add option="-O3" />
-			<Add option="-Wshadow" />
-			<Add option="-Winit-self" />
-			<Add option="-Wredundant-decls" />
-			<Add option="-Wcast-align" />
-			<Add option="-Wfloat-equal" />
-			<Add option="-Wunreachable-code" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-m32" />
-			<Add option="-std=c11 -Wpedantic" />
+			<Add option="-std=c11" />
 			<Add directory="../Bibliotheken/CSFML/include" />
 		</Compiler>
 		<Linker>
-			<Add option="-s" />
 			<Add option="-m32" />
 			<Add option="-lmingw32 -lopengl32 -lglu32" />
 			<Add library="libcsfml-audio" />

@@ -11,6 +11,7 @@
 #include <dirent.h>
 #include <math.h>
 #include <time.h>
+#include <immintrin.h>
 #include <SFML/Audio.h>
 #include <SFML/Graphics.h>
 #include <SFML/Window.h>

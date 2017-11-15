@@ -1,9 +1,30 @@
 #include "CSFMLOtherStuff.h"
+#define SSE_COMPARE 1
 
 // Compare two Floats
 bool CompareFloats(float Value1, float Value2)
 {
-    return fabs(Value1 - Value2) < 0.00001f;
+    if(SSE_COMPARE)
+    {
+        register __m128 val1, val2, val3;
+        register int result;
+
+        val1 = _mm_set1_ps(Value1);
+        val2 = _mm_set1_ps(Value2);
+        val3 = _mm_cmpeq_ps(val1, val2);
+
+        result = _mm_movemask_ps(val3);
+
+        if(result == 0x0000000f)
+            return true;
+        else
+            return false;
+
+    }
+    else
+    {
+        return fabs(Value1 - Value2) < 0.00001f;
+    }
 }
 
 // Getting a Random Float Number

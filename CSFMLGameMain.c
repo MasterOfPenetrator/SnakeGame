@@ -188,13 +188,22 @@ void CSFMLMainMoveView()
         // Move
         sfView_move(Level.BG_View, View_Movement);
 
-        // Round is enable?
+        // Round to Absolute Number
+        // like 325.002 must be 325.000, otherwise, on longer moving, offsets still adds and will destroy movement
+        // Perform a Round to nearest Head Height
         if(GameMain.GM_View_Movement_RoundFlag)
         {
             sfVector2f ActualView = sfView_getCenter(Level.BG_View);
+            float Nearest = 100.0f / GameSnake.SB_Head.h;
 
-            ActualView.x = roundf(ActualView.x);
-            ActualView.y = roundf(ActualView.y);
+            ActualView.x /= 100.0f;
+            ActualView.y /= 100.0f;
+
+            ActualView.x = roundf(ActualView.x * Nearest) / Nearest;
+            ActualView.y = roundf(ActualView.y * Nearest) / Nearest;
+
+            ActualView.x *= 100.0f;
+            ActualView.y *= 100.0f;
 
             sfView_setCenter(Level.BG_View, ActualView);
 
@@ -248,9 +257,16 @@ void CSFMLMainMoveView()
         if(GameMain.GM_View_Movement_RoundFlag)
         {
             sfVector2f ActualView = sfView_getCenter(Level.BG_View);
+            float Nearest = 100.0f / GameSnake.SB_Head.w;
 
-            ActualView.x = roundf(ActualView.x);
-            ActualView.y = roundf(ActualView.y);
+            ActualView.x /= 100.0f;
+            ActualView.y /= 100.0f;
+
+            ActualView.x = roundf(ActualView.x * Nearest) / Nearest;
+            ActualView.y = roundf(ActualView.y * Nearest) / Nearest;
+
+            ActualView.x *= 100.0f;
+            ActualView.y *= 100.0f;
 
             sfView_setCenter(Level.BG_View, ActualView);
 
