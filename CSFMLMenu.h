@@ -3,6 +3,7 @@
 #define CSFMLMENU_H
 // Includes
 #include <stdio.h>
+#include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -14,8 +15,6 @@
 #include <SFML/Graphics.h>
 #include <SFML/Window.h>
 #include <SFML/System.h>
-#include <SFML/Config.h>
-#include <SFML/OpenGL.h>
 #include "CSFMLFileHandling.h"
 #include "CSFMLGameMain.h"
 

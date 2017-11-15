@@ -46,6 +46,7 @@ bool CSFMLGameInit()
     GameMain.GM_Is_Init = true;
     GameMain.GM_View_SumMovement = 0.0f;
     GameMain.GM_View_Movement_ResetFlag = false;
+    GameMain.GM_View_StartFlag = false;
 
     return Init_Error;
 }
@@ -72,6 +73,7 @@ void CSFMLGameQuit()
     // Other Stuff
     GameMain.GM_View_SumMovement = 0.0f;
     GameMain.GM_View_Movement_ResetFlag = false;
+    GameMain.GM_View_StartFlag = false;
     GameMain.GM_Is_Init = false;
 }
 
@@ -134,90 +136,115 @@ void CSFMLGameUpdate()
 }
 
 // Move View by Snake Speed
-// Todo: Move to a center of Max Map Size!
 void CSFMLMainMoveView()
 {
+    Direction a_dir = GameClock.GC_Actual_Snake_Direction;
+    Direction p_dir = GameClock.GC_Prev_Snake_Direction;
+
+    // Detect Start of the Movement!
+    if(a_dir != NONE && p_dir == NONE)
+        GameMain.GM_View_StartFlag = true;
+
     // Get Frame Movement depend on the Snake Direction
-    float Frame_Movement = 0.0f;
-
-    // Up or Down
-    if(GameSnake.S_Actual_Direction == UP || GameSnake.S_Actual_Direction == DOWN)
+    if(GameMain.GM_View_StartFlag)
     {
-        // Calculate Frame Movement
-        Frame_Movement = (GameSnake.SB_Head.h / ((1.0f / GameSnake.S_Speed) * 1000.0f)) * GameClock.GC_DeltaTime * 1000.0f;
+        float Frame_Movement = 0.0f;
+        sfVector2f View_Movement = {0.0f, 0.0f};
 
-        if(Frame_Movement + GameMain.GM_View_SumMovement < GameSnake.SB_Head.h)
+        // Up or Down
+        if(a_dir == UP || a_dir == DOWN)
         {
-            GameMain.GM_View_SumMovement += Frame_Movement;
+            // Calculate Frame Movement
+            Frame_Movement = (GameSnake.SB_Head.h / ((1.0f / GameSnake.S_Speed) * 1000.0f)) * GameClock.GC_DeltaTime * 1000.0f;
+
+            if(Frame_Movement + GameMain.GM_View_SumMovement < GameSnake.SB_Head.h)
+            {
+                GameMain.GM_View_SumMovement += Frame_Movement;
+            }
+            else
+            {
+                Frame_Movement = 0.0f;
+                GameMain.GM_View_Movement_ResetFlag = true;
+            }
+
+            // Now check for Last Step and determine it
+            if(GameClock.GC_SnakeTick && !CompareFloats(GameSnake.SB_Head.h, GameMain.GM_View_SumMovement) && GameMain.GM_View_Movement_ResetFlag)
+            {
+                // Get for this the Actual Movement
+                Frame_Movement = GameSnake.SB_Head.w - GameMain.GM_View_SumMovement;
+                GameMain.GM_View_Movement_ResetFlag = false;
+
+                printf("Tick Ende\n");
+
+                // Reset the Sum
+                GameMain.GM_View_SumMovement = 0.0f;
+            }
+
+            // Set Vector
+            if(a_dir == UP)
+            {
+                View_Movement.x = 0.0f;
+                View_Movement.y = -Frame_Movement;
+            }
+            else if(a_dir == DOWN)
+            {
+                View_Movement.x = 0.0f;
+                View_Movement.y = Frame_Movement;
+            }
+
+            // Move
+            sfView_move(Level.BG_View, View_Movement);
+
         }
-        else
+        // Left or Right
+        else if(a_dir == LEFT || a_dir == RIGHT)
         {
-            GameMain.GM_View_Movement_ResetFlag = true;
+            // Calculate Frame Movement
+            Frame_Movement = (GameSnake.SB_Head.w / ((1.0f / GameSnake.S_Speed) * 1000.0f)) * GameClock.GC_DeltaTime * 1000.0f;
+
+            if(Frame_Movement + GameMain.GM_View_SumMovement < GameSnake.SB_Head.w)
+            {
+                GameMain.GM_View_SumMovement += Frame_Movement;
+            }
+            else
+            {
+                Frame_Movement = 0.0f;
+                GameMain.GM_View_Movement_ResetFlag = true;
+            }
+
+            // Now check for Last Step and determine it
+            if(GameClock.GC_SnakeTick && !CompareFloats(GameSnake.SB_Head.w, GameMain.GM_View_SumMovement) && GameMain.GM_View_Movement_ResetFlag)
+            {
+                // Get for this the Actual Movement
+                Frame_Movement = GameSnake.SB_Head.w - GameMain.GM_View_SumMovement;
+                GameMain.GM_View_Movement_ResetFlag = false;
+
+                printf("Tick Ende\n");
+
+                // Reset the Sum
+                GameMain.GM_View_SumMovement = 0.0f;
+            }
+
+            // Set Vector
+            if(a_dir == LEFT)
+            {
+                View_Movement.x = -Frame_Movement;
+                View_Movement.y = 0.0f;
+            }
+            else if(a_dir == RIGHT)
+            {
+                View_Movement.x = Frame_Movement;
+                View_Movement.y = 0.0f;
+            }
+
+            // Move
+            sfView_move(Level.BG_View, View_Movement);
         }
 
-        // Now check for Last Step and determine it
-        if(GameClock.GC_SnakeTick && !CompareFloats(GameSnake.SB_Head.h, GameMain.GM_View_SumMovement) && GameMain.GM_View_Movement_ResetFlag)
-        {
-            // Get for this the Actual Movement
-            Frame_Movement = GameSnake.SB_Head.h - GameMain.GM_View_SumMovement;
-            GameMain.GM_View_Movement_ResetFlag = false;
-
-            // Reset the Sum
-            GameMain.GM_View_SumMovement = 0.0f;
-        }
-
-    }
-    // Left or Right
-    else if(GameSnake.S_Actual_Direction == LEFT || GameSnake.S_Actual_Direction == RIGHT)
-    {
-        // Calculate Frame Movement
-        Frame_Movement = (GameSnake.SB_Head.w / ((1.0f / GameSnake.S_Speed) * 1000.0f)) * GameClock.GC_DeltaTime * 1000.0f;
-
-        if(Frame_Movement + GameMain.GM_View_SumMovement < GameSnake.SB_Head.w)
-        {
-            GameMain.GM_View_SumMovement += Frame_Movement;
-        }
-        else
-        {
-            GameMain.GM_View_Movement_ResetFlag = true;
-        }
-
-        // Now check for Last Step and determine it
-        if(GameClock.GC_SnakeTick && !CompareFloats(GameSnake.SB_Head.h, GameMain.GM_View_SumMovement) && GameMain.GM_View_Movement_ResetFlag)
-        {
-            Frame_Movement = GameSnake.SB_Head.w - GameMain.GM_View_SumMovement;
-            GameMain.GM_View_Movement_ResetFlag = false;
-            // Reset the Sum
-            GameMain.GM_View_SumMovement = 0.0f;
-        }
-    }
-
-    // Now Move the View
-    sfVector2f View_Movement = {0.0f, 0.0f};
-
-    if(GameSnake.S_Actual_Direction == LEFT)
-    {
-        View_Movement.x = -Frame_Movement;
-        View_Movement.y = 0.0f;
-        sfView_move(Level.BG_View, View_Movement);
-    }
-    else if(GameSnake.S_Actual_Direction == RIGHT)
-    {
-        View_Movement.x = Frame_Movement;
-        View_Movement.y = 0.0f;
-        sfView_move(Level.BG_View, View_Movement);
-    }
-    else if(GameSnake.S_Actual_Direction == UP)
-    {
-        View_Movement.x = 0.0f;
-        View_Movement.y = -Frame_Movement;
-        sfView_move(Level.BG_View, View_Movement);
-    }
-    else if(GameSnake.S_Actual_Direction == DOWN)
-    {
-        View_Movement.x = 0.0f;
-        View_Movement.y = Frame_Movement;
-        sfView_move(Level.BG_View, View_Movement);
+        // Test Ausgabe
+        sfVector2f MOV = sfView_getCenter(Level.BG_View);
+        printf("View X: %f - View Y: %f\n", MOV.x, MOV.y);
+        printf("Move X: %f - Move Y: --\n", GameMain.GM_View_SumMovement);
     }
 }
 

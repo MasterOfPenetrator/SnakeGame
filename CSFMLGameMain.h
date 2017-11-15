@@ -4,6 +4,7 @@
 
 // Enums
 typedef enum { IT_HEALTH, IT_SPEED, IT_FOOD, IT_GOD, IT_NOCLIP, IT_CUSTOM } ItemType;
+typedef enum { LEFT, RIGHT, UP, DOWN, NONE } Direction;
 
 // Includes
 #include "CSFMLMenu.h"
@@ -30,6 +31,7 @@ typedef struct {
     // sfView Stuff
     float GM_View_SumMovement;
     bool GM_View_Movement_ResetFlag;
+    bool GM_View_StartFlag;
 } Game;
 
 // Variables

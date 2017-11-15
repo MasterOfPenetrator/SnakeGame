@@ -433,33 +433,39 @@ bool CSFMLSetSnakeLight()
         return false;
 
     // Licht setzen
-    // Fix It!
-    /*
-    float Light_X, Light_Y, Cone_X, Cone_Y;
+
+    float Light_X = 0.0f, Light_Y = 0.0f, Cone_X = 0.0f, Cone_Y = 0.0f;
     if(GameSnake.S_Rotate == 0)
     {
-        Light_X = ((GameSnake.SB_Head.x - (GameSnake.SB_Head.x*(sfView_getCenter(Level.BG_View).x / 1000))) * 50.0f) + (GameSnake.SB_Head.w / 2) + Level.BG_Screenposition.x;
-        Light_Y = (GameSnake.SB_Head.y * 50.0f) + (GameSnake.SB_Head.h / 2) + Level.BG_Screenposition.y;
-        Cone_X = Light_X + GameSnake.S_LightDistance;
+        Light_X = (Level.TL_Start_Position.x * Level.TL_X_Size) + (GameSnake.SB_Head.w/2) + Level.BG_Screenposition.x;
+        Light_Y = (Level.TL_Start_Position.y * Level.TL_Y_Size) + (GameSnake.SB_Head.h/2) + Level.BG_Screenposition.y;
         Cone_Y = Light_Y;
-
-        printf("View X: %f\n", sfView_getCenter(Level.BG_View).x);
+        Cone_X = Light_X + GameSnake.S_LightDistance;
     }
     else if(GameSnake.S_Rotate == 180)
     {
-
+        Light_X = (Level.TL_Start_Position.x * Level.TL_X_Size) + (GameSnake.SB_Head.w/2) + Level.BG_Screenposition.x;
+        Light_Y = (Level.TL_Start_Position.y * Level.TL_Y_Size) + (GameSnake.SB_Head.h/2) + Level.BG_Screenposition.y;
+        Cone_Y = Light_Y;
+        Cone_X = Light_X - GameSnake.S_LightDistance;
     }
     else if(GameSnake.S_Rotate == 90)
     {
-
+        Light_X = (Level.TL_Start_Position.x * Level.TL_X_Size) + (GameSnake.SB_Head.w/2) + Level.BG_Screenposition.x;
+        Light_Y = (Level.TL_Start_Position.y * Level.TL_Y_Size) + (GameSnake.SB_Head.h/2) + Level.BG_Screenposition.y;
+        Cone_Y = Light_Y - GameSnake.S_LightDistance;
+        Cone_X = Light_X;
     }
     else if(GameSnake.S_Rotate == 270)
     {
-
+        Light_X = (Level.TL_Start_Position.x * Level.TL_X_Size) + (GameSnake.SB_Head.w/2) + Level.BG_Screenposition.x;
+        Light_Y = (Level.TL_Start_Position.y * Level.TL_Y_Size) + (GameSnake.SB_Head.h/2) + Level.BG_Screenposition.y;
+        Cone_Y = Light_Y + GameSnake.S_LightDistance;
+        Cone_X = Light_X;
     }
 
     CSFMLSetLight(Light_X, Light_Y, Cone_X, Cone_Y, 0, true, GameSnake.S_Light_FBM, 20, 1, GameSnake.S_Light_OnOff);
-    */
+
 
     return true;
 }
@@ -704,7 +710,7 @@ bool CSFMLCheckSelfCollision()
     for(i = 0; i<GameSnake.SB_Body_Elements; i++)
     {
         // Hit on Body
-        if(GameSnake.SB_Body[i].x == fNew_X && GameSnake.SB_Body[i].y == fNew_Y)
+        if(CompareFloats(GameSnake.SB_Body[i].x, fNew_X) && CompareFloats(GameSnake.SB_Body[i].y, fNew_Y))
         {
             if(!GameSnake.S_GODMODE)
                 GameSnake.S_Health -= SNAKE_SELFHIT_DMG;
@@ -946,6 +952,7 @@ bool CSFMLHandleSnake()
             {
                 // Move
                 CSFMLPushSnakeBlock(LEFT);
+                GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
             }
 
         }
@@ -972,6 +979,7 @@ bool CSFMLHandleSnake()
             {
                 // Move
                 CSFMLPushSnakeBlock(RIGHT);
+                GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
             }
         }
         // Move Up
@@ -997,6 +1005,7 @@ bool CSFMLHandleSnake()
             {
                 // Move
                 CSFMLPushSnakeBlock(DOWN);
+                GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
             }
         }
         // Move Down
@@ -1022,6 +1031,7 @@ bool CSFMLHandleSnake()
             {
                 // Move
                 CSFMLPushSnakeBlock(UP);
+                GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
             }
         }
     }

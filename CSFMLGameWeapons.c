@@ -158,7 +158,7 @@ bool CSFMLInitWeapons()
 
             // Set it Inactive
             // For Debug & Testing it is every Active
-            GameWeapons.GW_Active[counter] = true;
+            GameWeapons.GW_Active[counter] = false;
 
             // Set Weapon Blocks
             GameWeapons.GW_Weapon_Block[counter].w = sfTexture_getSize(GameWeapons.GW_WeaponTexture[counter]).x;

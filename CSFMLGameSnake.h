@@ -10,9 +10,6 @@
 #define SNAKE_SELFHIT_DMG 45
 #define SNAKE_BITE_DMG 10
 
-// Enums
-typedef enum { LEFT, RIGHT, UP, DOWN, NONE } Direction;
-
 // Structs
 typedef struct {
     float x;

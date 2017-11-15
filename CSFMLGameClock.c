@@ -12,6 +12,8 @@ bool CSFMLInitClock()
     }
 
     // Setup General things
+    GameClock.GC_Actual_Snake_Direction = NONE;
+    GameClock.GC_Prev_Snake_Direction = NONE;
     GameClock.GC_Actual_Time.microseconds = 0;
     GameClock.GC_Last_Time.microseconds = 0;
     GameClock.GC_DeltaTime = 0.0f;
@@ -305,6 +307,13 @@ bool CSFMLUpdateClock()
         }
     }
 
+    // Change Direction affecting to Snake Tick
+    if(GameClock.GC_SnakeTick)
+    {
+        GameClock.GC_Actual_Snake_Direction = GameSnake.S_Actual_Direction;
+        GameClock.GC_Prev_Snake_Direction = GameSnake.S_Prev_Direction;
+    }
+
     return true;
 }
 
@@ -322,6 +331,9 @@ void CSFMLQuitClock()
     }
 
     // Reset General Things
+    GameClock.GC_Actual_Snake_Direction = NONE;
+    GameClock.GC_Prev_Snake_Direction = NONE;
+    GameClock.GC_SecondTick = false;
     GameClock.GC_SnakeTick = false;
     GameClock.GC_Is_Init = false;
 }

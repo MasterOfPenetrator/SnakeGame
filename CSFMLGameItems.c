@@ -522,7 +522,7 @@ void CSFMLHandleItems()
         if(GameItem.GI_Placed[i])
         {
             // Collision Detected
-            if(Next_X == GameItem.GI_Blocks[i].x && Next_Y == GameItem.GI_Blocks[i].y)
+            if(CompareFloats(Next_X, GameItem.GI_Blocks[i].x) && CompareFloats(Next_Y, GameItem.GI_Blocks[i].y))
             {
                 // Checkup Propertys
                 size_t s;
