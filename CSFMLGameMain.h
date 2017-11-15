@@ -31,7 +31,7 @@ typedef struct {
     // sfView Stuff
     float GM_View_SumMovement;
     bool GM_View_Movement_ResetFlag;
-    bool GM_View_StartFlag;
+    bool GM_View_Movement_RoundFlag;
 } Game;
 
 // Variables

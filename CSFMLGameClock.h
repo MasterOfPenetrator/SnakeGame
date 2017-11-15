@@ -24,7 +24,6 @@ typedef struct {
     sfTime GC_Actual_Time;
     sfTime GC_Last_Time;
     Direction GC_Actual_Snake_Direction;
-    Direction GC_Prev_Snake_Direction;
     volatile bool GC_SnakeTick;
     volatile bool GC_SecondTick;
     float GC_DeltaTime;
