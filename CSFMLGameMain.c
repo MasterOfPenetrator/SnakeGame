@@ -390,7 +390,7 @@ void CSFMLGamePauseRenderText()
         sfText_setString(GameMain.GM_Pause, "Game Paused");
 
         sfColor color = {233, 77, 0, 255};
-        sfVector2f Position = {SCREEN_WIDTH/2 - sfText_getLocalBounds(GameMain.GM_Pause).width/2, Level.BG_Screenposition.x + 350.0f};
+        sfVector2f Position = {SCREEN_WIDTH/2 - sfText_getLocalBounds(GameMain.GM_Pause).width/2, Level.BG_Screenposition.y + 472.0f/2 - sfText_getLocalBounds(GameMain.GM_Pause).height/2};
         sfText_setPosition(GameMain.GM_Pause, Position);
         sfText_setColor(GameMain.GM_Pause, color);
 
