@@ -48,6 +48,8 @@ typedef struct __attribute__((__packed__)) {
     float S_LightDistance;
     bool S_Light_FBM;
     bool S_Light_OnOff;
+    bool S_Autokill;
+    float S_Autokill_Speed_Amount;
 
     bool S_Is_Init;
     bool S_Is_Dead;

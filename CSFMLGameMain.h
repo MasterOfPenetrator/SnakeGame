@@ -22,10 +22,12 @@ typedef struct {
     // SFML Stuff
     sfText *GM_Health;
     sfText *GM_Score;
+    sfText *GM_Pause;
     sfFont *GM_Font;
 
     // General Stuff
     bool GM_Is_Init;
+    bool GM_Paused;
     int GM_Level_ID;
 
     // sfView Stuff
@@ -44,6 +46,8 @@ void CSFMLGameQuit();
 void CSFMLGameShowScore();
 void CSFMLGameShowHealth();
 void CSFMLGameUpdateTimeSnakeScore();
+void CSFMLGamePause();
+void CSFMLGamePauseRenderText();
 void CSFMLMainMoveView();
 void CSFMLMainRenderOther();
 

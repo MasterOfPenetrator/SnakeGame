@@ -21,6 +21,8 @@ bool CSFMLInitClock()
     GameClock.GC_SnakeTime = 0.0f;
     GameClock.GC_SecondTick = false;
     GameClock.GC_SecondTime = 0.0f;
+    GameClock.GC_MinuteTick = false;
+    GameClock.GC_MinuteTime = 0.0f;
     GameClock.GC_Is_Init = true;
     GameClock.GC_ItemEvents = NULL; // Prevent dangling pointer
     GameClock.GC_ItemEvents_Count = 0;
@@ -40,6 +42,7 @@ bool CSFMLUpdateClock()
     GameClock.GC_Time += GameClock.GC_DeltaTime;
     GameClock.GC_SnakeTime += GameClock.GC_DeltaTime;
     GameClock.GC_SecondTime += GameClock.GC_DeltaTime;
+    GameClock.GC_MinuteTime += GameClock.GC_DeltaTime;
     GameClock.GC_Last_Time = GameClock.GC_Actual_Time;
 
     // Set GameTime to Level Shader, if Level is loaded!
@@ -77,6 +80,29 @@ bool CSFMLUpdateClock()
         }
     }
 
+    // Update MinuteTick Timer
+    if(GameSnake.S_Is_Init)
+    {
+        if(GameClock.GC_MinuteTime > 60.0f)
+        {
+            GameClock.GC_MinuteTick = true;
+
+            // Autokill Feature for the Map active?
+            if(Level.MD_Details.Autokill_Active && !GameMain.GM_Paused)
+            {
+                GameSnake.S_Speed += Level.MD_Details.Autokill_Amount;
+                GameSnake.S_DefaultSpeed += Level.MD_Details.Autokill_Amount;
+                printf("Autokill: Speed increased, now: %f\n", GameSnake.S_DefaultSpeed);
+            }
+
+            GameClock.GC_MinuteTime = 0.0f;
+        }
+        else
+        {
+            GameClock.GC_MinuteTick = false;
+        }
+    }
+
     // Update SecondTick Timer
     if(GameSnake.S_Is_Init)
     {
@@ -106,7 +132,7 @@ bool CSFMLUpdateClock()
     }
 
     // Update Time Events, only when Time Events putted
-    if(GameClock.GC_ItemEvents_Count > 0)
+    if(GameClock.GC_ItemEvents_Count > 0 && !GameMain.GM_Paused)
     {
         // Iterate over all Items
         size_t i;
@@ -326,6 +352,7 @@ void CSFMLQuitClock()
     GameClock.GC_Actual_Snake_Direction = NONE;
     GameClock.GC_SecondTick = false;
     GameClock.GC_SnakeTick = false;
+    GameClock.GC_MinuteTick = false;
     GameClock.GC_Is_Init = false;
 }
 

@@ -96,8 +96,8 @@ bool CSFMLLoadMapDescriptor()
 
     // Define Path
     char CompletePath_MapDescriptor[100] = {0};
-    strcat(CompletePath_MapDescriptor, Level.Level_Path);
-    strcat(CompletePath_MapDescriptor, "MapDescriptor.DAT");
+    strncat(CompletePath_MapDescriptor, Level.Level_Path, strlen(Level.Level_Path)+1);
+    strncat(CompletePath_MapDescriptor, "MapDescriptor.DAT", 18);
 
     // Load Data
     FILE *Mapdesc = fopen(CompletePath_MapDescriptor, "rb");
@@ -192,8 +192,8 @@ bool CSFMLLoadEventmap()
 
     // Define Path
     char CompletePath_EventMap[100] = {0};
-    strcat(CompletePath_EventMap, Level.Level_Path);
-    strcat(CompletePath_EventMap, "Eventmap.DAT");
+    strncat(CompletePath_EventMap, Level.Level_Path, strlen(Level.Level_Path)+1);
+    strncat(CompletePath_EventMap, "Eventmap.DAT", 13);
 
     // Load Data
     FILE *EventMap = fopen(CompletePath_EventMap, "rb");
@@ -258,8 +258,8 @@ bool CSFMLLoadTilemap()
 
     // Define Path
     char CompletePath_Tilemap[100] = {0};
-    strcat(CompletePath_Tilemap, Level.Level_Path);
-    strcat(CompletePath_Tilemap, "Tilemap.DAT");
+    strncat(CompletePath_Tilemap, Level.Level_Path, strlen(Level.Level_Path)+1);
+    strncat(CompletePath_Tilemap, "Tilemap.DAT", 12);
 
     // Load Data
     FILE *TileMap = fopen(CompletePath_Tilemap, "rb");
@@ -331,12 +331,13 @@ bool CSFMLLoadBackground()
     char CompletePath_Normal_Texture[100] = {0};
     char CompletePath_Specular_Texture[100] = {0};
 
-    strcat(CompletePath_Diffuse_Texture, Level.Level_Path);
-    strcat(CompletePath_Diffuse_Texture, "Diffuse.png");
-    strcat(CompletePath_Normal_Texture, Level.Level_Path);
-    strcat(CompletePath_Normal_Texture, "Normal.png");
-    strcat(CompletePath_Specular_Texture, Level.Level_Path);
-    strcat(CompletePath_Specular_Texture, "Specular.png");
+    strncat(CompletePath_Diffuse_Texture, Level.Level_Path, strlen(Level.Level_Path)+1);
+    strncat(CompletePath_Diffuse_Texture, "Diffuse.png", 12);
+    strncat(CompletePath_Normal_Texture, Level.Level_Path, strlen(Level.Level_Path)+1);
+    strncat(CompletePath_Normal_Texture, "Normal.png", 11);
+    strncat(CompletePath_Specular_Texture, Level.Level_Path, strlen(Level.Level_Path)+1);
+    strncat(CompletePath_Specular_Texture, "Specular.png", 13);
+
     // Initialize Textures, Sprite and Shader
     Level.BG_Texture_Diffuse = sfTexture_createFromFile(CompletePath_Diffuse_Texture, NULL);
     Level.BG_Texture_Normal = sfTexture_createFromFile(CompletePath_Normal_Texture, NULL);
@@ -354,8 +355,8 @@ bool CSFMLLoadBackground()
     {
         // Build Path
         char CompletePath_Shader[100] = {0};
-        strcat(CompletePath_Shader, Level.Level_Path);
-        strcat(CompletePath_Shader, "Shader.frag");
+        strncat(CompletePath_Shader, Level.Level_Path, strlen(Level.Level_Path)+1);
+        strncat(CompletePath_Shader, "Shader.frag", 12);
 
         // Load Shader
         Level.BG_Texture_Shader = sfShader_createFromFile(NULL, NULL, CompletePath_Shader);

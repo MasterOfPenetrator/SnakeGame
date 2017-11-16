@@ -28,6 +28,10 @@ typedef struct {
 typedef struct {
     const char MapName[20];
     int Score_per_Second;
+    float Start_Speed;
+    float Default_Speed;
+    bool Autokill_Active;
+    float Autokill_Amount;
     MapDMGTypes DMG[3];
     MapAllowedItems ItemsAllowed[6];
 } MapDescriptor;

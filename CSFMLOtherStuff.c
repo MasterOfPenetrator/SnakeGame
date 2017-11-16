@@ -2,6 +2,10 @@
 #define SSE_COMPARE 1
 
 // Compare two Floats
+// Use SSE for exactly Compare
+// Some weird thing, at any Optimizion Step, the
+// Compiler never use SIMD instructions!
+// He uses just the FPU
 bool CompareFloats(float Value1, float Value2)
 {
     if(SSE_COMPARE)
@@ -15,10 +19,8 @@ bool CompareFloats(float Value1, float Value2)
 
         result = _mm_movemask_ps(val3);
 
-        if(result == 0x0000000f)
-            return true;
-        else
-            return false;
+        // Result = 0x0 Not Equal, > 0x0 equal
+        return (bool)result;
 
     }
     else

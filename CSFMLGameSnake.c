@@ -35,8 +35,10 @@ bool CSFMLInitSnake()
         sfShader_setTextureUniform(GameSnake.SB_Head_Shader, "Head_Texture", GameSnake.SB_Head_Texture);
         sfShader_setBoolUniform(GameSnake.SB_Head_Shader, "Head_Death", false);
         sfShader_setVec2Uniform(GameSnake.SB_Head_Shader, "Head_Resolution", res);
+        sfShader_setBoolUniform(GameSnake.SB_Head_Shader, "Desaturate", false);
         sfShader_setTextureUniform(GameSnake.SB_Body_Shader, "Body_Texture", GameSnake.SB_Body_Texture);
         sfShader_setBoolUniform(GameSnake.SB_Body_Shader, "Body_Death", false);
+        sfShader_setBoolUniform(GameSnake.SB_Body_Shader, "Desaturate", false);
         GameSnake.SB_Head_State.blendMode = sfBlendAlpha;
         GameSnake.SB_Head_State.shader = GameSnake.SB_Head_Shader;
         GameSnake.SB_Head_State.texture = GameSnake.SB_Head_Texture;
@@ -80,8 +82,8 @@ bool CSFMLInitSnake()
     // Setup general things
     GameSnake.S_Health = 100;
     GameSnake.S_Score = 0;
-    GameSnake.S_Speed = 3.0f;
-    GameSnake.S_DefaultSpeed = 3.0f;
+    GameSnake.S_Speed = Level.MD_Details.Start_Speed;
+    GameSnake.S_DefaultSpeed = Level.MD_Details.Default_Speed;
     GameSnake.S_Actual_Direction = NONE;
     GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
     GameSnake.S_Rotate = 0;

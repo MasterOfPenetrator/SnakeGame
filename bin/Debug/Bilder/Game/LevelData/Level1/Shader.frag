@@ -15,6 +15,7 @@ const vec3 Ambient_Farbe = vec3(0.6f, 0.6f, 1.0f);
 const vec4 Spiegelungs_Farbe = vec4(0.4f, 0.4f, 0.4f, 1.0f);
 const vec2 Aufloesung = vec2(600.0f,700.0f);
 const int MAX_LIGHTS = 10;
+const float Desaturate_Factor = 0.8f;
 
 // Licht Daten
 uniform vec3 Licht_Position[MAX_LIGHTS];
@@ -25,6 +26,9 @@ uniform float Ambient_Staerke[MAX_LIGHTS];
 uniform float Licht_Kegel_Winkel[MAX_LIGHTS];
 uniform float Licht_Aktiv[MAX_LIGHTS];
 uniform int Anzahl_Lichter;
+
+// Other Stuff
+uniform bool Desaturate;
 
 // Functions
 // Noise
@@ -116,6 +120,15 @@ void main()
         {
             End_Farbe = vec3(0.0f, 0.0f, 0.0f);
         }
+    }
+
+    if(Desaturate)
+    {
+        float Intensity = (0.3f * End_Farbe.r) + (0.59f * End_Farbe.g) + (0.11f * End_Farbe.b);
+
+        End_Farbe.r = (Intensity * Desaturate_Factor) + (End_Farbe.r * (1.0f - Desaturate_Factor));
+        End_Farbe.g = (Intensity * Desaturate_Factor) + (End_Farbe.g * (1.0f - Desaturate_Factor));
+        End_Farbe.b = (Intensity * Desaturate_Factor) + (End_Farbe.b * (1.0f - Desaturate_Factor));
     }
 
     // Setze Pixel

@@ -121,6 +121,7 @@ bool CSFMLInitItems()
                 // Setup Shader Values
                 sfShader_setTextureUniform(GameItem.GI_Shaders[counter], "Texture", GameItem.GI_Textures[counter]);
                 sfShader_setFloatUniform(GameItem.GI_Shaders[counter], "Time", GameClock.GC_Time);
+                sfShader_setBoolUniform(GameItem.GI_Shaders[counter], "Desaturate", false);
 
                 // Setup RenderState
                 GameItem.GI_States[counter].blendMode = sfBlendAlpha;
@@ -319,6 +320,7 @@ void CSFMLSetPlaceItems()
             if((random > 0) && (random <= GameItem.GI_Items[i].I_Chance) && (CSFMLIncreaseItemCount(i)))
             {
                 GameItem.GI_Placed[i] = true;
+                printf("Spawned Item: %s\n", GameItem.GI_Items[i].I_Name);
             }
 
         }
@@ -524,22 +526,42 @@ void CSFMLHandleItems()
             // Collision Detected
             if(CompareFloats(Next_X, GameItem.GI_Blocks[i].x) && CompareFloats(Next_Y, GameItem.GI_Blocks[i].y))
             {
-                // Checkup Propertys
+                // General
+                // Delete Hitted Item
+                CSFMLDecreaseItemCount(i);
+                GameItem.GI_Placed[i] = false;
+                GameItem.GI_Coordinates_Setted[i] = false;
+
+                // Spawn the Item Text
+                if(strstr(GameItem.GI_Items[i].I_Name, "First Aid"))
+                {
+                    CSFMLItemSpawnText("First Aid Picked!");
+                }
+                else if(strstr(GameItem.GI_Items[i].I_Name, "Speed"))
+                {
+                    CSFMLItemSpawnText("Speed Up Picked!");
+                }
+                else if(strstr(GameItem.GI_Items[i].I_Name, "Food"))
+                {
+                    CSFMLItemSpawnText("Food Picked!");
+                }
+                else if(strstr(GameItem.GI_Items[i].I_Name, "clip"))
+                {
+                    CSFMLItemSpawnText("Noclip Picked!");
+                }
+                else if(strstr(GameItem.GI_Items[i].I_Name, "god"))
+                {
+                    CSFMLItemSpawnText("Godmode Picked!");
+                }
+
+                // Make the Item Effect now
+                // There could be up to 3 Effects per Item simultanly
                 size_t s;
                 for(s = 0; s<GameItem.GI_Items[i].I_PropertyCount; s++)
                 {
                     // Proceed Effects
-                    // Todo: Place a Nicely Splash Text, if a Item is hitted!
                     if(GameItem.GI_Items[i].I_Propertys[s].I_Effect == I_HEALTH)
                     {
-                        // General
-                        CSFMLDecreaseItemCount(i);
-                        GameItem.GI_Placed[i] = false;
-                        GameItem.GI_Coordinates_Setted[i] = false;
-
-                        // Spawn Hint
-                        CSFMLItemSpawnText("First Aid Picked!");
-
                         // Set Health
                         // Timelimited Health Item
                         if(GameItem.GI_Items[i].I_Propertys[s].I_Duration > 0)
@@ -579,14 +601,6 @@ void CSFMLHandleItems()
                     }
                     else if(GameItem.GI_Items[i].I_Propertys[s].I_Effect == I_SPEED)
                     {
-                        // General
-                        CSFMLDecreaseItemCount(i);
-                        GameItem.GI_Placed[i] = false;
-                        GameItem.GI_Coordinates_Setted[i] = false;
-
-                        // Spawn Hint
-                        CSFMLItemSpawnText("Speed Picked!");
-
                         // Set Speed
                         // Timelimited Speed Item
                         if(GameItem.GI_Items[i].I_Propertys[s].I_Duration > 0)
@@ -615,14 +629,8 @@ void CSFMLHandleItems()
                     }
                     else if(GameItem.GI_Items[i].I_Propertys[s].I_Effect == I_SCORE)
                     {
-                        // General
-                        CSFMLDecreaseItemCount(i);
-                        GameItem.GI_Placed[i] = false;
-                        GameItem.GI_Coordinates_Setted[i] = false;
+                        // Grow Snake
                         CSFMLGrowSnake();
-
-                        // Spawn Hint
-                        CSFMLItemSpawnText("Food Picked!");
 
                         // Set Score
                         // Timelimited Score Event
@@ -658,14 +666,6 @@ void CSFMLHandleItems()
                     }
                     else if(GameItem.GI_Items[i].I_Propertys[s].I_Effect == I_GOD)
                     {
-                        // General
-                        CSFMLDecreaseItemCount(i);
-                        GameItem.GI_Placed[i] = false;
-                        GameItem.GI_Coordinates_Setted[i] = false;
-
-                        // Spawn Hint
-                        CSFMLItemSpawnText("You foolish! Shame on you for God Mode :)");
-
                         // Set God Mode
                         // Timelimited God Item
                         if(GameItem.GI_Items[i].I_Propertys[s].I_Duration > 0)
@@ -687,14 +687,6 @@ void CSFMLHandleItems()
                     }
                     else if(GameItem.GI_Items[i].I_Propertys[s].I_Effect == I_CLIP)
                     {
-                        // General
-                        CSFMLDecreaseItemCount(i);
-                        GameItem.GI_Placed[i] = false;
-                        GameItem.GI_Coordinates_Setted[i] = false;
-
-                        // Spawn Hint
-                        CSFMLItemSpawnText("You foolish! Shame on your family Noclip :)");
-
                         // Set NoClip Mode
                         // Timelimited Noclip Item
                         if(GameItem.GI_Items[i].I_Propertys[s].I_Duration > 0)

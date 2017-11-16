@@ -36,17 +36,24 @@ bool CSFMLGameInit()
     GameMain.GM_Font = sfFont_createFromFile("Bilder/Schriftarten/3Dventure.ttf");
     GameMain.GM_Health = sfText_create();
     GameMain.GM_Score = sfText_create();
+    GameMain.GM_Pause = sfText_create();
 
-    if(GameMain.GM_Font == NULL || GameMain.GM_Health == NULL || GameMain.GM_Score == NULL)
+    if(GameMain.GM_Font == NULL || GameMain.GM_Health == NULL || GameMain.GM_Score == NULL || GameMain.GM_Pause == NULL)
     {
         Init_Error |= true;
     }
 
     // Setup other things
     GameMain.GM_Is_Init = true;
+    GameMain.GM_Paused = false;
     GameMain.GM_View_SumMovement = 0.0f;
     GameMain.GM_View_Movement_ResetFlag = false;
     GameMain.GM_View_Movement_RoundFlag = false;
+
+    if(shader_enabled)
+    {
+        sfShader_setBoolUniform(Level.BG_Texture_Shader, "Desaturate", GameMain.GM_Paused);
+    }
 
     return Init_Error;
 }
@@ -54,27 +61,33 @@ bool CSFMLGameInit()
 // Clear Game
 void CSFMLGameQuit()
 {
-    // Clear Game Main Elements
-    sfFont_destroy(GameMain.GM_Font);
-    sfText_destroy(GameMain.GM_Health);
-    sfText_destroy(GameMain.GM_Score);
-    GameMain.GM_Font = NULL;
-    GameMain.GM_Health = NULL;
-    GameMain.GM_Score = NULL;
+    if(GameMain.GM_Is_Init)
+    {
+        // Clear Game Main Elements
+        sfFont_destroy(GameMain.GM_Font);
+        sfText_destroy(GameMain.GM_Health);
+        sfText_destroy(GameMain.GM_Score);
+        sfText_destroy(GameMain.GM_Pause);
+        GameMain.GM_Pause = NULL;
+        GameMain.GM_Font = NULL;
+        GameMain.GM_Health = NULL;
+        GameMain.GM_Score = NULL;
 
-    // Clear Elements
-    CSFMLQuitWeapons();
-    CSFMLQuitItems();
-    CSFMLQuitSnake();
-    CSFMLQuitClock();
-    CSFMLQuitLights();
-    CSFMLQuitLevel();
+        // Clear Elements
+        CSFMLQuitWeapons();
+        CSFMLQuitItems();
+        CSFMLQuitSnake();
+        CSFMLQuitClock();
+        CSFMLQuitLights();
+        CSFMLQuitLevel();
 
-    // Other Stuff
-    GameMain.GM_View_SumMovement = 0.0f;
-    GameMain.GM_View_Movement_ResetFlag = false;
-    GameMain.GM_View_Movement_RoundFlag = false;
-    GameMain.GM_Is_Init = false;
+        // Other Stuff
+        GameMain.GM_View_SumMovement = 0.0f;
+        GameMain.GM_View_Movement_ResetFlag = false;
+        GameMain.GM_View_Movement_RoundFlag = false;
+        GameMain.GM_Paused = false;
+        GameMain.GM_Is_Init = false;
+    }
 }
 
 // Render Game
@@ -287,6 +300,7 @@ void CSFMLMainRenderOther()
     // Place Score and Health String
     CSFMLGameShowScore();
     CSFMLGameShowHealth();
+    CSFMLGamePauseRenderText();
 
     // Place Background Pictures
     MenuPlaceIMG(0, 0, false, 0);
@@ -308,10 +322,10 @@ void CSFMLGameShowScore()
     char start[8] = "Score: ";
     char end[8] = " Points";
     char value[12];
-    strcat(score_string, start);
+    strncat(score_string, start, 8);
     itoa(GameSnake.S_Score, value, 10);
-    strcat(score_string, value);
-    strcat(score_string, end);
+    strncat(score_string, value, 12);
+    strncat(score_string, end, 8);
 
     sfText_setString(GameMain.GM_Score, score_string);
 
@@ -333,10 +347,10 @@ void CSFMLGameShowHealth()
     char start[9] = "Health: ";
     char end[3] = " %";
     char value[6];
-    strcat(health_string, start);
+    strncat(health_string, start, 9);
     itoa(GameSnake.S_Health, value, 10);
-    strcat(health_string, value);
-    strcat(health_string, end);
+    strncat(health_string, value, 6);
+    strncat(health_string, end, 3);
 
     sfText_setString(GameMain.GM_Health, health_string);
 
@@ -346,6 +360,45 @@ void CSFMLGameShowHealth()
 // Update Score for Seconds
 void CSFMLGameUpdateTimeSnakeScore()
 {
-    if(GameClock.GC_SecondTick && GameSnake.S_Is_Init && !GameSnake.S_Is_Dead)
+    if(GameClock.GC_SecondTick && GameSnake.S_Is_Init && !GameSnake.S_Is_Dead && !GameMain.GM_Paused)
         GameSnake.S_Score += Level.MD_Details.Score_per_Second;
+}
+
+// Set Game Paused
+void CSFMLGamePause()
+{
+    // Toggle State
+    GameMain.GM_Paused = !GameMain.GM_Paused;
+
+    if(shader_enabled)
+    {
+        sfShader_setBoolUniform(Level.BG_Texture_Shader, "Desaturate", GameMain.GM_Paused);
+        sfShader_setBoolUniform(GameSnake.SB_Head_Shader, "Desaturate", GameMain.GM_Paused);
+        sfShader_setBoolUniform(GameSnake.SB_Body_Shader, "Desaturate", GameMain.GM_Paused);
+
+        size_t i;
+        for(i = 0; i<GameItem.GI_Items_Count; i++)
+        {
+            sfShader_setBoolUniform(GameItem.GI_Shaders[i], "Desaturate", GameMain.GM_Paused);
+        }
+    }
+}
+
+// Render Paused Text
+void CSFMLGamePauseRenderText()
+{
+    // Show Text
+    if(GameMain.GM_Paused)
+    {
+        sfText_setFont(GameMain.GM_Pause, media.normal_font);
+        sfText_setCharacterSize(GameMain.GM_Pause, 30);
+        sfText_setString(GameMain.GM_Pause, "Game Paused");
+
+        sfColor color = {233, 77, 0, 255};
+        sfVector2f Position = {SCREEN_WIDTH/2 - sfText_getLocalBounds(GameMain.GM_Pause).width/2, Level.BG_Screenposition.x + 350.0f};
+        sfText_setPosition(GameMain.GM_Pause, Position);
+        sfText_setColor(GameMain.GM_Pause, color);
+
+        sfRenderWindow_drawText(screen, GameMain.GM_Pause, NULL);
+    }
 }

@@ -26,9 +26,11 @@ typedef struct {
     Direction GC_Actual_Snake_Direction;
     volatile bool GC_SnakeTick;
     volatile bool GC_SecondTick;
+    volatile bool GC_MinuteTick;
     float GC_DeltaTime;
     float GC_SnakeTime;
     float GC_SecondTime;
+    float GC_MinuteTime;
     float GC_Time;
     TimeEvent *GC_ItemEvents;
     size_t GC_ItemEvents_Count;

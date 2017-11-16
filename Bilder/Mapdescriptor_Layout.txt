@@ -19,3 +19,7 @@ MapDescriptor desc;
     desc.ItemsAllowed[4].Count = 1;
     desc.ItemsAllowed[5].Type = IT_CUSTOM;
     desc.ItemsAllowed[5].Count = 5;
+    desc.Autokill_Active = true;
+    desc.Autokill_Amount = 0.5f;
+    desc.Default_Speed = 3.0f;
+    desc.Start_Speed = 3.0f;

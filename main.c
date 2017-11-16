@@ -38,21 +38,26 @@ int main (void)
             // Proceed Keys
             if(EventLoop.type == sfEvtKeyReleased && GameMain.GM_Is_Init)
             {
-                if(EventLoop.key.code == sfKeyUp && GameSnake.S_Prev_Direction != DOWN)
+                if(EventLoop.key.code == sfKeyUp && GameSnake.S_Prev_Direction != DOWN && !GameMain.GM_Paused)
                 {
                     GameSnake.S_Actual_Direction = UP;
                 }
-                if(EventLoop.key.code == sfKeyDown && GameSnake.S_Prev_Direction != UP)
+                if(EventLoop.key.code == sfKeyDown && GameSnake.S_Prev_Direction != UP && !GameMain.GM_Paused)
                 {
                     GameSnake.S_Actual_Direction = DOWN;
                 }
-                if(EventLoop.key.code == sfKeyRight && GameSnake.S_Prev_Direction != LEFT)
+                if(EventLoop.key.code == sfKeyRight && GameSnake.S_Prev_Direction != LEFT && !GameMain.GM_Paused)
                 {
                     GameSnake.S_Actual_Direction = RIGHT;
                 }
-                if(EventLoop.key.code == sfKeyLeft && GameSnake.S_Prev_Direction != RIGHT)
+                if(EventLoop.key.code == sfKeyLeft && GameSnake.S_Prev_Direction != RIGHT && !GameMain.GM_Paused)
                 {
                     GameSnake.S_Actual_Direction = LEFT;
+                }
+                if(EventLoop.key.code == sfKeyEscape)
+                {
+                    GameSnake.S_Actual_Direction = NONE;
+                    CSFMLGamePause();
                 }
             }
 

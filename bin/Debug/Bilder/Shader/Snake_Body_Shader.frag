@@ -4,10 +4,14 @@
 // Input Texture
 uniform sampler2D Body_Texture;
 
+// Constants
+const float Desaturate_Factor = 1.0f;
+
 // Input Variables
 uniform int Body_Health;
 uniform bool Body_Death;
 uniform float Time;
+uniform bool Desaturate;
 
 // Functions
 // Noise
@@ -65,6 +69,16 @@ void main()
     if(Body_Death)
     {
         Tex_Color *= 0.0f;
+    }
+
+    // Desature
+    if(Desaturate)
+    {
+        float Intensity = (0.3f * Tex_Color.r) + (0.59f * Tex_Color.g) + (0.11f * Tex_Color.b);
+
+        Tex_Color.r = (Intensity * Desaturate_Factor) + (Tex_Color.r * (1.0f - Desaturate_Factor));
+        Tex_Color.g = (Intensity * Desaturate_Factor) + (Tex_Color.g * (1.0f - Desaturate_Factor));
+        Tex_Color.b = (Intensity * Desaturate_Factor) + (Tex_Color.b * (1.0f - Desaturate_Factor));
     }
 
     // Setup our Pixel Color
