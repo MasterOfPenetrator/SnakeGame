@@ -50,11 +50,6 @@ bool CSFMLGameInit()
     GameMain.GM_View_Movement_ResetFlag = false;
     GameMain.GM_View_Movement_RoundFlag = false;
 
-    if(shader_enabled)
-    {
-        sfShader_setBoolUniform(Level.BG_Texture_Shader, "Desaturate", GameMain.GM_Paused);
-    }
-
     return Init_Error;
 }
 

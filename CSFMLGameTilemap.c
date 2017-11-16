@@ -371,6 +371,7 @@ bool CSFMLLoadBackground()
         sfShader_setTextureUniform(Level.BG_Texture_Shader, "Diffuse_Textur", Level.BG_Texture_Diffuse);
         sfShader_setTextureUniform(Level.BG_Texture_Shader, "Normal_Textur", Level.BG_Texture_Normal);
         sfShader_setTextureUniform(Level.BG_Texture_Shader, "Spiegel_Textur", Level.BG_Texture_Specular);
+        sfShader_setBoolUniform(Level.BG_Texture_Shader, "Desaturate", false);
         Level.BG_Texture_State.blendMode = sfBlendNone;
         Level.BG_Texture_State.shader = Level.BG_Texture_Shader;
         Level.BG_Texture_State.texture = Level.BG_Texture_Diffuse;
