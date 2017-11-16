@@ -6,7 +6,7 @@ MapDescriptor desc;
     desc.DMG[1].Damage = 25;
     desc.DMG[1].Type = 2;
     desc.DMG[2].Damage = 35;
-    desc.DMG[2].Type = 1;
+    desc.DMG[2].Type = 3;
     desc.ItemsAllowed[0].Type = IT_HEALTH;
     desc.ItemsAllowed[0].Count = 1;
     desc.ItemsAllowed[1].Type = IT_FOOD;

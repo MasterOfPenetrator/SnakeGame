@@ -14,6 +14,8 @@ int main (void)
     InitError |= !CSFMLInit();
     InitError |= !CSFMLMenuInit();
 
+    //PutHighScore();
+
     while (!InitError && sfRenderWindow_isOpen(screen))
     {
         // Proceed Events
@@ -68,7 +70,7 @@ int main (void)
                 if(EventLoop.text.unicode < 128 && mstate.Text_Field_Clicked)
                 {
                     // Read Input
-                    if(mstate.UserName_Counter < 19)
+                    if(mstate.UserName_Counter < 20)
                     {
                         if(((char)EventLoop.text.unicode) == '\b')
                         {
@@ -83,11 +85,15 @@ int main (void)
                             mstate.Level_Username[mstate.UserName_Counter] = (char) EventLoop.text.unicode;
                             mstate.UserName_Counter++;
                         }
-
                     }
-                    // Close Input
-                    if(mstate.UserName_Counter == 19)
-                        mstate.Level_Username[19] = '\0';
+                    else
+                    {
+                        if(((char)EventLoop.text.unicode) == '\b')
+                        {
+                            mstate.Level_Username[mstate.UserName_Counter-1] = '\0';
+                            mstate.UserName_Counter--;
+                        }
+                    }
                 }
             }
         }
@@ -115,13 +121,20 @@ int main (void)
         // Process Game
         if(mstate.startgame)
         {
-            if(!GameMain.GM_Is_Init)
-            {
-                CSFMLGameInit(mstate.Level_ID);
-            }
             if(GameMain.GM_Is_Init)
             {
                 CSFMLGameUpdate();
+
+                if(GameSnake.S_Is_Dead)
+                {
+                    mstate.startgame = false;
+                    CSFMLGameQuit();
+                    mstate.actualsite = GAMESITE_END;
+                }
+            }
+            else
+            {
+                CSFMLGameInit(mstate.Level_ID);
             }
         }
 

@@ -37,7 +37,7 @@ typedef struct __attribute__((__packed__)) {
 
     // Properties
     size_t SB_Body_Elements;
-    char S_Name[20];
+    char S_Name[21];
 
     int S_Health;
     int S_Rotate;

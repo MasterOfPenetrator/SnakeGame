@@ -32,7 +32,12 @@ bool CompareFloats(float Value1, float Value2)
 // Getting a Random Float Number
 float GetRandomFloatNumber(int MAX)
 {
-    float val =  (MAX) * ((float)rand() / RAND_MAX);
+    unsigned int rnd_val = 0;
+
+    if(!_rdrand32_step(&rnd_val))
+        rnd_val = rand();
+
+    float val =  (MAX) * ((float)rnd_val / UINT32_MAX);
 
     short sign = val < 0 ? -1 : 1;
 
@@ -42,7 +47,7 @@ float GetRandomFloatNumber(int MAX)
 // Check if a char is an Number / Alphabet
 bool CheckUnicode(char Check)
 {
-    if((Check >= 48 && Check <= 57) || (Check >= 97 && Check <= 122) || (Check >= 65 && Check <= 97))
+    if((Check >= 48 && Check <= 57) || (Check >= 97 && Check <= 122) || (Check >= 65 && Check <= 97) || Check == 32)
         return true;
     else
         return false;

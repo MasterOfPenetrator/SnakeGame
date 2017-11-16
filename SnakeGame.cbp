@@ -29,14 +29,13 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-march=corei7-avx" />
 			<Add option="-fomit-frame-pointer" />
 			<Add option="-fexpensive-optimizations" />
 			<Add option="-O3" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-m32" />
-			<Add option="-std=c11" />
+			<Add option="-std=c11 -msse -mrdrnd" />
 			<Add directory="../Bibliotheken/CSFML/include" />
 		</Compiler>
 		<Linker>
@@ -50,7 +49,6 @@
 			<Add library="libcsfml-system" />
 			<Add directory="../Bibliotheken/CSFML/lib/gcc" />
 		</Linker>
-		<Unit filename="Bilder/Einstellungen/HighscoresDATA.MOP" />
 		<Unit filename="Bilder/Einstellungen/SettingsDATA.MOP" />
 		<Unit filename="Bilder/GameItem_Layout.txt" />
 		<Unit filename="Bilder/Game/ItemData/FirstAid_10.DAT" />

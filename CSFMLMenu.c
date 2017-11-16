@@ -132,6 +132,7 @@ bool CSFMLMenuInit()
     mstate.sliderCleared = true;
     mstate.entryCleared = true;
     mstate.startgame = false;
+    mstate.hs_written = false;
     mstate.Level_Count = 0;
     mstate.Level_Dir_Opened = false;
     mstate.Level_Selected = false;
@@ -178,6 +179,7 @@ bool CSFMLMenuInit()
     // GameSite
     MenuPlaceButton(0, 8, 480, 630, true, MAINSITE, GAMESITE_LEVEL, false);
     MenuPlaceButton(0, 8, 480, 630, true, MAINSITE, GAMESITE_USER, false);
+    MenuPlaceButton(0, 8, 480, 630, true, MAINSITE, GAMESITE_END, false);
 
 
     // Shader Effekte Aktiv ?
@@ -248,6 +250,8 @@ void CSFMLMenuQuit()
 
     free(mstate.Level_Names);
     mstate.Level_Names = NULL;
+
+    mstate.hs_written = false;
 }
 
 void CSFMLQuit()
@@ -487,19 +491,12 @@ bool MenuPlaceText(const char *txt, int x, int y, unsigned int txtsize, sfColor 
     if(!CSFMLIsInit || !mstate.isInit)
         return false;
 
-    sfFont *font = sfFont_createFromFile("Bilder/Schriftarten/SEASERN.ttf");
-
-    if(font == NULL)
-    {
-        printf("Fehler Video Subsystem: Kann Datei SEASERN.ttf nicht laden!\n");
-        return false;
-    }
     sfVector2f pos = {x,y};
 
     sfText *text = sfText_create();
     sfText_setPosition(text, pos);
     sfText_setString(text, txt);
-    sfText_setFont(text, font);
+    sfText_setFont(text, media.normal_font);
     sfText_setCharacterSize(text, txtsize);
     sfText_setColor(text, textcolor);
 
@@ -507,8 +504,6 @@ bool MenuPlaceText(const char *txt, int x, int y, unsigned int txtsize, sfColor 
     sfRenderWindow_drawText(screen, text, NULL);
 
     // Speicher freigeben
-    sfFont_destroy(font);
-    font = NULL;
 
     sfText_destroy(text);
     text = NULL;
@@ -1334,7 +1329,7 @@ void CSFMLPrintUserEnter()
     sfColor Grey = {131,131,131,255};
     sfColor Black = {0,0,0,0};
     MenuPlaceText("Enter your Name", 65, 220, 45, Title);
-    MenuPlaceText("Maximum Size of your Name: 19 Chars!", 50, 300, 20, sfWhite);
+    MenuPlaceText("Maximum Size of your Name: 20 Chars!", 50, 300, 20, sfWhite);
     MenuPlaceText("Minimum Size of your Name: 5 Chars!", 50, 340, 20, sfWhite);
     MenuPlaceText("Username", 35, 400, 25, sfWhite);
 
@@ -1425,6 +1420,7 @@ void CSFMLUserLevelButton(const char *Text)
     sfVector2f Position_Rect = {Position.x - 10, Position.y - 7};
     sfVector2f Size_Rect = {335, 50};
 
+
     // Prepare for Click
     sfColor Tex_Col;
     if(!(mstate.mouse_pos.x < Position_Rect.x ||
@@ -1447,8 +1443,9 @@ void CSFMLUserLevelButton(const char *Text)
             MenuPlace();
 
             // Setup Game Variables
+            mstate.Level_Username[mstate.UserName_Counter] = '\0';
             strncpy(GameSnake.S_Name, mstate.Level_Username, strlen(mstate.Level_Username)+1);
-            GameMain.GM_Level_ID = mstate.Level_ID + 1;
+            GameMain.GM_Level_ID = mstate.Level_ID;
         }
     }
     else
@@ -1482,6 +1479,55 @@ void CSFMLUserLevelButton(const char *Text)
     actualtext = NULL;
 }
 
+// Draw Score
+void DrawScore()
+{
+    // First Text
+    sfColor Col = {255, 74, 0, 255};
+
+    sfText *one = sfText_create();
+    sfText *two = sfText_create();
+    sfText *third = sfText_create();
+    sfText_setFont(one, media.normal_font);
+    sfText_setFont(two, media.normal_font);
+    sfText_setFont(third, media.normal_font);
+    sfText_setCharacterSize(one, 25);
+    sfText_setCharacterSize(two, 25);
+    sfText_setCharacterSize(third, 25);
+    sfText_setColor(one, Col);
+    sfText_setColor(two, Col);
+    sfText_setColor(third, Col);
+    sfText_setString(one, "You're died dude!");
+    sfText_setString(third, "Go Back and try again!");
+
+    // Second Text
+    char Text1[50] = {0};
+    strncat(Text1, "You got: ", 10);
+    char Score[30] = {0};
+    itoa(GameSnake.S_Score, Score, 10);
+    strncat(Text1, Score, 30);
+    strncat(Text1, " Points", 8);
+    sfText_setString(two, Text1);
+    sfVector2f Pos1 = {100, 250}, Pos2 = {100, 300}, Pos3 = {100, 350};
+    sfText_setPosition(one, Pos1);
+    sfText_setPosition(two, Pos2);
+    sfText_setPosition(third, Pos3);
+
+    sfRenderWindow_drawText(screen, one, NULL);
+    sfRenderWindow_drawText(screen, two, NULL);
+    sfRenderWindow_drawText(screen, third, NULL);
+
+    sfText_destroy(one);
+    sfText_destroy(two);
+    sfText_destroy(third);
+    one = NULL;
+    two = NULL;
+    third = NULL;
+
+
+}
+
+// Process Menu
 bool MenuPlace()
 {
     if(!CSFMLIsInit || !mstate.isInit)
@@ -1656,8 +1702,8 @@ bool MenuPlace()
 
         // Play Now!
         case GAMESITE_PLAY:
+            // Aufräumen
             CSFMLCLRSCR();
-            CSFMLCLRLevelStuff();
             sfRenderWindow_setTitle(screen, "Snake Game: Spiele jetzt!");
 
             mstate.startgame = true;
@@ -1666,6 +1712,20 @@ bool MenuPlace()
 
         // Snake Dead Page
         case GAMESITE_END:
+            sfRenderWindow_setTitle(screen, "Snake Game: Spiel Ende");
+
+            MenuPlaceIMG(0,0, false, 0);
+            MenuPlaceIMG(0, 200, true, 0);
+
+            MenuSetElementsVisible(GAMESITE_END);
+            if(!mstate.hs_written)
+            {
+                WriteHighScore(GameSnake.S_Name, (uint32_t)GameSnake.S_Score);
+                mstate.hs_written = true;
+            }
+
+            DrawScore();
+            CSFMLCLRLevelStuff();
         break;
 
         // Layout und Funktionen für Exitseite

@@ -49,6 +49,7 @@ bool CSFMLGameInit()
     GameMain.GM_View_SumMovement = 0.0f;
     GameMain.GM_View_Movement_ResetFlag = false;
     GameMain.GM_View_Movement_RoundFlag = false;
+    mstate.hs_written = false;
 
     return Init_Error;
 }

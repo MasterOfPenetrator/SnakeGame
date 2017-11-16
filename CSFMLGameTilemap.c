@@ -86,6 +86,7 @@ void CSFMLQuitLevel()
     Level.EV_Is_Init = false;
     Level.Is_Loaded = false;
     Level.TL_Is_Init = false;
+    Level.Level_Path[0] = '\0';
 }
 
 // Loading MapDescriptor

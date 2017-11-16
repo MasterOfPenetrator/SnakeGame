@@ -7,6 +7,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include <string.h>
 #include <dirent.h>
 #include <math.h>
@@ -130,11 +131,12 @@ typedef struct
     bool Allow_UserEnter;
     bool Text_Field_Clicked;
     size_t UserName_Counter;
-    char Level_Username[20];
+    char Level_Username[21];
     bool User_Final_Enter;
 
     // Start Game
     bool startgame;
+    bool hs_written;
 
 } MenuState;
 

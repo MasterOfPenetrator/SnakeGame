@@ -40,15 +40,15 @@ float Noise(float x)
 	return mix(fract(sin(i) * 43758.5453123f), fract(sin(i + 1.0f) * 43758.5453123f), u);
 }
 // Fractional Brown Motion
-float FBM(float x)
+float FBM(float x, float f, float a)
 {
 	float Value = 0.0f;
-	float Amplitude = 0.75f;
-	float Frequency = 2.0f;
+	float Amplitude = a;
+	float Frequency = f;
 	for(int i = 0; i<10; i++)
     {
         Value += Noise(x * Frequency) * Amplitude;
-        Frequency *= 2.0f;
+        Frequency *= f;
         Amplitude *= 0.5f;
     }
 
@@ -108,7 +108,7 @@ void main()
         vec3 Diffuse = (Licht_Farbe.rgb * Licht_Farbe.a) * Diffuse_Factor;
         if(FBM_Kegel_Aktiv[count] > 0.99f)
         {
-            Diffuse *= FBM(Time);
+            Diffuse *= FBM(Time, 2.0f, 0.75f);
         }
 
         // Ist Licht überhaupt Aktiv?
@@ -126,9 +126,9 @@ void main()
     {
         float Intensity = (0.3f * End_Farbe.r) + (0.59f * End_Farbe.g) + (0.11f * End_Farbe.b);
 
-        End_Farbe.r = (Intensity * Desaturate_Factor) + (End_Farbe.r * (1.0f - Desaturate_Factor));
-        End_Farbe.g = (Intensity * Desaturate_Factor) + (End_Farbe.g * (1.0f - Desaturate_Factor));
-        End_Farbe.b = (Intensity * Desaturate_Factor) + (End_Farbe.b * (1.0f - Desaturate_Factor));
+        End_Farbe.r = (Intensity * Desaturate_Factor * FBM(Time, 0.5f, 0.95f)) + (End_Farbe.r * (1.0f - Desaturate_Factor));
+        End_Farbe.g = (Intensity * Desaturate_Factor * FBM(Time, 0.5f, 0.95f)) + (End_Farbe.g * (1.0f - Desaturate_Factor));
+        End_Farbe.b = (Intensity * Desaturate_Factor * FBM(Time, 0.5f, 0.95f)) + (End_Farbe.b * (1.0f - Desaturate_Factor));
     }
 
     // Setze Pixel

@@ -72,35 +72,11 @@ void ReadHighScore()
 
 void PutHighScore()
 {
-    HIGHSCORE eins[25] = {{"Peter", 1},
-    {"Peter", 2},
-    {"Peter", 3},
-    {"Peter", 4},
-    {"Peter", 5},
-    {"Peter", 7},
-    {"Peter", 8},
-    {"Peter", 9},
-    {"Peter", 10},
-    {"Peter", 11},
-    {"Peter", 111},
-    {"Peter", 112},
-    {"Peter", 113},
-    {"Peter", 411},
-    {"Peter", 511},
-    {"Peter", 116},
-    {"Peter", 7111},
-    {"Peter", 118},
-    {"Peter", 911},
-    {"Peter", 1110},
-    {"Peter", 11111},
-    {"Peter", 118},
-    {"Peter", 911},
-    {"Peter", 1110},
-    {"Peter", 11111} };
+    HIGHSCORE eins = {"MOP", 1200};
 
     FILE *test = fopen("Bilder/Einstellungen/HighscoresDATA.MOP", "ab+");
 
-    fwrite(eins, sizeof(HIGHSCORE), 25, test);
+    fwrite(&eins, sizeof(HIGHSCORE), 1, test);
 
     fclose(test);
 }
