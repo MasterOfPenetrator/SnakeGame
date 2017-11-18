@@ -244,7 +244,7 @@ void CSFMLMenuQuit()
     size_t i = 0;
     for(i = 0; i<mstate.Level_Count; i++)
     {
-        free(mstate.Level_Names[i]);
+        //free(mstate.Level_Names[i]);
         mstate.Level_Names = NULL;
     }
 
@@ -1195,8 +1195,8 @@ bool CSFMLPrintLevels()
                     printf("Menu Subsystem Fehler: Kann Speicher fuer Levelstring nicht anlegen!\n");
                     return false;
                 }
-
                 strcpy(mstate.Level_Names[counter], entrys->d_name);
+                counter++;
             }
         }
 
@@ -1215,7 +1215,7 @@ bool CSFMLPrintLevels()
     {
         // Get Text
         char CompleteString[100] = {0};
-        char Mapname[20];
+        char Mapname[20] = {0};
         CSFMLPreloadMapName(mstate.Level_Names[i], Mapname, 20);
         strncat(CompleteString, mstate.Level_Names[i], strlen(mstate.Level_Names[i])+1);
         strncat(CompleteString, ": ", 2);
@@ -1246,7 +1246,7 @@ void CSFMLPrintLevelButton(const char *Text, size_t i)
 
     // Init Position & Size
     sfVector2f LocalBounds = {sfText_getLocalBounds(actualtext).width, sfText_getLocalBounds(actualtext).height};
-    sfVector2f Position = {(SCREEN_WIDTH/2) - (LocalBounds.x/2), (320 + (LocalBounds.y*i)) };
+    sfVector2f Position = {(SCREEN_WIDTH/2) - (LocalBounds.x/2), (320 + (75*i)) };
     sfVector2f Position_Rect = {Position.x - 10, Position.y - 7};
     sfVector2f Size_Rect = {LocalBounds.x + 20, LocalBounds.y + 20};
 

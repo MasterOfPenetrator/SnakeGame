@@ -97,6 +97,9 @@ void CSFMLGameUpdate()
             // Update GameClock
             CSFMLUpdateClock();
 
+            // Update Autokill
+            CSFMLUpdateAutokill();
+
             // Update Tick Based Stuff
             if(GameClock.GC_SnakeTick)
             {

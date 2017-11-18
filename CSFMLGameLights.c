@@ -87,7 +87,7 @@ bool CSFMLSetViewportLight()
 
     // Setup Viewport Light, it is set at 0
     sfGlslVec3 light_pos = {0.0f, 1.0f, 0.75f};
-    GameLight_Ambientpower[0] = 0.005f;
+    GameLight_Ambientpower[0] = Level.MD_Details.Ambient_Power;
     GameLight_Coneactive[0] = 0.0f;
     GameLight_Coneangle[0] = 0.0f;
     GameLight_FBMactive[0] = 0.0f;

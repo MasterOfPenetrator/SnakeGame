@@ -154,7 +154,7 @@ bool CSFMLPreloadMapName(const char *Path, char *LevelName, size_t LevelName_Siz
     strncat(CompletePath, "Bilder/Game/LevelData/", 22);
     strncat(CompletePath, Path, strlen(Path)+1);
     strncat(CompletePath, "/", 1);
-    strncat(CompletePath, "Mapdescriptor.DAT", 18);
+    strncat(CompletePath, "MapDescriptor.DAT", 18);
 
     // Loading File
     FILE *MD_File = fopen(CompletePath, "rb");

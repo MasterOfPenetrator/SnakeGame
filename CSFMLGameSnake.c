@@ -481,7 +481,7 @@ bool CSFMLCheckTileMapCollision()
     Direction dir = GameSnake.S_Actual_Direction;
     float fNew_X = GameSnake.SB_Head.x;
     float fNew_Y = GameSnake.SB_Head.y;
-    int p;
+    size_t p;
 
     if(dir == UP)
     {
@@ -511,7 +511,7 @@ bool CSFMLCheckTileMapCollision()
 
     // Degenerate Health and Change Direction
     bool Snake_Hit = false;
-    for(p = 0; p<3; p++)
+    for(p = 0; p<Level.MD_Details.DMG_Count; p++)
     {
         if(Level.TL_Map[New_Y][New_X] == Level.MD_Details.DMG[p].Type)
         {
@@ -539,13 +539,14 @@ bool CSFMLCheckTileMapCollision()
         GameSnake.S_Light_OnOff = false;
         GameSnake.S_Health = 0;
         GameSnake.S_Is_Dead = true;
+        printf("Map Informatiomn: You're died cause of Tile Map Collision!\n");
         return false;
     }
 
     // Process Automatic Change Direction to Avoid Snake moves into a non-moveable Tile!
     if(Snake_Hit)
     {
-        printf("Tile Map Collision Detected!\n");
+        printf("Map Information: Tile Map Collision Detected!\n");
         // Actual Direction Demand Process
         // Up or Down - Possible New Direction Left or Right, check for Another Hit
         if(dir == UP || dir == DOWN)
@@ -576,7 +577,7 @@ bool CSFMLCheckTileMapCollision()
             if(!(New_X+1 >= MAX_TILES_X))
             {
                 // Now Check Tile Map for Right
-                for(p = 0; p<3; p++)
+                for(p = 0; p<Level.MD_Details.DMG_Count; p++)
                     if(Level.TL_Map[New_Y][New_X+1] == Level.MD_Details.DMG[p].Type)
                         Right = false;
             }
@@ -622,7 +623,7 @@ bool CSFMLCheckTileMapCollision()
             if(!(New_Y+1 >= MAX_TILES_Y))
             {
                 // Now Check Tile Map for Down
-                for(p = 0; p<3; p++)
+                for(p = 0; p<Level.MD_Details.DMG_Count; p++)
                     if(Level.TL_Map[New_Y+1][New_X] == Level.MD_Details.DMG[p].Type)
                         Down = false;
             }
@@ -635,7 +636,7 @@ bool CSFMLCheckTileMapCollision()
             if(!(New_Y-1 <= 0))
             {
                 // Now Check Tile Map for Up
-                for(p = 0; p<3; p++)
+                for(p = 0; p<Level.MD_Details.DMG_Count; p++)
                     if(Level.TL_Map[New_Y-1][New_X] == Level.MD_Details.DMG[p].Type)
                         Up = false;
             }
@@ -687,7 +688,7 @@ bool CSFMLCheckSelfCollision()
     Direction dir = GameSnake.S_Actual_Direction;
     float fNew_X = GameSnake.SB_Head.x;
     float fNew_Y = GameSnake.SB_Head.y;
-    int p;
+    size_t p;
 
     if(dir == UP)
     {
@@ -735,13 +736,14 @@ bool CSFMLCheckSelfCollision()
         GameSnake.S_Light_OnOff = false;
         GameSnake.S_Health = 0;
         GameSnake.S_Is_Dead = true;
+        printf("Map Information: You're Died cause of a Selfhit!\n");
         return false;
     }
 
     // Self Hit Detected, calculate new direction, for beeing alived
     if(Hit)
     {
-        printf("Selfhit Detected !\n");
+        printf("Map Information: Selfhit Detected !\n");
         // Generate normalized Indices
         size_t New_X = floor(fNew_X);
         size_t New_Y = floor(fNew_Y);
@@ -763,7 +765,7 @@ bool CSFMLCheckSelfCollision()
             if(!(New_X-1 <= 0))
             {
                 // Now Check Tile Map for Left
-                for(p = 0; p<3; p++)
+                for(p = 0; p<Level.MD_Details.DMG_Count; p++)
                     if(Level.TL_Map[New_Y][New_X-1] == Level.MD_Details.DMG[p].Type)
                         Left = false;
             }
@@ -776,7 +778,7 @@ bool CSFMLCheckSelfCollision()
             if(!(New_X+1 >= MAX_TILES_X))
             {
                 // Now Check Tile Map for Right
-                for(p = 0; p<3; p++)
+                for(p = 0; p<Level.MD_Details.DMG_Count; p++)
                     if(Level.TL_Map[New_Y][New_X+1] == Level.MD_Details.DMG[p].Type)
                         Right = false;
             }
@@ -842,7 +844,7 @@ bool CSFMLCheckSelfCollision()
             if(!(New_Y+1 >= MAX_TILES_Y))
             {
                 // Now Check Tile Map for Down
-                for(p = 0; p<3; p++)
+                for(p = 0; p<Level.MD_Details.DMG_Count; p++)
                     if(Level.TL_Map[New_Y+1][New_X] == Level.MD_Details.DMG[p].Type)
                         Down = false;
             }
@@ -856,7 +858,7 @@ bool CSFMLCheckSelfCollision()
             if(!(New_Y-1 <= 0))
             {
                 // Now Check Tile Map for Up
-                for(p = 0; p<3; p++)
+                for(p = 0; p<Level.MD_Details.DMG_Count; p++)
                     if(Level.TL_Map[New_Y-1][New_X] == Level.MD_Details.DMG[p].Type)
                         Up = false;
             }

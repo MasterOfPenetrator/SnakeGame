@@ -4,8 +4,9 @@ bool CSFMLInitClock()
 {
     // Init Game Timer
     GameClock.GC_Clock = sfClock_create();
+    GameClock.GC_Autokill_Time = malloc(sizeof(float));
 
-    if(GameClock.GC_Clock == NULL)
+    if(GameClock.GC_Clock == NULL || GameClock.GC_Autokill_Time == NULL)
     {
         printf("Game Subsystem Fehler 'GameClock': Kann Uhr nicht initialisieren!\n");
         return false;
@@ -27,6 +28,8 @@ bool CSFMLInitClock()
     GameClock.GC_ItemEvents = NULL; // Prevent dangling pointer
     GameClock.GC_ItemEvents_Count = 0;
     GameClock.GC_ItemEvents_Init = false;
+    GameClock.GC_Autokill_Init = false;
+    GameClock.GC_Autokill_Time[0] = 0.0f;
 
     return true;
 }
@@ -86,15 +89,6 @@ bool CSFMLUpdateClock()
         if(GameClock.GC_MinuteTime > 60.0f)
         {
             GameClock.GC_MinuteTick = true;
-
-            // Autokill Feature for the Map active?
-            if(Level.MD_Details.Autokill_Active && !GameMain.GM_Paused)
-            {
-                GameSnake.S_Speed += Level.MD_Details.Autokill_Amount;
-                GameSnake.S_DefaultSpeed += Level.MD_Details.Autokill_Amount;
-                printf("Autokill: Speed increased, now: %f\n", GameSnake.S_DefaultSpeed);
-            }
-
             GameClock.GC_MinuteTime = 0.0f;
         }
         else
@@ -335,11 +329,86 @@ bool CSFMLUpdateClock()
     return true;
 }
 
+// Update Autokill
+bool CSFMLUpdateAutokill()
+{
+    size_t i = 0;
+
+    // Init Autokill
+    if(!GameClock.GC_Autokill_Init && Level.Is_Loaded)
+    {
+        if(Level.MD_Details.Autokill_Count > 1)
+        {
+            // Update Mem
+            GameClock.GC_Autokill_Time = realloc(GameClock.GC_Autokill_Time, Level.MD_Details.Autokill_Count * sizeof(float));
+
+            if(GameClock.GC_Autokill_Time == NULL)
+            {
+                printf("Game Subsystem Fehler 'GameClock': Kann Speicher fuer Autokill Timer nicht reservieren!\n");
+                return false;
+            }
+
+            // Fill Time with zeroes
+            for(i = 0; i<Level.MD_Details.Autokill_Count; i++)
+                GameClock.GC_Autokill_Time[i] = 0.0f;
+
+        }
+
+        GameClock.GC_Autokill_Init = true;
+    }
+
+    // Proceed Autokill
+    if(Level.Is_Loaded && GameSnake.S_Is_Init && Level.MD_Details.Autokill_Count > 0)
+    {
+        for(i = 0; i<Level.MD_Details.Autokill_Count; i++)
+        {
+            GameClock.GC_Autokill_Time[i] += GameClock.GC_DeltaTime;
+
+            if(GameClock.GC_Autokill_Time[i] > (60.0f / Level.MD_Details.Autokill[i].Duration))
+            {
+                switch(Level.MD_Details.Autokill[i].Effect)
+                {
+                    case IT_SPEED:
+                        GameSnake.S_Speed += Level.MD_Details.Autokill[i].Amount;
+                        GameSnake.S_DefaultSpeed = GameSnake.S_Speed;
+                        printf("Autokill: Speed increased, to: %f !\n", GameSnake.S_DefaultSpeed);
+                    break;
+
+                    case IT_HEALTH:
+                        if((1 + Level.MD_Details.Autokill[i].Amount) <= (GameSnake.S_Health - Level.MD_Details.Autokill[i].Amount))
+                        {
+                            GameSnake.S_Health -= Level.MD_Details.Autokill[i].Amount;
+                            printf("Autokill: Health decreased!\n");
+                        }
+                        else
+                        {
+                            GameSnake.S_Health = 0;
+                            GameSnake.S_Is_Dead = true;
+                            printf("Autokill: Health decreased to Zero -> You're Dead Bitch!\n");
+                        }
+                    break;
+
+                    default:
+                    break;
+                }
+
+                GameClock.GC_Autokill_Time[i] = 0.0f;
+            }
+        }
+    }
+
+    return true;
+}
+
+// Clear Clock Elements
 void CSFMLQuitClock()
 {
     // Clear SFML Stuff
     sfClock_destroy(GameClock.GC_Clock);
     GameClock.GC_Clock = NULL;
+
+    free(GameClock.GC_Autokill_Time);
+    GameClock.GC_Autokill_Time = NULL;
 
     // Clearing Time Events
     if(GameClock.GC_ItemEvents_Init)

@@ -1,3 +1,4 @@
+Example map:
 MapDescriptor desc;
     desc.Score_per_Second = 1;
     strcpy(desc.MapName, "Example Map");
@@ -7,6 +8,7 @@ MapDescriptor desc;
     desc.DMG[1].Type = 2;
     desc.DMG[2].Damage = 35;
     desc.DMG[2].Type = 3;
+    desc.DMG_Count = 3;
     desc.ItemsAllowed[0].Type = IT_HEALTH;
     desc.ItemsAllowed[0].Count = 1;
     desc.ItemsAllowed[1].Type = IT_FOOD;
@@ -19,7 +21,40 @@ MapDescriptor desc;
     desc.ItemsAllowed[4].Count = 1;
     desc.ItemsAllowed[5].Type = IT_CUSTOM;
     desc.ItemsAllowed[5].Count = 5;
-    desc.Autokill_Active = true;
-    desc.Autokill_Amount = 0.5f;
     desc.Default_Speed = 3.0f;
     desc.Start_Speed = 3.0f;
+    desc.Ambient_Power = 0.005f;
+    desc.Autokill[0].Amount = 0.5f;
+    desc.Autokill[0].Duration = 1;
+    desc.Autokill[0].Effect = IT_SPEED;
+    desc.Autokill_Count = 1;
+
+
+Spacy Artistic:
+MapDescriptor desc;
+    desc.Score_per_Second = 2;
+    strcpy(desc.MapName, "Spacy Artistic");
+    desc.DMG[0].Damage = 30;
+    desc.DMG[0].Type = 1;
+    desc.DMG_Count = 1;
+    desc.ItemsAllowed[0].Type = IT_HEALTH;
+    desc.ItemsAllowed[0].Count = 1;
+    desc.ItemsAllowed[1].Type = IT_FOOD;
+    desc.ItemsAllowed[1].Count = 2;
+    desc.ItemsAllowed[2].Type = IT_NOCLIP;
+    desc.ItemsAllowed[2].Count = 0;
+    desc.ItemsAllowed[3].Type = IT_GOD;
+    desc.ItemsAllowed[3].Count = 0;
+    desc.ItemsAllowed[4].Type = IT_SPEED;
+    desc.ItemsAllowed[4].Count = 1;
+    desc.ItemsAllowed[5].Type = IT_CUSTOM;
+    desc.ItemsAllowed[5].Count = 5;
+    desc.Start_Speed = 4.0f;
+    desc.Ambient_Power = 0.5f;
+    desc.Autokill[0].Amount = 1.0f;
+    desc.Autokill[0].Duration = 2;
+    desc.Autokill[0].Effect = IT_SPEED;
+    desc.Autokill[1].Amount = 5.0f;
+    desc.Autokill[1].Duration = 1;
+    desc.Autokill[1].Effect = IT_HEALTH;
+    desc.Autokill_Count = 2;

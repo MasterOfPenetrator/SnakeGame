@@ -34,6 +34,10 @@ typedef struct {
     float GC_Time;
     TimeEvent *GC_ItemEvents;
     size_t GC_ItemEvents_Count;
+
+    float *GC_Autokill_Time;
+    bool GC_Autokill_Init;
+
     bool GC_ItemEvents_Init;
     bool GC_Is_Init;
 } Clock;
@@ -44,6 +48,7 @@ Clock GameClock;
 // Functions
 bool CSFMLInitClock();
 bool CSFMLUpdateClock();
+bool CSFMLUpdateAutokill();
 void CSFMLQuitClock();
 bool CSFMLAddTimeEvent(EffectType Effect, int Duration, int NewValue, bool Dir);
 bool CSFMLDeleteTimeEventByIndex(size_t index);

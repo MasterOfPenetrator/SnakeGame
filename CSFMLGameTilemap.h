@@ -26,13 +26,21 @@ typedef struct {
 } MapDMGTypes;
 
 typedef struct {
+    float Amount;
+    ItemType Effect;
+    int Duration; // How often it will appear in 1 Minute
+} KillEffect;
+
+typedef struct {
     const char MapName[20];
     int Score_per_Second;
     float Start_Speed;
     float Default_Speed;
-    bool Autokill_Active;
-    float Autokill_Amount;
+    float Ambient_Power;
+    KillEffect Autokill[3];
+    size_t Autokill_Count;
     MapDMGTypes DMG[3];
+    size_t DMG_Count;
     MapAllowedItems ItemsAllowed[6];
 } MapDescriptor;
 

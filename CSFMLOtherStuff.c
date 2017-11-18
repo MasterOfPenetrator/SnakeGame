@@ -1,16 +1,16 @@
 #include "CSFMLOtherStuff.h"
-#define SSE_COMPARE 1
+#define SSE 1
 
 // Compare two Floats
 // Use SSE for exactly Compare
 // Some weird thing, at any Optimizion Step, the
 // Compiler never use SIMD instructions!
 // He uses just the FPU
-bool CompareFloats(float Value1, float Value2)
+inline bool CompareFloats(float Value1, float Value2)
 {
-    if(SSE_COMPARE)
+    if(SSE)
     {
-        register __m128 val1, val2, val3;
+        __m128 val1, val2, val3;
         register int result;
 
         val1 = _mm_set1_ps(Value1);
@@ -30,7 +30,7 @@ bool CompareFloats(float Value1, float Value2)
 }
 
 // Getting a Random Float Number
-float GetRandomFloatNumber(int MAX)
+inline float GetRandomFloatNumber(int MAX)
 {
     unsigned int rnd_val = 0;
 
@@ -38,7 +38,6 @@ float GetRandomFloatNumber(int MAX)
         rnd_val = rand();
 
     float val =  (MAX) * ((float)rnd_val / UINT32_MAX);
-
     short sign = val < 0 ? -1 : 1;
 
     return floorf(fabs(val)*2.f) / 2.f * sign;

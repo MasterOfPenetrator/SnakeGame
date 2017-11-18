@@ -35,7 +35,7 @@
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-m32" />
-			<Add option="-std=c11 -msse -mrdrnd" />
+			<Add option="-std=c11 -msse -mrdrnd -ffast-math -ftree-vectorizer-verbose=10" />
 			<Add directory="../Bibliotheken/CSFML/include" />
 		</Compiler>
 		<Linker>
@@ -49,6 +49,7 @@
 			<Add library="libcsfml-system" />
 			<Add directory="../Bibliotheken/CSFML/lib/gcc" />
 		</Linker>
+		<Unit filename="Bilder/Einstellungen/HighscoresDATA.MOP" />
 		<Unit filename="Bilder/Einstellungen/SettingsDATA.MOP" />
 		<Unit filename="Bilder/GameItem_Layout.txt" />
 		<Unit filename="Bilder/Game/ItemData/FirstAid_10.DAT" />
@@ -69,6 +70,13 @@
 		<Unit filename="Bilder/Game/LevelData/Level1/Shader.frag" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Specular.png" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Tilemap.DAT" />
+		<Unit filename="Bilder/Game/LevelData/Level2/Diffuse.png" />
+		<Unit filename="Bilder/Game/LevelData/Level2/Eventmap.DAT" />
+		<Unit filename="Bilder/Game/LevelData/Level2/MapDescriptor.DAT" />
+		<Unit filename="Bilder/Game/LevelData/Level2/Normal.png" />
+		<Unit filename="Bilder/Game/LevelData/Level2/Shader.frag" />
+		<Unit filename="Bilder/Game/LevelData/Level2/Specular.png" />
+		<Unit filename="Bilder/Game/LevelData/Level2/Tilemap.DAT" />
 		<Unit filename="Bilder/Game/Tiles/FirstAid_10.png" />
 		<Unit filename="Bilder/Game/Tiles/FirstAid_20.png" />
 		<Unit filename="Bilder/Game/Tiles/FirstAid_35.png" />
