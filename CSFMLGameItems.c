@@ -171,22 +171,10 @@ bool CSFMLInitItems()
         GameItem.GI_AllowedItems[i].Max_Count = Level.MD_Details.ItemsAllowed[i].Count;
     }
 
-    // Setup Text and Font
-    GameItem.GI_Font = sfFont_createFromFile("Bilder/Schriftarten/SEASERN.ttf");
-    GameItem.GI_Text = sfText_create();
-
-    if(GameItem.GI_Font == NULL || GameItem.GI_Text == NULL)
-    {
-        printf("Game Subsystem Fehler 'GameItems': Kann Item Hinweis Text/Font/Shader nicht laden!\n");
-        return false;
-    }
-
-    sfText_setFont(GameItem.GI_Text, GameItem.GI_Font);
-    sfText_setCharacterSize(GameItem.GI_Text, 20);
-
     // Setup general things
-    GameItem.GI_TextRenderIt = false;
-    GameItem.GI_TextAlpha = 255.0f;
+    GameItem.GI_ItemTexts = NULL;
+    GameItem.GI_ItemTexts_Count = 0;
+    GameItem.GI_ItemTexts_Used = 0;
 
     GameItem.GI_Is_Init = true;
     GameItem.GI_AllowedItems_Count = 6;
@@ -214,12 +202,6 @@ void CSFMLQuitItems()
         sfTexture_destroy(GameItem.GI_Textures[i]);
         GameItem.GI_Textures[i] = NULL;
     }
-
-    sfFont_destroy(GameItem.GI_Font);
-    GameItem.GI_Font = NULL;
-
-    sfText_destroy(GameItem.GI_Text);
-    GameItem.GI_Text = NULL;
 
     sfSprite_destroy(GameItem.GI_Sprite);
     GameItem.GI_Sprite = NULL;
@@ -249,6 +231,18 @@ void CSFMLQuitItems()
 
         free(GameItem.GI_States);
         GameItem.GI_States = NULL;
+    }
+
+    if(GameItem.GI_ItemTexts_Count > 0)
+    {
+        for(i = 0; i<GameItem.GI_ItemTexts_Count; i++)
+        {
+            sfText_destroy(GameItem.GI_ItemTexts[i].Text);
+            GameItem.GI_ItemTexts[i].Text = NULL;
+        }
+
+        free(GameItem.GI_ItemTexts);
+        GameItem.GI_ItemTexts = NULL;
     }
 
     GameItem.GI_Is_Init = false;
@@ -367,6 +361,7 @@ void CSFMLSetCoordinatesItems()
                 GameItem.GI_Blocks[i].x = Random_X;
                 GameItem.GI_Blocks[i].y = Random_Y;
                 GameItem.GI_Coordinates_Setted[i] = true;
+                printf("Item Coordinates: %f - %f\n", Random_X, Random_Y);
             }
         }
     }
@@ -441,50 +436,118 @@ void CSFMLRenderItems()
 }
 
 // Spawn Text
-void CSFMLItemSpawnText(const char *text)
+bool CSFMLItemSpawnText(const char *text)
 {
-    // Set Text Properties
-    sfText_setString(GameItem.GI_Text, text);
-    sfVector2f res = {sfText_getLocalBounds(GameItem.GI_Text).width, sfText_getLocalBounds(GameItem.GI_Text).height};
+    // Allocate Memory
+    if(GameItem.GI_ItemTexts_Count == 0)
+    {
+        GameItem.GI_ItemTexts = malloc(sizeof(ItemSpawnText));
 
-    // Determine Middle Position
-    float Position_X = ((572-res.x) / 2) + Level.BG_Screenposition.x;
-    float Position_Y = ((472-res.y) / 2) + Level.BG_Screenposition.y;
-    sfVector2f Position = {Position_X, Position_Y};
-    sfText_setPosition(GameItem.GI_Text, Position);
-    sfColor Col = {255, 184, 0, 255};
-    sfText_setColor(GameItem.GI_Text, Col);
+        if(GameItem.GI_ItemTexts == NULL)
+        {
+            printf("Game Subsystem Fehler 'GameItems': Kann Speicher fuer Spawn Texte nicht reservieren!\n");
+            return false;
+        }
 
-    // Release
-    GameItem.GI_TextRenderIt = true;
+        GameItem.GI_ItemTexts[0].Text = sfText_create();
+
+        if(GameItem.GI_ItemTexts[0].Text == NULL)
+        {
+            printf("Game Subsystem Fehler 'GameItems': Kann Text Objekt fuer Spawn Texte erstellen!\n");
+            return false;
+        }
+
+        sfText_setFont(GameItem.GI_ItemTexts[0].Text, media.normal_font);
+        sfText_setCharacterSize(GameItem.GI_ItemTexts[0].Text, 20);
+        sfText_setString(GameItem.GI_ItemTexts[0].Text, text);
+
+        sfVector2f Position = {GetRandomFloatNumber(572.0f - sfText_getLocalBounds(GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text).width) + Level.BG_Screenposition.x , GetRandomFloatNumber(472.0f - sfText_getLocalBounds(GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text).height) + Level.BG_Screenposition.y};
+        sfColor Color = {255, 184, 0, 255};
+
+        sfText_setPosition(GameItem.GI_ItemTexts[0].Text, Position);
+        sfText_setColor(GameItem.GI_ItemTexts[0].Text, Color);
+
+        GameItem.GI_ItemTexts[0].RenderIt = true;
+        GameItem.GI_ItemTexts[0].Alpha = 255.0f;
+
+        GameItem.GI_ItemTexts_Count = 1;
+        GameItem.GI_ItemTexts_Used = 1;
+    }
+    else if(GameItem.GI_ItemTexts_Count > 0)
+    {
+        // Realloc if need
+        if(GameItem.GI_ItemTexts_Count == GameItem.GI_ItemTexts_Used)
+        {
+            // Increment count
+            GameItem.GI_ItemTexts_Count++;
+            GameItem.GI_ItemTexts = realloc(GameItem.GI_ItemTexts, GameItem.GI_ItemTexts_Count * sizeof(ItemSpawnText));
+
+            if(GameItem.GI_ItemTexts == NULL)
+            {
+                printf("Game Subsystem Fehler 'GameItems': Kann keinen zusaetzlichen Speicher fuer Spawn Texte reservieren!\n");
+                return false;
+            }
+        }
+
+        // Append to the next
+        GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text = sfText_create();
+
+        if(GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text == NULL)
+        {
+           printf("Game Subsystem Fehler 'GameItems': Kann Text Objekt fuer Spawn Texte erstellen!\n");
+            return false;
+        }
+
+        sfText_setFont(GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text, media.normal_font);
+        sfText_setCharacterSize(GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text, 20);
+        sfText_setString(GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text, text);
+
+        sfVector2f Position = {GetRandomFloatNumber(572.0f - sfText_getLocalBounds(GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text).width) + Level.BG_Screenposition.x , GetRandomFloatNumber(472.0f - sfText_getLocalBounds(GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text).height) + Level.BG_Screenposition.y};
+        sfColor Color = {255, 184, 0, 255};
+
+        sfText_setPosition(GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text, Position);
+        sfText_setColor(GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Text, Color);
+
+        GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].RenderIt = true;
+        GameItem.GI_ItemTexts[GameItem.GI_ItemTexts_Used].Alpha = 255.0f;
+
+        // Increment Used
+        GameItem.GI_ItemTexts_Used++;
+    }
 }
 
 // Render Text
 void CSFMLRenderItemText()
 {
-    // Render Item Event Text!
-    if(GameItem.GI_TextRenderIt)
+    // Iterate over all Items
+    size_t i;
+    for(i = 0; i<GameItem.GI_ItemTexts_Count; i++)
     {
-        // Setup Variables
-        sfColor ActualColor = sfText_getColor(GameItem.GI_Text);
-        sfVector2f ActualScale = sfText_getScale(GameItem.GI_Text);
-
-        // Set Fade Out and Scale Out
-        GameItem.GI_TextAlpha -= GameClock.GC_DeltaTime * 1/GameClock.GC_DeltaTime;
-        ActualColor.a = (sfUint8) GameItem.GI_TextAlpha;
-        ActualScale.x = (GameItem.GI_TextAlpha / 255.0f);
-        ActualScale.y = (GameItem.GI_TextAlpha / 255.0f);
-
-        // Set New Alpha and Scale
-        sfText_setColor(GameItem.GI_Text, ActualColor);
-        sfText_setScale(GameItem.GI_Text, ActualScale);
-        sfRenderWindow_drawText(screen, GameItem.GI_Text, NULL);
-
-        // Reset things
-        if(GameItem.GI_TextAlpha < 1)
+        // Render Text
+        if(GameItem.GI_ItemTexts[i].RenderIt)
         {
-            GameItem.GI_TextAlpha = 255.0f;
-            GameItem.GI_TextRenderIt = false;
+            // Get Actual Color and Scale
+            sfColor ActualColor = sfText_getColor(GameItem.GI_ItemTexts[i].Text);
+            sfVector2f ActualScale = sfText_getScale(GameItem.GI_ItemTexts[i].Text);
+
+            // Set Fade Out and Scale Out
+            GameItem.GI_ItemTexts[i].Alpha -= GameClock.GC_DeltaTime * 1/GameClock.GC_DeltaTime;
+            ActualColor.a = (sfUint8) GameItem.GI_ItemTexts[i].Alpha;
+            ActualScale.x = (GameItem.GI_ItemTexts[i].Alpha / 255.0f);
+            ActualScale.y = (GameItem.GI_ItemTexts[i].Alpha / 255.0f);
+
+            sfText_setColor(GameItem.GI_ItemTexts[i].Text, ActualColor);
+            sfText_setScale(GameItem.GI_ItemTexts[i].Text, ActualScale);
+            sfRenderWindow_drawText(screen, GameItem.GI_ItemTexts[i].Text, NULL);
+
+            if(GameItem.GI_ItemTexts[i].Alpha < 1.0f)
+            {
+                GameItem.GI_ItemTexts[i].Alpha = 0.0f;
+                GameItem.GI_ItemTexts[i].RenderIt = false;
+                sfText_destroy(GameItem.GI_ItemTexts[i].Text);
+                GameItem.GI_ItemTexts[i].Text = NULL;
+                GameItem.GI_ItemTexts_Used--;
+            }
         }
     }
 }

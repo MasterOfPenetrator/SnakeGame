@@ -33,8 +33,13 @@ inline bool CompareFloats(float Value1, float Value2)
 inline float GetRandomFloatNumber(int MAX)
 {
     unsigned int rnd_val = 0;
+    register int attempts = 10;
+    register bool success = false;
 
-    if(!_rdrand32_step(&rnd_val))
+    while(attempts-- && !success)
+        success = _rdrand32_step(&rnd_val);
+
+    if(!success)
         rnd_val = rand();
 
     float val =  (MAX) * ((float)rnd_val / UINT32_MAX);

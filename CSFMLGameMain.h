@@ -23,7 +23,7 @@ typedef struct {
     sfText *GM_Health;
     sfText *GM_Score;
     sfText *GM_Pause;
-    sfFont *GM_Font;
+    sfText *GM_Pause_Autokill;
 
     // General Stuff
     bool GM_Is_Init;

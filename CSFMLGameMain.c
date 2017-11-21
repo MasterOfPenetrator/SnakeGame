@@ -33,12 +33,12 @@ bool CSFMLGameInit()
     Init_Error |= !CSFMLInitWeapons();
 
     // Init Text for Score and Health
-    GameMain.GM_Font = sfFont_createFromFile("Bilder/Schriftarten/3Dventure.ttf");
     GameMain.GM_Health = sfText_create();
     GameMain.GM_Score = sfText_create();
     GameMain.GM_Pause = sfText_create();
+    GameMain.GM_Pause_Autokill = sfText_create();
 
-    if(GameMain.GM_Font == NULL || GameMain.GM_Health == NULL || GameMain.GM_Score == NULL || GameMain.GM_Pause == NULL)
+    if(GameMain.GM_Health == NULL || GameMain.GM_Score == NULL || GameMain.GM_Pause == NULL || GameMain.GM_Pause_Autokill == NULL)
     {
         Init_Error |= true;
     }
@@ -60,12 +60,12 @@ void CSFMLGameQuit()
     if(GameMain.GM_Is_Init)
     {
         // Clear Game Main Elements
-        sfFont_destroy(GameMain.GM_Font);
         sfText_destroy(GameMain.GM_Health);
         sfText_destroy(GameMain.GM_Score);
         sfText_destroy(GameMain.GM_Pause);
+        sfText_destroy(GameMain.GM_Pause_Autokill);
+        GameMain.GM_Pause_Autokill = NULL;
         GameMain.GM_Pause = NULL;
-        GameMain.GM_Font = NULL;
         GameMain.GM_Health = NULL;
         GameMain.GM_Score = NULL;
 
@@ -313,7 +313,7 @@ void CSFMLGameShowScore()
     sfColor color = {233, 77, 0, 255};
 
     sfText_setPosition(GameMain.GM_Score, position);
-    sfText_setFont(GameMain.GM_Score, GameMain.GM_Font);
+    sfText_setFont(GameMain.GM_Score, media.spezial_font);
     sfText_setCharacterSize(GameMain.GM_Score, 20);
     sfText_setColor(GameMain.GM_Score, color);
 
@@ -338,7 +338,7 @@ void CSFMLGameShowHealth()
     sfColor color = {233, 77, 0, 255};
 
     sfText_setPosition(GameMain.GM_Health, position);
-    sfText_setFont(GameMain.GM_Health, GameMain.GM_Font);
+    sfText_setFont(GameMain.GM_Health, media.spezial_font);
     sfText_setCharacterSize(GameMain.GM_Health, 20);
     sfText_setColor(GameMain.GM_Health, color);
 
@@ -399,5 +399,17 @@ void CSFMLGamePauseRenderText()
         sfText_setColor(GameMain.GM_Pause, color);
 
         sfRenderWindow_drawText(screen, GameMain.GM_Pause, NULL);
+
+        if(Level.MD_Details.Autokill_Count > 0)
+        {
+            sfText_setFont(GameMain.GM_Pause_Autokill, media.normal_font);
+            sfText_setCharacterSize(GameMain.GM_Pause_Autokill, 20);
+            sfText_setString(GameMain.GM_Pause_Autokill, "Remember... Autokill still active...");
+            sfText_setColor(GameMain.GM_Pause_Autokill, color);
+            Position.x /= 1.75;
+            Position.y += 50;
+            sfText_setPosition(GameMain.GM_Pause_Autokill, Position);
+            sfRenderWindow_drawText(screen, GameMain.GM_Pause_Autokill, NULL);
+        }
     }
 }

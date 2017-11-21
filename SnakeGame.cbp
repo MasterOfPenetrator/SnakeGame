@@ -35,7 +35,7 @@
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-m32" />
-			<Add option="-std=c11 -msse -mrdrnd -ffast-math -ftree-vectorizer-verbose=10" />
+			<Add option="-std=c11 -msse -mrdrnd" />
 			<Add directory="../Bibliotheken/CSFML/include" />
 		</Compiler>
 		<Linker>

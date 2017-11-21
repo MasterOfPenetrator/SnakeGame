@@ -370,7 +370,7 @@ bool CSFMLUpdateAutokill()
                 {
                     case IT_SPEED:
                         GameSnake.S_Speed += Level.MD_Details.Autokill[i].Amount;
-                        GameSnake.S_DefaultSpeed = GameSnake.S_Speed;
+                        GameSnake.S_DefaultSpeed += Level.MD_Details.Autokill[i].Amount;
                         printf("Autokill: Speed increased, to: %f !\n", GameSnake.S_DefaultSpeed);
                     break;
 

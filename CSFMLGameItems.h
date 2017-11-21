@@ -42,6 +42,12 @@ typedef struct {
 } Item;
 
 typedef struct {
+    sfText *Text;
+    bool RenderIt;
+    float Alpha;
+} ItemSpawnText;
+
+typedef struct {
     sfTexture **GI_Textures;
     sfShader **GI_Shaders;
     sfSprite *GI_Sprite;
@@ -57,10 +63,9 @@ typedef struct {
     AllowedItems *GI_AllowedItems;
     size_t GI_AllowedItems_Count;
 
-    sfText *GI_Text;
-    sfFont *GI_Font;
-    bool GI_TextRenderIt;
-    float GI_TextAlpha;
+    ItemSpawnText *GI_ItemTexts;
+    size_t GI_ItemTexts_Count;
+    size_t GI_ItemTexts_Used;
 
     bool GI_Is_Init;
 
@@ -76,7 +81,7 @@ void CSFMLPlaceItems();
 void CSFMLSetCoordinatesItems();
 void CSFMLRenderItems();
 void CSFMLHandleItems();
-void CSFMLItemSpawnText(const char *text);
+bool CSFMLItemSpawnText(const char *text);
 void CSFMLRenderItemText();
 
 // Intern Functions
