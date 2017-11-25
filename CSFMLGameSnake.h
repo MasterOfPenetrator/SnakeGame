@@ -6,7 +6,6 @@
 #include "CSFMLGameMain.h"
 
 // Defines
-#define SNAKE_START_BLOCKS 5
 #define SNAKE_SELFHIT_DMG 45
 #define SNAKE_BITE_DMG 10
 

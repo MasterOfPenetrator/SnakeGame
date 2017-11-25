@@ -36,6 +36,8 @@ typedef struct {
     int Score_per_Second;
     float Start_Speed;
     float Default_Speed;
+    size_t Snake_Start_Blocks;
+    size_t Snake_Grow_Amount;
     float Ambient_Power;
     KillEffect Autokill[3];
     size_t Autokill_Count;
