@@ -36,8 +36,13 @@ bool CSFMLInitClock()
 
 bool CSFMLUpdateClock()
 {
+    bool Update_Error = false;
+
     if(!GameClock.GC_Is_Init)
-        return false;
+    {
+        Update_Error |= true;
+        return Update_Error;
+    }
 
     // Update GameTime
     GameClock.GC_Actual_Time = sfClock_getElapsedTime(GameClock.GC_Clock);
@@ -125,7 +130,16 @@ bool CSFMLUpdateClock()
         }
     }
 
-    // Update Time Events, only when Time Events putted
+    // Update Other Stuff
+    Update_Error |= !CSFMLUpdateItemTimeEvents();
+    Update_Error |= !CSFMLUpdateAutokill();
+
+    return Update_Error;
+}
+
+// Update Item Time Events
+bool CSFMLUpdateItemTimeEvents()
+{
     if(GameClock.GC_ItemEvents_Count > 0 && !GameMain.GM_Paused)
     {
         // Iterate over all Items

@@ -332,21 +332,21 @@ void CSFMLSetCoordinatesItems()
 
     // Check Snake Collide Head !OK
     if(CompareFloats(Random_X, GameSnake.SB_Head.x) && CompareFloats(Random_Y, GameSnake.SB_Head.y))
-        Hit = true;
+        Hit |= true;
 
     // Check Snake Collide Body !OK
     // Todo: Prevent for XXX = Float Value, it could be undefined behavior
     for(i = 0; i<GameSnake.SB_Body_Elements; i++)
     {
         if(CompareFloats(Random_X, GameSnake.SB_Body[i].x) && CompareFloats(Random_Y, GameSnake.SB_Body[i].y))
-            Hit = true;
+            Hit |= true;
     }
 
     // Check Item Collide -> Semms now OK
     for(i = 0; i<GameItem.GI_Items_Count; i++)
     {
         if(CompareFloats(Random_X, GameItem.GI_Blocks[i].x) && CompareFloats(Random_Y, GameItem.GI_Blocks[i].y))
-            Hit = true;
+            Hit |= true;
     }
 
     // Iterate over all Items
@@ -361,7 +361,6 @@ void CSFMLSetCoordinatesItems()
                 GameItem.GI_Blocks[i].x = Random_X;
                 GameItem.GI_Blocks[i].y = Random_Y;
                 GameItem.GI_Coordinates_Setted[i] = true;
-                printf("Item Coordinates: %f - %f\n", Random_X, Random_Y);
             }
         }
     }

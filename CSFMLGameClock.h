@@ -48,6 +48,7 @@ Clock GameClock;
 // Functions
 bool CSFMLInitClock();
 bool CSFMLUpdateClock();
+bool CSFMLUpdateItemTimeEvents();
 bool CSFMLUpdateAutokill();
 void CSFMLQuitClock();
 bool CSFMLAddTimeEvent(EffectType Effect, int Duration, int NewValue, bool Dir);

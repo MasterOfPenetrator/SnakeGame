@@ -126,9 +126,9 @@ void main()
     {
         float Intensity = (0.3f * End_Farbe.r) + (0.59f * End_Farbe.g) + (0.11f * End_Farbe.b);
 
-        End_Farbe.r = (Intensity * Desaturate_Factor * FBM(Time, 0.5f, 0.95f)) + (End_Farbe.r * (1.0f - Desaturate_Factor));
-        End_Farbe.g = (Intensity * Desaturate_Factor * FBM(Time, 0.5f, 0.95f)) + (End_Farbe.g * (1.0f - Desaturate_Factor));
-        End_Farbe.b = (Intensity * Desaturate_Factor * FBM(Time, 0.5f, 0.95f)) + (End_Farbe.b * (1.0f - Desaturate_Factor));
+        End_Farbe.r = (Intensity * Desaturate_Factor * FBM(Time, 0.25f, 0.95f)) + (End_Farbe.r * (1.0f - Desaturate_Factor));
+        End_Farbe.g = (Intensity * Desaturate_Factor * FBM(Time, 0.25f, 0.95f)) + (End_Farbe.g * (1.0f - Desaturate_Factor));
+        End_Farbe.b = (Intensity * Desaturate_Factor * FBM(Time, 0.25f, 0.95f)) + (End_Farbe.b * (1.0f - Desaturate_Factor));
     }
 
     // Setze Pixel

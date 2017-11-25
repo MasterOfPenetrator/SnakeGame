@@ -97,9 +97,6 @@ void CSFMLGameUpdate()
             // Update GameClock
             CSFMLUpdateClock();
 
-            // Update Autokill
-            CSFMLUpdateAutokill();
-
             // Update Tick Based Stuff
             if(GameClock.GC_SnakeTick)
             {
@@ -406,7 +403,7 @@ void CSFMLGamePauseRenderText()
             sfText_setCharacterSize(GameMain.GM_Pause_Autokill, 20);
             sfText_setString(GameMain.GM_Pause_Autokill, "Remember... Autokill still active...");
             sfText_setColor(GameMain.GM_Pause_Autokill, color);
-            Position.x /= 1.75;
+            Position.x /= 1.75f;
             Position.y += 50;
             sfText_setPosition(GameMain.GM_Pause_Autokill, Position);
             sfRenderWindow_drawText(screen, GameMain.GM_Pause_Autokill, NULL);
