@@ -48,13 +48,6 @@ typedef struct {
 } ItemSpawnText;
 
 typedef struct {
-    Item Type;
-    iBlock Block;
-    bool Placed;
-    bool Setted;
-} SpawnedItem;
-
-typedef struct {
     sfTexture **GI_Textures;
     sfShader **GI_Shaders;
     sfSprite *GI_Sprite;
@@ -66,8 +59,6 @@ typedef struct {
     iBlock *GI_Blocks;
     bool *GI_Placed;
     bool *GI_Coordinates_Setted;
-
-    SpawnedItem *GI_Spawned;
 
     AllowedItems *GI_AllowedItems;
     size_t GI_AllowedItems_Count;

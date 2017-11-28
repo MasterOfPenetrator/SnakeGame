@@ -332,18 +332,19 @@ void CSFMLSetCoordinatesItems()
             Hit |= true;
     }
 
-    // Check for Item Collide itself
+    // Iterate over all Items
+    size_t s;
     for(i = 0; i<GameItem.GI_Items_Count; i++)
     {
-        if(CompareFloats(Random_X, GameItem.GI_Blocks[i].x) && CompareFloats(Random_Y, GameItem.GI_Blocks[i].y))
-            Hit |= true;
-    }
+        // Check for Item Self Collide
+        for(s = 0; s<GameItem.GI_Items_Count; s++)
+        {
+            if(CompareFloats(Random_X, GameItem.GI_Blocks[s].x) && CompareFloats(Random_Y, GameItem.GI_Blocks[s].y))
+                Hit |= true;
+        }
 
-    // Iterate over all Items
-    for(i = 0; i<GameItem.GI_Items_Count && !Hit; i++)
-    {
         // Just proceed with Items, that are placed and Coordinates not setted!
-        if(GameItem.GI_Placed[i] && !GameItem.GI_Coordinates_Setted[i])
+        if(GameItem.GI_Placed[i] && !GameItem.GI_Coordinates_Setted[i] && !Hit)
         {
             // Position must be in Tilemap with 0 and doesnt Render in Snake Elements
             if(Level.TL_Map[(size_t)floor(Random_Y)][(size_t)floor(Random_X)] == 0)
@@ -351,6 +352,7 @@ void CSFMLSetCoordinatesItems()
                 GameItem.GI_Blocks[i].x = Random_X;
                 GameItem.GI_Blocks[i].y = Random_Y;
                 GameItem.GI_Coordinates_Setted[i] = true;
+                printf("Item Type: %s\n", GameItem.GI_Items[i].I_Name);
             }
         }
     }
@@ -575,7 +577,7 @@ void CSFMLHandleItems()
     for(i = 0; i<GameItem.GI_Items_Count; i++)
     {
         // Just for the placed one
-        if(GameItem.GI_Placed[i])
+        if(GameItem.GI_Placed[i] && GameItem.GI_Coordinates_Setted[i])
         {
             // Collision Detected
             if(CompareFloats(Next_X, GameItem.GI_Blocks[i].x) && CompareFloats(Next_Y, GameItem.GI_Blocks[i].y))
