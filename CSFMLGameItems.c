@@ -269,8 +269,8 @@ bool CSFMLSpawnItem()
             GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Current = GameItem.GI_Items[i];
 
             // Setup the Block
-            GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Block.w = 25.0f;
-            GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Block.h = 25.0f;
+            GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Block.w = sfTexture_getSize(GameItem.GI_Textures[i]).x;
+            GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Block.h = sfTexture_getSize(GameItem.GI_Textures[i]).y;
 
             // Generate Random Coordinates
             float Random_X = 0.0f;
