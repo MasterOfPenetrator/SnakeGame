@@ -25,10 +25,6 @@ bool CSFMLInitItems()
         }
     }
 
-    // Close Dir
-    closedir(dir);
-    dir = NULL;
-
     if(GameItem.GI_Items_Count == 0)
     {
         printf("Game Subsystem Fehler 'GameItems': Keine Item Dateien gefunden!\n");
@@ -68,12 +64,8 @@ bool CSFMLInitItems()
         GameItem.GI_States = NULL; // Prevent dangling pointer
     }
 
-    // Open Directory
-    if((dir = opendir("Bilder/Game/ItemData")) == NULL)
-    {
-        printf("Game Subsystem Fehler 'GameItems': Keine Item Files vorhanden!\n");
-        return false;
-    }
+    // Set Dir to beginning
+    rewinddir(dir);
 
     // Read Files
     size_t counter = 0;
@@ -359,7 +351,6 @@ void CSFMLSetCoordinatesItems()
                 GameItem.GI_Blocks[i].x = Random_X;
                 GameItem.GI_Blocks[i].y = Random_Y;
                 GameItem.GI_Coordinates_Setted[i] = true;
-                printf("GameItem[%d]: %f - %f\n", i, GameItem.GI_Blocks[i].x, GameItem.GI_Blocks[i].y);
             }
         }
     }
