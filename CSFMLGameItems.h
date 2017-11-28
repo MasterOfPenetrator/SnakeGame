@@ -48,6 +48,12 @@ typedef struct {
 } ItemSpawnText;
 
 typedef struct {
+    iBlock Block;
+    Item Current;
+    size_t ItemIndex;
+} SpawnedItem;
+
+typedef struct {
     sfTexture **GI_Textures;
     sfShader **GI_Shaders;
     sfSprite *GI_Sprite;
@@ -56,9 +62,9 @@ typedef struct {
     Item *GI_Items;
     size_t GI_Items_Count;
 
-    iBlock *GI_Blocks;
-    bool *GI_Placed;
-    bool *GI_Coordinates_Setted;
+    SpawnedItem *GI_Spawned;
+    size_t GI_Spawned_Count;
+    size_t GI_Spawned_Used;
 
     AllowedItems *GI_AllowedItems;
     size_t GI_AllowedItems_Count;
@@ -77,8 +83,6 @@ Items GameItem;
 // Functions
 bool CSFMLInitItems();
 void CSFMLQuitItems();
-void CSFMLPlaceItems();
-void CSFMLSetCoordinatesItems();
 void CSFMLRenderItems();
 void CSFMLHandleItems();
 bool CSFMLItemSpawnText(const char *text);

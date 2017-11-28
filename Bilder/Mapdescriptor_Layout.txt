@@ -42,7 +42,7 @@ MapDescriptor desc;
     desc.ItemsAllowed[0].Type = IT_HEALTH;
     desc.ItemsAllowed[0].Count = 1;
     desc.ItemsAllowed[1].Type = IT_FOOD;
-    desc.ItemsAllowed[1].Count = 2;
+    desc.ItemsAllowed[1].Count = 4;
     desc.ItemsAllowed[2].Type = IT_NOCLIP;
     desc.ItemsAllowed[2].Count = 0;
     desc.ItemsAllowed[3].Type = IT_GOD;
