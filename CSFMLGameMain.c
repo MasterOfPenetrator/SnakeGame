@@ -410,3 +410,15 @@ void CSFMLGamePauseRenderText()
         }
     }
 }
+
+// Render Background
+void CSFMLRenderBackground()
+{
+    sfVector2f pos = {14.0f, 214.0f};
+    sfSprite *test = sfSprite_create();
+    sfSprite_setColor(test, sfWhite);
+    sfSprite_setPosition(test, pos);
+    sfRenderWindow_drawSprite(screen, test, NULL);
+    sfSprite_destroy(test);
+    test = NULL;
+}

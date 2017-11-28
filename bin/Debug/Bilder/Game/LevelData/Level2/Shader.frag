@@ -58,28 +58,28 @@ float FBM(float x, float f, float a)
 // Hauptfunktion
 void main()
 {
-    // Farben aus aktueller Textur holen
+    // Get Colors from textures
     vec4 Diffuse_Farbe = texture2D(Diffuse_Textur, gl_TexCoord[0].xy);
     vec3 Normal_Farbe = texture2D(Normal_Textur, gl_TexCoord[0].xy).rgb;
     vec4 Spiegel_Farbe = texture2D(Spiegel_Textur, gl_TexCoord[0].xy);
     vec3 End_Farbe = vec3(0.0f);
 
-    // Durch alle Lichter Iterieren
+    // Iterate over all setted lights
     for(int count = 0; count<Anzahl_Lichter; count++)
     {
-        // Richtung des Lichts bestimmen
+        // Get direction and fix it
         vec3 Licht_Richtung = vec3(Licht_Position[count].xy - (gl_FragCoord.xy/Aufloesung.xy), Licht_Position[count].z);
         Licht_Richtung.x *= Aufloesung.x / Aufloesung.y;
 
-        // Dämpfung der Umgebung bestimmen
+        // Calculate attentuation
         float Licht_Laenge = length(Licht_Richtung);
         float Daempfung = 1.0 / ( 0.1f + (0.2f*Licht_Laenge) + (1.5f*pow(Licht_Laenge, 2)) );
 
-        // Vektoren normieren
+        // normnalize vectors
         vec3 N = normalize(Normal_Farbe * 2.0f - 1.0f);
         vec3 L = normalize(Licht_Richtung);
 
-        // Lichtkegel berechnen
+        // Light cone active?
         if(Licht_Kegel_Aktiv[count] > 0.99f)
         {
             vec3 Kegel_Richtung = vec3(Kegel_Position[count].xy - (gl_FragCoord.xy/Aufloesung.xy), Kegel_Position[count].z);
@@ -92,10 +92,10 @@ void main()
             }
         }
 
-        // Normalen Farbanteil berechnen
+        // Calculate diffuse
         float Diffuse_Factor = max(dot(N,L), 0.0f);
 
-        // Spiegelung berechnen
+        // Calculate specular
         vec4 Spiegel = vec4(0.0f);
         if(Diffuse_Factor > 0.0f)
         {
@@ -104,14 +104,14 @@ void main()
             Spiegel = Spiegel_Faktor * Spiegelungs_Farbe * Spiegel_Farbe;
         }
 
-        // Ist FBM aktiv?
+        // Motion active?
         vec3 Diffuse = (Licht_Farbe.rgb * Licht_Farbe.a) * Diffuse_Factor;
         if(FBM_Kegel_Aktiv[count] > 0.99f)
         {
             Diffuse *= FBM(Time, 2.0f, 0.75f);
         }
 
-        // Ist Licht überhaupt Aktiv?
+        // Light active?
         if(Licht_Aktiv[count] > 0.99f)
         {
             End_Farbe += (Spiegel.rgb + Diffuse_Farbe.rgb) * ((Ambient_Farbe.rgb * Ambient_Staerke[count]) + Diffuse * Daempfung);
@@ -122,8 +122,10 @@ void main()
         }
     }
 
+    // Game Paused?
     if(Desaturate)
     {
+        // Desature
         float Intensity = (0.3f * End_Farbe.r) + (0.59f * End_Farbe.g) + (0.11f * End_Farbe.b);
 
         End_Farbe.r = (Intensity * Desaturate_Factor * FBM(Time, 0.25f, 0.95f)) + (End_Farbe.r * (1.0f - Desaturate_Factor));
@@ -131,7 +133,7 @@ void main()
         End_Farbe.b = (Intensity * Desaturate_Factor * FBM(Time, 0.25f, 0.95f)) + (End_Farbe.b * (1.0f - Desaturate_Factor));
     }
 
-    // Setze Pixel
+    // Set Pixels
     gl_FragColor = gl_Color * vec4(End_Farbe, Diffuse_Farbe.a);
 }
 

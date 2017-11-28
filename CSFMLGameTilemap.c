@@ -21,6 +21,7 @@ bool CSFMLLoadlevel(int id)
     InitError |= !CSFMLLoadTilemap();
     InitError |= !CSFMLLoadEventmap();
     InitError |= !CSFMLLoadMapDescriptor();
+    InitError |= !CSFMLLoadMusic();
 
     if(InitError)
     {
@@ -70,6 +71,9 @@ void CSFMLQuitLevel()
     sfTexture_destroy(Level.BG_Texture_Specular);
     sfSprite_destroy(Level.BG_Sprite);
     sfView_destroy(Level.BG_View);
+    sfMusic_stop(Level.BG_Music);
+    sfMusic_destroy(Level.BG_Music);
+    Level.BG_Music = NULL;
     Level.BG_Texture_Diffuse = NULL;
     Level.BG_Texture_Normal = NULL;
     Level.BG_Texture_Specular = NULL;
@@ -86,8 +90,41 @@ void CSFMLQuitLevel()
     Level.EV_Is_Init = false;
     Level.Is_Loaded = false;
     Level.TL_Is_Init = false;
+    Level.BG_Music_Is_Init = false;
+    Level.MD_Is_Init = false;
     Level.Level_Path[0] = '\0';
 }
+
+// Loading Background Music
+bool CSFMLLoadMusic()
+{
+    if(!Level.Is_Init || !Level.BG_Is_Init || !Level.TL_Is_Init || !Level.EV_Is_Init || !Level.MD_Is_Init)
+        return false;
+
+    // Define Path
+    char CompletePath_Music[100] = {0};
+    strncat(CompletePath_Music, Level.Level_Path, strlen(Level.Level_Path)+1);
+    strncat(CompletePath_Music, "Music.ogg", 10);
+
+    // Load Music
+    Level.BG_Music = sfMusic_createFromFile(CompletePath_Music);
+
+    if(Level.BG_Music == NULL)
+    {
+        printf("Game Subsystem Fehler 'GameTilemap': Kann Musik Datei nicht laden!\n");
+        return false;
+    }
+
+    // Play thge Music
+    sfMusic_setLoop(Level.BG_Music, sfTrue);
+    sfMusic_play(Level.BG_Music);
+    sfMusic_setVolume(Level.BG_Music, mstate.setting[1].actual_value);
+
+    Level.BG_Music_Is_Init = true;
+
+    return true;
+}
+
 
 // Loading MapDescriptor
 bool CSFMLLoadMapDescriptor()

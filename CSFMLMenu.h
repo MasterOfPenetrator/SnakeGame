@@ -138,6 +138,9 @@ typedef struct
     bool startgame;
     bool hs_written;
 
+    // Music
+    sfMusic *Menu_Music;
+
 } MenuState;
 
 // Variablen Allgemein

@@ -259,7 +259,7 @@ bool CSFMLIncreaseItemCount(size_t ItemIndex)
     // Find ItemType in Allowed Items
     size_t i;
     bool Result = false;
-    for(i = 0; i<GameItem.GI_AllowedItems_Count; i++)
+    for(i = 0; i<GameItem.GI_AllowedItems_Count && !Result; i++)
     {
         if(GameItem.GI_AllowedItems[i].Type == actualtype)
         {
@@ -314,9 +314,7 @@ void CSFMLSetPlaceItems()
             if((random > 0) && (random <= GameItem.GI_Items[i].I_Chance) && (CSFMLIncreaseItemCount(i)))
             {
                 GameItem.GI_Placed[i] = true;
-                printf("Spawned Item: %s\n", GameItem.GI_Items[i].I_Name);
             }
-
         }
     }
 }
@@ -342,7 +340,7 @@ void CSFMLSetCoordinatesItems()
             Hit |= true;
     }
 
-    // Check Item Collide -> Semms now OK
+    // Check for Item Collide itself
     for(i = 0; i<GameItem.GI_Items_Count; i++)
     {
         if(CompareFloats(Random_X, GameItem.GI_Blocks[i].x) && CompareFloats(Random_Y, GameItem.GI_Blocks[i].y))
@@ -361,6 +359,7 @@ void CSFMLSetCoordinatesItems()
                 GameItem.GI_Blocks[i].x = Random_X;
                 GameItem.GI_Blocks[i].y = Random_Y;
                 GameItem.GI_Coordinates_Setted[i] = true;
+                printf("GameItem[%d]: %f - %f\n", i, GameItem.GI_Blocks[i].x, GameItem.GI_Blocks[i].y);
             }
         }
     }
@@ -513,6 +512,8 @@ bool CSFMLItemSpawnText(const char *text)
         // Increment Used
         GameItem.GI_ItemTexts_Used++;
     }
+
+    return true;
 }
 
 // Render Text

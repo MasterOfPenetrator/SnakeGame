@@ -62,9 +62,15 @@ typedef struct {
     sfRenderStates BG_Texture_State;
     sfSprite *BG_Sprite;
 
+    // Views
     sfView *BG_View;
     sfView *BG_Minimap;
 
+    // Music
+    sfMusic *BG_Music;
+    bool BG_Music_Is_Init;
+
+    // Other Related Stuff
     unsigned int BG_Width;
     unsigned int BG_Height;
     sfVector2f BG_Screenposition;
@@ -95,6 +101,7 @@ GameLevel Level;
 bool CSFMLLoadlevel(int id);
 bool CSFMLRenderLevel();
 void CSFMLQuitLevel();
+bool CSFMLLoadMusic();
 bool CSFMLLoadMapDescriptor();
 bool CSFMLPreloadMapName(const char *Path, char *LevelName, size_t LevelName_Size); // For Menu Level Names
 bool CSFMLLoadEventmap();

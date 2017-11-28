@@ -4,6 +4,8 @@
 #include "CSFMLMenu.h"
 #include "CSFMLGameMain.h"
 
+#define sfMouse_getPosition(X) _Generic((X), sfRenderWindow*: sfMouse_getPositionRenderWindow, sfWindow*: sfMouse_getPosition)(X)
+
 int main (void)
 {
     // Set First Game Off
@@ -104,7 +106,7 @@ int main (void)
         // Get Mouse Position
         mstate.mouse_pos = sfMouse_getPosition(screen);
 
-        // Get Mouse Position normalizued
+        // Get Mouse Position normalized
         mstate.n_mouse_pos.x = (float) mstate.mouse_pos.x / sfRenderWindow_getSize(screen).x;
         mstate.n_mouse_pos.y = (float) mstate.mouse_pos.y / sfRenderWindow_getSize(screen).y;
 

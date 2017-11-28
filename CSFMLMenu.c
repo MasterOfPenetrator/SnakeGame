@@ -57,6 +57,18 @@ bool CSFMLInit()
         return false;
     }
 
+    // Music
+    mstate.Menu_Music = sfMusic_createFromFile("Bilder/Musics/MenuSong.ogg");
+
+    if(mstate.Menu_Music == NULL)
+    {
+        printf("Video Subsystem Fehler: Kann Music nicht laden!\n");
+        return false;
+    }
+
+    sfMusic_setLoop(mstate.Menu_Music, sfTrue);
+    sfMusic_play(mstate.Menu_Music);
+
 
     // Buttons und Hintergründe laden
     media.bg[0].background = sfTexture_createFromFile("Bilder/Menu/MenuGameBorder.png", NULL);
@@ -292,6 +304,9 @@ void CSFMLQuit()
     media.buttons = NULL;
 
     // Allgemein
+    sfMusic_stop(mstate.Menu_Music);
+    sfMusic_destroy(mstate.Menu_Music);
+    mstate.Menu_Music = NULL;
     sfClock_destroy(clck);
     clck = NULL;
     sfFont_destroy(fps_font);
@@ -1538,6 +1553,8 @@ bool MenuPlace()
     sfColor white = {255,255,255,255};
     sfColor other = {255, 74, 0, 255};
 
+    sfMusic_setVolume(mstate.Menu_Music, mstate.setting[1].actual_value);
+
     switch(mstate.actualsite)
     {
         // Layout und Funktionen für Hauptseite
@@ -1706,6 +1723,8 @@ bool MenuPlace()
             CSFMLCLRSCR();
             sfRenderWindow_setTitle(screen, "Snake Game: Spiele jetzt!");
 
+            sfMusic_stop(mstate.Menu_Music);
+
             mstate.startgame = true;
 
         break;
@@ -1723,6 +1742,8 @@ bool MenuPlace()
                 WriteHighScore(GameSnake.S_Name, (uint32_t)GameSnake.S_Score);
                 mstate.hs_written = true;
             }
+
+            sfMusic_play(mstate.Menu_Music);
 
             DrawScore();
             CSFMLCLRLevelStuff();

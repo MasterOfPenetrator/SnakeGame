@@ -87,7 +87,7 @@ bool CSFMLInitSnake()
     GameSnake.S_Actual_Direction = NONE;
     GameSnake.S_Prev_Direction = GameSnake.S_Actual_Direction;
     GameSnake.S_Rotate = 0;
-    GameSnake.S_LightDistance = 200.0f;
+    GameSnake.S_LightDistance = 400.0f;
     GameSnake.S_Light_FBM = false;
     GameSnake.S_Light_OnOff = true;
     GameSnake.S_Is_Init = true;
@@ -478,7 +478,7 @@ bool CSFMLSetSnakeLight()
         Cone_X = Light_X;
     }
 
-    CSFMLSetLight(Light_X, Light_Y, Cone_X, Cone_Y, 0, true, GameSnake.S_Light_FBM, 20, 1, GameSnake.S_Light_OnOff);
+    CSFMLSetLight(Light_X, Light_Y, Cone_X, Cone_Y, 0, true, GameSnake.S_Light_FBM, 35, 1, GameSnake.S_Light_OnOff);
 
 
     return true;
