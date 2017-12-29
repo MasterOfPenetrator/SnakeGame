@@ -45,7 +45,6 @@ void CSFMLGameUpdate();
 void CSFMLGameQuit();
 void CSFMLGameShowScore();
 void CSFMLGameShowHealth();
-void CSFMLGameUpdateTimeSnakeScore();
 void CSFMLGamePause();
 void CSFMLGamePauseRenderText();
 void CSFMLMainMoveView();

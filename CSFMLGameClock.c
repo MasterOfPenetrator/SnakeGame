@@ -127,6 +127,12 @@ bool CSFMLUpdateClock()
         }
     }
 
+    // Update Snake Score by Time
+    if(GameSnake.S_Is_Init && !GameSnake.S_Is_Dead && !GameMain.GM_Paused && GameClock.GC_SecondTick && Level.Is_Loaded)
+    {
+        GameSnake.S_Score += Level.MD_Details.Score_per_Second;
+    }
+
     // Update Other Stuff
     Update_Error |= !CSFMLUpdateItemTimeEvents();
     Update_Error |= !CSFMLUpdateAutokill();
@@ -147,7 +153,7 @@ bool CSFMLUpdateItemTimeEvents()
             // If Yes, returning to normal and Delete TimeEvent
             if(GameClock.GC_Time > (GameClock.GC_ItemEvents[i].StartTime + (float)GameClock.GC_ItemEvents[i].Duration))
             {
-                printf("Event Deleted!\n");
+                printf("Game Time: Item Event Deleted!\n");
                 // Restore Values
                 switch(GameClock.GC_ItemEvents[i].Effect_Type)
                 {
@@ -245,7 +251,7 @@ bool CSFMLUpdateItemTimeEvents()
                 // Set Time, if it not setted before!
                 if(!GameClock.GC_ItemEvents[i].Event_Setted)
                 {
-                    printf("Event Setted!\n");
+                    printf("Game Time: Item Event Setted!\n");
                     switch(GameClock.GC_ItemEvents[i].Effect_Type)
                     {
                         case HEALTH:

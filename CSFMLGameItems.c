@@ -266,7 +266,7 @@ bool CSFMLSpawnItem()
 
             // Now setup general
             GameItem.GI_Spawned[GameItem.GI_Spawned_Used].ItemIndex = i;
-            GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Current = GameItem.GI_Items[i];
+            memcpy(&GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Current, &GameItem.GI_Items[i], sizeof(Item));
 
             // Setup the Block
             GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Block.w = sfTexture_getSize(GameItem.GI_Textures[i]).x;
@@ -325,9 +325,6 @@ bool CSFMLSpawnItem()
             GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Block.x = Random_X;
             GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Block.y = Random_Y;
 
-            // Output it
-            printf("New Function Spawned Item: %s\n", GameItem.GI_Spawned[GameItem.GI_Spawned_Used].Current.I_Name);
-
             // Increment Used
             GameItem.GI_Spawned_Used++;
         }
@@ -345,7 +342,9 @@ bool CSFMLDeleteItem(size_t Index)
 
     size_t i;
     for(i = Index; i<GameItem.GI_Spawned_Used-1; i++)
-        GameItem.GI_Spawned[i] = GameItem.GI_Spawned[i+1];
+    {
+        memcpy(&GameItem.GI_Spawned[i], &GameItem.GI_Spawned[i+1], sizeof(SpawnedItem));
+    }
 
     GameItem.GI_Spawned_Used--;
 
@@ -616,7 +615,6 @@ void CSFMLHandleItems()
         // Collision Detected
         if(CompareFloats(Next_X, GameItem.GI_Spawned[i].Block.x) && CompareFloats(Next_Y, GameItem.GI_Spawned[i].Block.y))
         {
-            // General
             // Delete Hitted Item
             CSFMLDeleteItem(i);
 

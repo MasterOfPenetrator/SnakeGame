@@ -29,9 +29,6 @@ bool CSFMLGameInit()
     // Init Game Items
     Init_Error |= !CSFMLInitItems();
 
-    // Init Game Weapons
-    Init_Error |= !CSFMLInitWeapons();
-
     // Init Text for Score and Health
     GameMain.GM_Health = sfText_create();
     GameMain.GM_Score = sfText_create();
@@ -70,7 +67,6 @@ void CSFMLGameQuit()
         GameMain.GM_Score = NULL;
 
         // Clear Elements
-        CSFMLQuitWeapons();
         CSFMLQuitItems();
         CSFMLQuitSnake();
         CSFMLQuitClock();
@@ -101,7 +97,6 @@ void CSFMLGameUpdate()
             if(GameClock.GC_SnakeTick)
             {
                 // Update Handles
-                CSFMLHandleWeapons();
                 CSFMLHandleItems();
                 CSFMLHandleSnake();
 
@@ -132,9 +127,6 @@ void CSFMLGameUpdate()
 
             // Render Items
             CSFMLRenderItems();
-
-            // Render Weapons
-            CSFMLRenderWeapons();
 
             // Default Viewed Stuff
             sfRenderWindow_setView(screen, sfRenderWindow_getDefaultView(screen));
@@ -290,9 +282,6 @@ void CSFMLMainRenderOther()
     // Render Item Hint
     CSFMLRenderItemText();
 
-    // Activate Time Score Update
-    CSFMLGameUpdateTimeSnakeScore();
-
     // Place Score and Health String
     CSFMLGameShowScore();
     CSFMLGameShowHealth();
@@ -353,13 +342,6 @@ void CSFMLGameShowHealth()
     sfRenderWindow_drawText(screen, GameMain.GM_Health, NULL);
 }
 
-// Update Score for Seconds
-void CSFMLGameUpdateTimeSnakeScore()
-{
-    if(GameClock.GC_SecondTick && GameSnake.S_Is_Init && !GameSnake.S_Is_Dead && !GameMain.GM_Paused)
-        GameSnake.S_Score += Level.MD_Details.Score_per_Second;
-}
-
 // Set Game Paused
 void CSFMLGamePause()
 {
@@ -411,14 +393,3 @@ void CSFMLGamePauseRenderText()
     }
 }
 
-// Render Background
-void CSFMLRenderBackground()
-{
-    sfVector2f pos = {14.0f, 214.0f};
-    sfSprite *test = sfSprite_create();
-    sfSprite_setColor(test, sfWhite);
-    sfSprite_setPosition(test, pos);
-    sfRenderWindow_drawSprite(screen, test, NULL);
-    sfSprite_destroy(test);
-    test = NULL;
-}

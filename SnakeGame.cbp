@@ -66,6 +66,7 @@
 		<Unit filename="Bilder/Game/LevelData/Level1/Diffuse.png" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Eventmap.DAT" />
 		<Unit filename="Bilder/Game/LevelData/Level1/MapDescriptor.DAT" />
+		<Unit filename="Bilder/Game/LevelData/Level1/Music.ogg" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Normal.png" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Shader.frag" />
 		<Unit filename="Bilder/Game/LevelData/Level1/Specular.png" />
@@ -73,6 +74,7 @@
 		<Unit filename="Bilder/Game/LevelData/Level2/Diffuse.png" />
 		<Unit filename="Bilder/Game/LevelData/Level2/Eventmap.DAT" />
 		<Unit filename="Bilder/Game/LevelData/Level2/MapDescriptor.DAT" />
+		<Unit filename="Bilder/Game/LevelData/Level2/Music.ogg" />
 		<Unit filename="Bilder/Game/LevelData/Level2/Normal.png" />
 		<Unit filename="Bilder/Game/LevelData/Level2/Shader.frag" />
 		<Unit filename="Bilder/Game/LevelData/Level2/Specular.png" />
@@ -134,6 +136,7 @@
 		<Unit filename="Bilder/Menu/ZurueckButtonClicked.png" />
 		<Unit filename="Bilder/Menu/ZurueckButtonNormal.png" />
 		<Unit filename="Bilder/Menu/ZurueckButtonOnMouseOver.png" />
+		<Unit filename="Bilder/Musics/MenuSong.ogg" />
 		<Unit filename="Bilder/Schriftarten/3Dventure.ttf" />
 		<Unit filename="Bilder/Schriftarten/SEASERN.ttf" />
 		<Unit filename="Bilder/Schriftarten/baby blocks.ttf" />
@@ -178,10 +181,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="CSFMLGameTilemap.h" />
-		<Unit filename="CSFMLGameWeapons.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="CSFMLGameWeapons.h" />
 		<Unit filename="CSFMLMenu.c">
 			<Option compilerVar="CC" />
 		</Unit>

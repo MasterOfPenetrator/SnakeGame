@@ -28,7 +28,7 @@ float FBM(float x)
     {
         Value += Noise(x * Frequency) * Amplitude;
         Frequency *= 1.25f;
-        Amplitude *= 0.1f;
+        Amplitude *= 0.6f;
     }
 
     return Value;
