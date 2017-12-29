@@ -48,6 +48,9 @@ bool CSFMLGameInit()
     GameMain.GM_View_Movement_RoundFlag = false;
     mstate.hs_written = false;
 
+    // Print Entered Username
+    printf("Username entered: %s\n", GameSnake.S_Name);
+
     return Init_Error;
 }
 

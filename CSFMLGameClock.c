@@ -74,17 +74,6 @@ bool CSFMLUpdateClock()
         }
     }
 
-    // Set GameTime to Weapon Shaders
-    if(GameWeapons.GW_Is_Init && shader_enabled)
-    {
-        size_t it;
-        for(it = 0; it<GameWeapons.GW_Weapon_Count; it++)
-        {
-            sfShader_setIntUniform(GameWeapons.GW_BarrelShader[it], "Time", GameClock.GC_Time);
-            sfShader_setIntUniform(GameWeapons.GW_WeaponShader[it], "Time", GameClock.GC_Time);
-        }
-    }
-
     // Update MinuteTick Timer
     if(GameSnake.S_Is_Init)
     {
@@ -388,7 +377,7 @@ bool CSFMLUpdateAutokill()
                     case IT_SPEED:
                         GameSnake.S_Speed += Level.MD_Details.Autokill[i].Amount;
                         GameSnake.S_DefaultSpeed += Level.MD_Details.Autokill[i].Amount;
-                        printf("Autokill: Speed increased, to: %f !\n", GameSnake.S_DefaultSpeed);
+                        printf("Autokill: Speed increased, to: %0.2f !\n", GameSnake.S_DefaultSpeed);
                     break;
 
                     case IT_HEALTH:

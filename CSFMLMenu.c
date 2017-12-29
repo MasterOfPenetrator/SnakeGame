@@ -170,8 +170,8 @@ bool CSFMLMenuInit()
     sfColor other = {254,84,0,255};
     // MainSite
     MenuPlaceButton(0, 5, 100, 230, true, GAMESITE_LEVEL, MAINSITE, false);
-    MenuPlaceButton(0, 3, 100, 330, true, SCORESITE, MAINSITE, false);
-    MenuPlaceButton(0, 4, 100, 430, true, SETTINGSSITE, MAINSITE, false);
+    //MenuPlaceButton(0, 3, 100, 330, true, SCORESITE, MAINSITE, false);
+    //MenuPlaceButton(0, 4, 100, 430, true, SETTINGSSITE, MAINSITE, false);
     MenuPlaceButton(0, 0, 100, 530, true, EXITSITE, MAINSITE, false);
 
     // ScoreSites

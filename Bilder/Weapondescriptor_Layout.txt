@@ -1,9 +1,0 @@
-Weapon SimplePistol;
-    strcpy(SimplePistol.Name, "Simple Pistol");
-    SimplePistol.Duration = 60;
-    SimplePistol.Barrells_Count = 1;
-    SimplePistol.Barrells[0].Damage = 10;
-    SimplePistol.Barrells[0].Angle = 0.0f;
-    SimplePistol.Barrells[0].Distance = 45.0f;
-    SimplePistol.Barrells[0].Rate = 1;
-    SimplePistol.Barrells[0].Speed = 2;

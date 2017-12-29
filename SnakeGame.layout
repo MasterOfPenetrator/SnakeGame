@@ -2,134 +2,9 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="CSFMLGameClock.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4051" topLine="110" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameTilemap.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3127" topLine="138" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameItems.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="10830" topLine="167" />
-		</Cursor>
-	</File>
-	<File name="Bilder\Game\WeaponData\SimplePistol\Weapon_Shader.frag" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1345" topLine="8" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameMain.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="998" topLine="26" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameLights.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="730" topLine="11" />
-		</Cursor>
-	</File>
-	<File name="CSFMLMenu.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2755" topLine="123" />
-		</Cursor>
-	</File>
-	<File name="CSFMLMenu.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="49584" topLine="1548" />
-		</Cursor>
-	</File>
-	<File name="CSFMLOtherStuff.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1048" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Bilder\Game\LevelData\Level2\Shader.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2833" topLine="72" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameLights.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3244" topLine="78" />
-		</Cursor>
-	</File>
-	<File name="CSFMLFileHandling.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1811" topLine="99" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameMain.c" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="7929" topLine="276" />
-		</Cursor>
-	</File>
-	<File name="Bilder\Shader\Snake_Body_Shader.frag" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="830" topLine="30" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameTilemap.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1341" topLine="57" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameClock.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1049" topLine="24" />
-		</Cursor>
-	</File>
-	<File name="Bilder\Shader\Food.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="650" topLine="11" />
-		</Cursor>
-	</File>
-	<File name="Bilder\Shader\Speed.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="752" topLine="24" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameEnemies.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="165" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameSnake.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="20230" topLine="465" />
-		</Cursor>
-	</File>
-	<File name="Bilder\Game\LevelData\Level1\Shader.frag" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4305" topLine="115" />
-		</Cursor>
-	</File>
 	<File name="CSFMLFileHandling.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="94" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="CSFMLOtherStuff.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="154" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameEnemies.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="29" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Bilder\Shader\FirstAid.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="655" topLine="29" />
-		</Cursor>
-	</File>
-	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5034" topLine="101" />
 		</Cursor>
 	</File>
 	<File name="Bilder\Shader\Menu_Button_Blur_Effect.frag" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -137,19 +12,14 @@
 			<Cursor1 position="1007" topLine="5" />
 		</Cursor>
 	</File>
-	<File name="Bilder\Shader\Snake_Head_Shader.frag" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="CSFMLOtherStuff.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2282" topLine="50" />
+			<Cursor1 position="1048" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Bilder\Shader\GodMode.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="CSFMLGameEnemies.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="767" topLine="34" />
-		</Cursor>
-	</File>
-	<File name="CSFMLGameItems.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="923" topLine="69" />
+			<Cursor1 position="29" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="Bilder\Shader\Noclip.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -157,9 +27,139 @@
 			<Cursor1 position="775" topLine="30" />
 		</Cursor>
 	</File>
+	<File name="Bilder\Shader\Snake_Head_Shader.frag" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2282" topLine="50" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameClock.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2494" topLine="60" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameLights.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3244" topLine="78" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameClock.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1049" topLine="24" />
+		</Cursor>
+	</File>
+	<File name="CSFMLOtherStuff.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="154" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Bilder\Shader\Speed.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="752" topLine="24" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameItems.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="19753" topLine="598" />
+		</Cursor>
+	</File>
+	<File name="CSFMLMenu.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7831" topLine="121" />
+		</Cursor>
+	</File>
+	<File name="Bilder\Game\WeaponData\SimplePistol\Weapon_Shader.frag" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1345" topLine="8" />
+		</Cursor>
+	</File>
+	<File name="Bilder\Game\LevelData\Level1\Shader.frag" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4305" topLine="115" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameTilemap.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3127" topLine="138" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameMain.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1374" topLine="36" />
+		</Cursor>
+	</File>
+	<File name="Bilder\Game\LevelData\Level2\Shader.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2833" topLine="72" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameTilemap.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1341" topLine="57" />
+		</Cursor>
+	</File>
+	<File name="main.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4480" topLine="128" />
+		</Cursor>
+	</File>
+	<File name="Bilder\Shader\Food.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="650" topLine="11" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameLights.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="730" topLine="11" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameEnemies.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="165" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Bilder\Shader\Snake_Body_Shader.frag" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="830" topLine="30" />
+		</Cursor>
+	</File>
+	<File name="Bilder\Shader\FirstAid.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="655" topLine="29" />
+		</Cursor>
+	</File>
+	<File name="CSFMLMenu.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2755" topLine="123" />
+		</Cursor>
+	</File>
 	<File name="CSFMLGameSnake.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="102" topLine="21" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameItems.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="923" topLine="69" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameSnake.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="20230" topLine="465" />
+		</Cursor>
+	</File>
+	<File name="Bilder\Shader\GodMode.frag" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="767" topLine="34" />
+		</Cursor>
+	</File>
+	<File name="CSFMLGameMain.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="408" topLine="6" />
+		</Cursor>
+	</File>
+	<File name="CSFMLFileHandling.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1811" topLine="99" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
