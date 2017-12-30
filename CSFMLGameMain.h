@@ -15,6 +15,7 @@ typedef enum { LEFT, RIGHT, UP, DOWN, NONE } Direction;
 #include "CSFMLGameSnake.h"
 #include "CSFMLGameItems.h"
 #include "CSFMLGameEnemies.h"
+#include "CSFMLGameHighScore.h"
 
 // Structs
 typedef struct {

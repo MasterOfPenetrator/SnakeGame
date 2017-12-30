@@ -1,14 +1,35 @@
 #include "CSFMLOtherStuff.h"
-#define SSE 1
+
+// Check CPU for SSE
+inline bool SSE1Avail()
+{
+    // Variables
+    int CPUFeatures[4];
+    int CPUInfoType = 1;
+
+    __asm__ __volatile__(
+		"xchg %%ebx, %%edi;"
+		"cpuid;"
+		"xchg %%ebx, %%edi;"
+		:"=a" (CPUFeatures[0]), "=D" (CPUFeatures[1]), "=c" (CPUFeatures[2]), "=d" (CPUFeatures[3])
+		:"0" (CPUInfoType)
+    );
+
+    return  CPUFeatures[3] & (1 << 25) || false;
+
+}
 
 // Compare two Floats
-// Use SSE for exactly Compare
-// Some weird thing, at any Optimizion Step, the
-// Compiler never use SIMD instructions!
-// He uses just the FPU
 inline bool CompareFloats(float Value1, float Value2)
 {
-    if(SSE)
+    // Perform Check
+    if(!Check_Performed)
+    {
+        SSE1_Available = SSE1Avail();
+        Check_Performed = true;
+    }
+
+    if(SSE1_Available)
     {
         __m128 val1, val2, val3;
         register int result;
@@ -83,15 +104,3 @@ char* itoa(int value, char* result, int base)
     }
     return result;
 }
-
-// Make Vector Addition
-sfVector2f Vector2fAddition(sfVector2f Vec1, sfVector2f Vec2)
-{
-    sfVector2f Result;
-
-    Result.x = Vec1.x + Vec2.x;
-    Result.y = Vec1.y + Vec2.y;
-
-    return Result;
-}
-

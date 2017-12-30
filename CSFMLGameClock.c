@@ -18,6 +18,7 @@ bool CSFMLInitClock()
     GameClock.GC_Last_Time.microseconds = 0;
     GameClock.GC_DeltaTime = 0.0f;
     GameClock.GC_Time = 0.0f;
+    GameClock.GC_GameTime = 0.0f;
     GameClock.GC_SnakeTick = false;
     GameClock.GC_SnakeTime = 0.0f;
     GameClock.GC_SecondTick = false;
@@ -120,6 +121,12 @@ bool CSFMLUpdateClock()
     if(GameSnake.S_Is_Init && !GameSnake.S_Is_Dead && !GameMain.GM_Paused && GameClock.GC_SecondTick && Level.Is_Loaded)
     {
         GameSnake.S_Score += Level.MD_Details.Score_per_Second;
+    }
+
+    // Update the actual GameTime
+    if(GameSnake.S_Is_Init && !GameSnake.S_Is_Dead && Level.Is_Loaded)
+    {
+        GameClock.GC_GameTime += GameClock.GC_DeltaTime;
     }
 
     // Update Other Stuff

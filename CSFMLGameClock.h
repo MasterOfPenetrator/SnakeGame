@@ -32,6 +32,7 @@ typedef struct {
     float GC_SecondTime;
     float GC_MinuteTime;
     float GC_Time;
+    float GC_GameTime;
     TimeEvent *GC_ItemEvents;
     size_t GC_ItemEvents_Count;
 

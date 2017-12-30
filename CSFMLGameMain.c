@@ -29,6 +29,9 @@ bool CSFMLGameInit()
     // Init Game Items
     Init_Error |= !CSFMLInitItems();
 
+    // Init Game Highscore
+    Init_Error |= !CSFMLInitHighscore();
+
     // Init Text for Score and Health
     GameMain.GM_Health = sfText_create();
     GameMain.GM_Score = sfText_create();
@@ -48,9 +51,6 @@ bool CSFMLGameInit()
     GameMain.GM_View_Movement_RoundFlag = false;
     mstate.hs_written = false;
 
-    // Print Entered Username
-    printf("Username entered: %s\n", GameSnake.S_Name);
-
     return Init_Error;
 }
 
@@ -69,7 +69,18 @@ void CSFMLGameQuit()
         GameMain.GM_Health = NULL;
         GameMain.GM_Score = NULL;
 
+        // Write the new Highscore Entry!
+        CSFMLWriteHighscore();
+
+        // Make a Debug Print of Entries:
+        size_t s;
+        for(s = 0; s<GameHighscore.HE_Entries_Length; s++)
+        {
+            printf("[%d]%s, %s, %d, %d, %0.2f\n", s+1, GameHighscore.HE_Entries[s].HE_Username, GameHighscore.HE_Entries[s].HE_Levelname, GameHighscore.HE_Entries[s].HE_Score, GameHighscore.HE_Entries[s].HE_SnakeLength, GameHighscore.HE_Entries[s].HE_TimeAlive);
+        }
+
         // Clear Elements
+        CSFMLQuitHighscore();
         CSFMLQuitItems();
         CSFMLQuitSnake();
         CSFMLQuitClock();

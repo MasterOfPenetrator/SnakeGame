@@ -161,6 +161,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="CSFMLGameEnemies.h" />
+		<Unit filename="CSFMLGameHighScore.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLGameHighScore.h" />
 		<Unit filename="CSFMLGameItems.c">
 			<Option compilerVar="CC" />
 		</Unit>
