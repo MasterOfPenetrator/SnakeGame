@@ -2,12 +2,8 @@
 
 #define CSFMLGameMain_H
 
-// Enums
-typedef enum { IT_HEALTH, IT_SPEED, IT_FOOD, IT_GOD, IT_NOCLIP, IT_CUSTOM } ItemType;
-typedef enum { LEFT, RIGHT, UP, DOWN, NONE } Direction;
-
 // Includes
-#include "CSFMLMenu.h"
+#include "CSFMLMain.h"
 #include "CSFMLOtherStuff.h"
 #include "CSFMLGameTilemap.h"
 #include "CSFMLGameLights.h"

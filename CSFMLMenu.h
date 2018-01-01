@@ -1,24 +1,9 @@
 #ifndef CSFMLMENU_H
 
 #define CSFMLMENU_H
+
 // Includes
-#include <stdio.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <inttypes.h>
-#include <string.h>
-#include <dirent.h>
-#include <math.h>
-#include <time.h>
-#include <immintrin.h>
-#include <SFML/Audio.h>
-#include <SFML/Graphics.h>
-#include <SFML/Window.h>
-#include <SFML/System.h>
-#include "CSFMLFileHandling.h"
-#include "CSFMLGameMain.h"
+#include "CSFMLMain.h"
 
 // Eigenschaften
 #define SCREEN_WIDTH 600

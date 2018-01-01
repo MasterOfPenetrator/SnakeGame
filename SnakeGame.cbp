@@ -185,6 +185,15 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="CSFMLGameTilemap.h" />
+		<Unit filename="CSFMLMain.h" />
+		<Unit filename="CSFMLMainAPI.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLMainAPI.h" />
+		<Unit filename="CSFMLMainSettings.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="CSFMLMainSettings.h" />
 		<Unit filename="CSFMLMenu.c">
 			<Option compilerVar="CC" />
 		</Unit>

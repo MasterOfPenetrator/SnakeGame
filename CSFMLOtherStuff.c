@@ -1,12 +1,13 @@
 #include "CSFMLOtherStuff.h"
 
 // Check CPU for SSE
-inline bool SSE1Avail()
+inline bool SSE1Avail(void)
 {
     // Variables
     int CPUFeatures[4];
     int CPUInfoType = 1;
 
+    // Perform CPUID
     __asm__ __volatile__(
 		"xchg %%ebx, %%edi;"
 		"cpuid;"
@@ -15,8 +16,18 @@ inline bool SSE1Avail()
 		:"0" (CPUInfoType)
     );
 
+    // Return True or False for SSE1
     return  CPUFeatures[3] & (1 << 25) || false;
 
+}
+
+// Init Standard Random Generator
+inline void Rand_Init(void)
+{
+    time_t t;
+    srand((unsigned) time(&t));
+
+    R_Init = true;
 }
 
 // Compare two Floats
@@ -61,12 +72,17 @@ inline float GetRandomFloatNumber(int MAX)
         success = _rdrand32_step(&rnd_val);
 
     if(!success)
+    {
+        if(!R_Init)
+            Rand_Init();
+
         rnd_val = rand();
+    }
 
     float val =  (MAX) * ((float)rnd_val / UINT32_MAX);
     short sign = val < 0 ? -1 : 1;
 
-    return floorf(fabs(val)*2.f) / 2.f * sign;
+    return floorf(fabs(val)*2.0f) / 2.0f * sign;
 }
 
 // Check if a char is an Number / Alphabet

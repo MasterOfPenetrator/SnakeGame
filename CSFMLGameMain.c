@@ -72,13 +72,6 @@ void CSFMLGameQuit()
         // Write the new Highscore Entry!
         CSFMLWriteHighscore();
 
-        // Make a Debug Print of Entries:
-        size_t s;
-        for(s = 0; s<GameHighscore.HE_Entries_Length; s++)
-        {
-            printf("[%d]%s, %s, %d, %d, %0.2f\n", s+1, GameHighscore.HE_Entries[s].HE_Username, GameHighscore.HE_Entries[s].HE_Levelname, GameHighscore.HE_Entries[s].HE_Score, GameHighscore.HE_Entries[s].HE_SnakeLength, GameHighscore.HE_Entries[s].HE_TimeAlive);
-        }
-
         // Clear Elements
         CSFMLQuitHighscore();
         CSFMLQuitItems();

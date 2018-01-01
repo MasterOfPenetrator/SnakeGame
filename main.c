@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <windows.h>
-#include "CSFMLMenu.h"
-#include "CSFMLGameMain.h"
+#include "CSFMLMain.h"
 
 #define sfMouse_getPosition(X) _Generic((X), sfRenderWindow*: sfMouse_getPositionRenderWindow, sfWindow*: sfMouse_getPosition)(X)
 

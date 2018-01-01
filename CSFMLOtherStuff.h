@@ -6,11 +6,13 @@
 #include "CSFMLGameMain.h"
 
 // Variables
-static bool Check_Performed = false;
-static bool SSE1_Available = false;
+static bool Check_Performed;
+static bool R_Init;
+static bool SSE1_Available;
 
 // Functions
 bool SSEAvail();
+void Rand_Init();
 bool CompareFloats(float Value1, float Value2);
 float GetRandomFloatNumber(int MAX);
 bool CheckUnicode(char Check);

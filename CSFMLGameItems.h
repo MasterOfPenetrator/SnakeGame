@@ -11,13 +11,6 @@ typedef enum { I_INCREASE, I_DECREASE, I_NOTHING } ItemDirection;
 
 // Structs
 typedef struct {
-    float x;
-    float y;
-    float w;
-    float h;
-} iBlock;
-
-typedef struct {
     ItemType Type;
     size_t Actual_Count;
     size_t Max_Count;
@@ -48,7 +41,7 @@ typedef struct {
 } ItemSpawnText;
 
 typedef struct {
-    iBlock Block;
+    Block Block;
     Item Current;
     size_t ItemIndex;
 } SpawnedItem;
@@ -89,7 +82,7 @@ bool CSFMLItemSpawnText(const char *text);
 void CSFMLRenderItemText();
 
 // Intern Functions
-sfVector2f CSFMLItemConvertIndexToVector(iBlock blk);
+sfVector2f CSFMLItemConvertIndexToVector(Block blk);
 ItemType CSFMLGetItemType(Item Current);
 bool CSFMLIncreaseItemCount(size_t ItemIndex);
 void CSFMLDecreaseItemCount(size_t ItemIndex);

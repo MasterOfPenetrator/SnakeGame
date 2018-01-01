@@ -162,10 +162,6 @@ bool CSFMLInitItems()
     GameItem.GI_Is_Init = true;
     GameItem.GI_AllowedItems_Count = 6;
 
-    // Init Random Number Generator
-    time_t t;
-    srand((unsigned) time(&t));
-
     return true;
 }
 
@@ -401,7 +397,7 @@ void CSFMLDecreaseItemCount(size_t ItemIndex)
 }
 
 // Convert Block to Screen Coordinates
-sfVector2f CSFMLItemConvertIndexToVector(iBlock blk)
+sfVector2f CSFMLItemConvertIndexToVector(Block blk)
 {
     sfVector2f Ret_Value;
 

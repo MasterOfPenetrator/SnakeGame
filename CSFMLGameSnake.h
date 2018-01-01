@@ -11,13 +11,6 @@
 
 // Structs
 typedef struct {
-    float x;
-    float y;
-    float w;
-    float h;
-} Block;
-
-typedef struct __attribute__((__packed__)) {
 
     // Blocks
     Block SB_Head;
